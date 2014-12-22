@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.emf.codegen.ecore.genmodel.presentation.GenModelEditorID?after=additions">
+         <command
+               commandId="com.opcoach.genmodeladdon.generateSourceFolder"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <reference
+                     definitionId="com.opcoach.genmodeladdon.ui.genModelSelected">
+               </reference>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="com.opcoach.genmodeladdon.handlers.GeneratedDerivedSourceFolder"
+            id="com.opcoach.genmodeladdon.generateSourceFolder"
+            name="Generate Derived Source Folder">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.definitions">
+      <definition
+            id="com.opcoach.genmodeladdon.ui.genModelSelected">
+         <iterate>
+            <instanceof
+                  value="org.eclipse.emf.codegen.ecore.genmodel.GenModel">
+            </instanceof>
+         </iterate>
+      </definition>
+   </extension>
+
+</plugin>

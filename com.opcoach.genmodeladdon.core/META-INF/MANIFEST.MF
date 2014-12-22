@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Core
+Bundle-SymbolicName: com.opcoach.genmodeladdon.core
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: OPCOACH
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.xtend;bundle-version="2.0.0",
+ org.eclipse.emf.codegen.ecore;bundle-version="2.10.2";visibility:=reexport,
+ org.eclipse.xtext.xbase.lib;bundle-version="2.7.3"
+Export-Package: com.opcoach.genmodeladdon.core
