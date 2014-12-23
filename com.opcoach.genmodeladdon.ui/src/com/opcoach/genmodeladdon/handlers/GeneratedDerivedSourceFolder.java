@@ -21,8 +21,8 @@ public class GeneratedDerivedSourceFolder extends AbstractHandler {
 			Object selected = ((IStructuredSelection) sel).getFirstElement();
 			if (selected instanceof GenModel)
 			{
-				GenerateDevStructure gds = new GenerateDevStructure();
-				gds.generateDevStructure((GenModel) selected);
+				GenerateDevStructure gds = new GenerateDevStructure((GenModel) selected);
+				gds.generateDevStructure();
 			}
 		}
 		
