@@ -36,22 +36,39 @@ class GenerateDevStructure {
 			generateOverridenClass(c, "/tmp/test/")
 			generateOverridenInterface(c, "/tmp/test/")
 		}
+		
+		// Generate factory interface and implementation
+		gp.generateOverridenFactoryInterface("/tmp/test/")
+		gp.generateOverridenFactoryClass("/tmp/test/")
+	}
+	
+	
+	def generateOverridenFactoryInterface(GenPackage gp, String path)
+	{
+		val filename = path + gp.computeFactoryInterfaceName + ".java"
+		generateFile(filename, gp.generateInterfaceFactoryContent)
+	}
+
+	def generateOverridenFactoryClass(GenPackage gp, String path)
+	{
+		val filename = path + gp.computeFactoryClassName + ".java"
+		generateFile(filename, gp.generateClassFactoryContent)
 	}
 
 	def generateOverridenClass(GenClass gc, String path) {
 
-		// Open the file and generate contents
-		val fw = new FileWriter(path + gc.computeClassname + ".java")
-		fw.write(gc.generateClassContent.toString)
-		fw.flush
-		fw.close
+		generateFile(path + gc.computeClassname + ".java", gc.generateClassContent)
 	}
 
 	def generateOverridenInterface(GenClass gc, String path) {
 
+		generateFile(path + gc.computeInterfaceName + ".java", gc.generateInterfaceContent)
+	}
+	
+	def generateFile(String filename,  Object contents) {
 		// Open the file and generate contents
-		val fw = new FileWriter(path + gc.computeInterfaceName + ".java")
-		fw.write(gc.generateInterfaceContent.toString)
+		val fw = new FileWriter(filename)
+		fw.write(contents.toString)
 		fw.flush
 		fw.close
 	}
@@ -76,15 +93,42 @@ class GenerateDevStructure {
 		}
 	'''
 
-	def generateFactoryContent(GenClass gc) '''
-		package «gc.genPackage.computePackageNameForClasses»;
+	def generateInterfaceFactoryContent(GenPackage gp) '''
+		package «gp.computePackageNameForInterfaces»;
 		
-		// This class can override the generated class and will be instantiated by factory
-		class «gc.computeClassname» extends «gc.computeGeneratedClassName()» implements «gc.computeInterfaceName»
+		// This factory  overrides the generated factory and returns the new generated interfaces
+		class «gp.computeFactoryInterfaceName» extends «gp.computeGeneratedFactoryInterfaceName» 
 		{
-		
+			«FOR gc : gp.genClasses»
+			   «gc.generateFactoryDef»
+			«ENDFOR»
 		}
 	'''
+	
+	def  generateFactoryDef(GenClass gc) '''
+		public «gc.computeInterfaceName» create«gc.ecoreClass.name»();
+	'''
+	
+		def generateClassFactoryContent(GenPackage gp) '''
+		package «gp.computePackageNameForClasses»;
+		
+		// This factory  overrides the generated factory and returns the new generated interfaces
+		class «gp.computeFactoryClassName» extends «gp.computeGeneratedFactoryClassName» 
+		{
+			«FOR gc : gp.genClasses»
+			   «gc.generateCreateMethod»
+			«ENDFOR»
+		}
+	'''
+		def  generateCreateMethod(GenClass gc) '''
+		public «gc.computeInterfaceName» create«gc.ecoreClass.name»()
+		{
+			«gc.computeInterfaceName» result = new «gc.computeInterfaceName»();
+			return result;
+		}
+	'''
+	
+	
 
 	/** Compute the class name to be generated */
 	def computeClassname(GenClass gc) {
@@ -96,17 +140,27 @@ class GenerateDevStructure {
 		interfacePattern.replace("{0}", gc.ecoreClass.name)
 	}
 
+	/** Compute the factory interface name to be generated */
+	def computeFactoryInterfaceName(GenPackage gp) {
+		gp.prefix + "Factory"
+	}
+
+	/** Compute the factory class name to be generated */
+	def computeFactoryClassName(GenPackage gp) {
+		gp.prefix + "ExtendedFactory"
+	}
+
 	/** Compute the package name for class */
 	def computePackageNameForClasses(GenPackage gp) {
 		val basePackage = if(gp.basePackage == null) "" else gp.basePackage
-		val packSuffix = if (gp.classPackageSuffix == null) "" else "."+gp.classPackageSuffix
+		val packSuffix = if(gp.classPackageSuffix == null) "" else "." + gp.classPackageSuffix
 		basePackage + "." + gp.packageName.toLowerCase + packSuffix
 	}
 
 	/** Compute the package name for interfaces */
 	def computePackageNameForInterfaces(GenPackage gp) {
-		val basePackage = if(gp.basePackage == null) "" else gp.basePackage +"."
-		val intSuffix = if(gp.classPackageSuffix == null) "" else "."+gp.interfacePackageSuffix 
+		val basePackage = if(gp.basePackage == null) "" else gp.basePackage + "."
+		val intSuffix = if(gp.classPackageSuffix == null) "" else "." + gp.interfacePackageSuffix
 
 		basePackage + gp.packageName.toLowerCase + intSuffix
 	}
@@ -134,4 +188,29 @@ class GenerateDevStructure {
 		else
 			c.ecoreClass.name
 	}
+
+	/** Compute the generated factory class name depending on classpattern. */
+	def computeGeneratedFactoryClassName(GenPackage gp) {
+
+		// Get the class pattern defined in genmodel (if none, this is {0}Impl)
+		val classPattern = gp.genModel.classNamePattern
+
+		if (classPattern != null)
+			classPattern.replace("{0}", gp.packageName.toFirstUpper + "Factory")
+		else
+			gp.packageName.toFirstUpper + "FactoryImpl"
+	}
+
+	/** Compute the generated factory interface name depending on interface. */
+	def computeGeneratedFactoryInterfaceName(GenPackage gp) {
+
+		// Get the class pattern defined in genmodel (if none, this is {0}Impl)
+		val interfacePattern = gp.genModel.interfaceNamePattern
+
+		if (interfacePattern != null)
+			interfacePattern.replace("{0}", gp.packageName.toFirstUpper + "Factory")
+		else
+			gp.packageName.toFirstUpper + "Factory"
+	}
+
 }
