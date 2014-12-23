@@ -1,6 +1,8 @@
 package com.opcoach.genmodeladdon.core
 
+import java.io.File
 import java.io.FileWriter
+import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.emf.codegen.ecore.genmodel.GenClass
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel
 import org.eclipse.emf.codegen.ecore.genmodel.GenPackage
@@ -9,6 +11,7 @@ class GenerateDevStructure {
 
 	String classPattern
 	String interfacePattern
+	String projectName
 	GenModel genModel
 
 	/** Build the generator with 2 parameters
@@ -23,6 +26,7 @@ class GenerateDevStructure {
 
 	new(GenModel gm) {
 		this(gm, "{0}ExtImpl", "{0}Ext")
+		projectName = gm.extractProjectName
 	}
 
 	def generateDevStructure() {
@@ -32,25 +36,41 @@ class GenerateDevStructure {
 	}
 
 	def generateDevStructure(GenPackage gp) {
-		for (c : gp.genClasses) {
-			generateOverridenClass(c, "/tmp/test/")
-			generateOverridenInterface(c, "/tmp/test/")
-		}
+
+		val root = ResourcesPlugin.workspace.root
+		val proj = root.getProject(projectName)
+		val srcFolder = proj.getFolder("src/" + gp.computePackageNameForClasses.replace(".", "/"))
+		val srcAbsolutePath = srcFolder.location.toOSString + "/"
+		val f = new File(srcAbsolutePath)
+		if (!f.exists) f.mkdirs
+
+		val interfaceFolder = proj.getFolder("src/" + gp.computePackageNameForInterfaces.replace(".", "/"))
+		val interfaceAbsolutePath = interfaceFolder.location.toOSString  + "/"
+		val f2 = new File(interfaceAbsolutePath)
+		if (!f2.exists) f.mkdirs
 		
+	
+		println("Generate classes in    : " + srcAbsolutePath)
+		println("Generate interfaces in : " + interfaceAbsolutePath)
+
+		for (c : gp.genClasses) {
+			generateOverridenClass(c, srcAbsolutePath )
+			generateOverridenInterface(c, interfaceAbsolutePath)
+		}
+
 		// Generate factory interface and implementation
-		gp.generateOverridenFactoryInterface("/tmp/test/")
-		gp.generateOverridenFactoryClass("/tmp/test/")
+		gp.generateOverridenFactoryInterface(interfaceAbsolutePath)
+		gp.generateOverridenFactoryClass(srcAbsolutePath)
+		
+		proj.refreshLocal(5,null)
 	}
-	
-	
-	def generateOverridenFactoryInterface(GenPackage gp, String path)
-	{
+
+	def generateOverridenFactoryInterface(GenPackage gp, String path) {
 		val filename = path + gp.computeFactoryInterfaceName + ".java"
 		generateFile(filename, gp.generateInterfaceFactoryContent)
 	}
 
-	def generateOverridenFactoryClass(GenPackage gp, String path)
-	{
+	def generateOverridenFactoryClass(GenPackage gp, String path) {
 		val filename = path + gp.computeFactoryClassName + ".java"
 		generateFile(filename, gp.generateClassFactoryContent)
 	}
@@ -64,8 +84,9 @@ class GenerateDevStructure {
 
 		generateFile(path + gc.computeInterfaceName + ".java", gc.generateInterfaceContent)
 	}
-	
-	def generateFile(String filename,  Object contents) {
+
+	def generateFile(String filename, Object contents) {
+
 		// Open the file and generate contents
 		val fw = new FileWriter(filename)
 		fw.write(contents.toString)
@@ -76,8 +97,10 @@ class GenerateDevStructure {
 	def generateClassContent(GenClass gc) '''
 		package «gc.genPackage.computePackageNameForClasses»;
 		
+		import «gc.genPackage.computePackageNameForInterfaces».«gc.computeInterfaceName»;
+		
 		// This class can override the generated class and will be instantiated by factory
-		class «gc.computeClassname» extends «gc.computeGeneratedClassName()» implements «gc.computeInterfaceName»
+		public class «gc.computeClassname» extends «gc.computeGeneratedClassName()» implements «gc.computeInterfaceName»
 		{
 		
 		}
@@ -97,38 +120,41 @@ class GenerateDevStructure {
 		package «gp.computePackageNameForInterfaces»;
 		
 		// This factory  overrides the generated factory and returns the new generated interfaces
-		class «gp.computeFactoryInterfaceName» extends «gp.computeGeneratedFactoryInterfaceName» 
+		interface «gp.computeFactoryInterfaceName» extends «gp.computeGeneratedFactoryInterfaceName» 
 		{
 			«FOR gc : gp.genClasses»
-			   «gc.generateFactoryDef»
+				«gc.generateFactoryDef»
 			«ENDFOR»
 		}
 	'''
-	
-	def  generateFactoryDef(GenClass gc) '''
+
+	def generateFactoryDef(GenClass gc) '''
 		public «gc.computeInterfaceName» create«gc.ecoreClass.name»();
 	'''
-	
-		def generateClassFactoryContent(GenPackage gp) '''
+
+	def generateClassFactoryContent(GenPackage gp) '''
 		package «gp.computePackageNameForClasses»;
+		
+		«FOR gc : gp.genClasses»
+		import «gp.computePackageNameForInterfaces».«gc.computeInterfaceName»;
+		«ENDFOR»
 		
 		// This factory  overrides the generated factory and returns the new generated interfaces
 		class «gp.computeFactoryClassName» extends «gp.computeGeneratedFactoryClassName» 
 		{
 			«FOR gc : gp.genClasses»
-			   «gc.generateCreateMethod»
+				«gc.generateCreateMethod»
 			«ENDFOR»
 		}
 	'''
-		def  generateCreateMethod(GenClass gc) '''
+
+	def generateCreateMethod(GenClass gc) '''
 		public «gc.computeInterfaceName» create«gc.ecoreClass.name»()
 		{
-			«gc.computeInterfaceName» result = new «gc.computeInterfaceName»();
+			«gc.computeInterfaceName» result = new «gc.computeClassname»();
 			return result;
 		}
 	'''
-	
-	
 
 	/** Compute the class name to be generated */
 	def computeClassname(GenClass gc) {
@@ -159,8 +185,8 @@ class GenerateDevStructure {
 
 	/** Compute the package name for interfaces */
 	def computePackageNameForInterfaces(GenPackage gp) {
-		val basePackage = if(gp.basePackage == null) "" else gp.basePackage + "."
-		val intSuffix = if(gp.classPackageSuffix == null) "" else "." + gp.interfacePackageSuffix
+		val basePackage = if (gp.basePackage == null) "" else gp.basePackage + "."
+		val intSuffix = if (gp.interfacePackageSuffix == null || gp.interfacePackageSuffix.length==0) "" else "." + gp.interfacePackageSuffix
 
 		basePackage + gp.packageName.toLowerCase + intSuffix
 	}
@@ -211,6 +237,14 @@ class GenerateDevStructure {
 			interfacePattern.replace("{0}", gp.packageName.toFirstUpper + "Factory")
 		else
 			gp.packageName.toFirstUpper + "Factory"
+	}
+
+	private def extractProjectName(GenModel gm) {
+		println("URI of genmodel : " + gm.eResource.URI)
+		val genModelUri = gm.eResource.URI.toString
+		val nameStartingWithProjectName = genModelUri.replace("platform:/resource/", "")
+		val pos = nameStartingWithProjectName.indexOf("/")
+		return nameStartingWithProjectName.substring(0, pos)
 	}
 
 }
