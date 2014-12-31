@@ -42,27 +42,31 @@ class GenerateDevStructure {
 		val srcFolder = proj.getFolder("src/" + gp.computePackageNameForClasses.replace(".", "/"))
 		val srcAbsolutePath = srcFolder.location.toOSString + "/"
 		val f = new File(srcAbsolutePath)
-		if (!f.exists) f.mkdirs
+		if(!f.exists) f.mkdirs
 
 		val interfaceFolder = proj.getFolder("src/" + gp.computePackageNameForInterfaces.replace(".", "/"))
-		val interfaceAbsolutePath = interfaceFolder.location.toOSString  + "/"
+		val interfaceAbsolutePath = interfaceFolder.location.toOSString + "/"
 		val f2 = new File(interfaceAbsolutePath)
-		if (!f2.exists) f.mkdirs
-		
-	
+		if(!f2.exists) f.mkdirs
+
 		println("Generate classes in    : " + srcAbsolutePath)
 		println("Generate interfaces in : " + interfaceAbsolutePath)
 
 		for (c : gp.genClasses) {
-			generateOverridenClass(c, srcAbsolutePath )
+			generateOverridenClass(c, srcAbsolutePath)
 			generateOverridenInterface(c, interfaceAbsolutePath)
 		}
 
 		// Generate factory interface and implementation
 		gp.generateOverridenFactoryInterface(interfaceAbsolutePath)
 		gp.generateOverridenFactoryClass(srcAbsolutePath)
-		
-		proj.refreshLocal(5,null)
+
+		proj.refreshLocal(20, null)
+
+		// Add the factory override extension
+		val gfoe = new GenerateFactoryOverrideExtension(projectName, "http://www.op....A RENSEIGNER",
+			gp.factoryClassName)
+		gfoe.finish
 	}
 
 	def generateOverridenFactoryInterface(GenPackage gp, String path) {
@@ -136,7 +140,7 @@ class GenerateDevStructure {
 		package «gp.computePackageNameForClasses»;
 		
 		«FOR gc : gp.genClasses»
-		import «gp.computePackageNameForInterfaces».«gc.computeInterfaceName»;
+			import «gp.computePackageNameForInterfaces».«gc.computeInterfaceName»;
 		«ENDFOR»
 		
 		// This factory  overrides the generated factory and returns the new generated interfaces
@@ -163,11 +167,22 @@ class GenerateDevStructure {
 
 	/** Compute the interface name to be generated */
 	def computeInterfaceName(GenClass gc) {
+
+		/* 	println("importedClassName :" + gc.importedClassName)
+		println("qualifiedClassName :" + gc.qualifiedClassName)
+		println("importedInterfaceName :" + gc.importedInterfaceName)
+*/
 		interfacePattern.replace("{0}", gc.ecoreClass.name)
 	}
 
 	/** Compute the factory interface name to be generated */
 	def computeFactoryInterfaceName(GenPackage gp) {
+		/*println("factory Classname :" + gp.factoryClassName)
+		println("factory Instancename :" + gp.factoryInstanceName)
+		println("factory Interface name :" + gp.factoryInterfaceName)
+		println("factory name : " + gp.factoryName)
+		println("qualifiedAdapterFactoryClassName  : " + gp.qualifiedAdapterFactoryClassName)
+*/
 		gp.prefix + "Factory"
 	}
 
@@ -185,8 +200,11 @@ class GenerateDevStructure {
 
 	/** Compute the package name for interfaces */
 	def computePackageNameForInterfaces(GenPackage gp) {
-		val basePackage = if (gp.basePackage == null) "" else gp.basePackage + "."
-		val intSuffix = if (gp.interfacePackageSuffix == null || gp.interfacePackageSuffix.length==0) "" else "." + gp.interfacePackageSuffix
+		val basePackage = if(gp.basePackage == null) "" else gp.basePackage + "."
+		val intSuffix = if (gp.interfacePackageSuffix == null || gp.interfacePackageSuffix.length == 0)
+				""
+			else
+				"." + gp.interfacePackageSuffix
 
 		basePackage + gp.packageName.toLowerCase + intSuffix
 	}
