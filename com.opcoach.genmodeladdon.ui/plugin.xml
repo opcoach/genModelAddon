@@ -6,16 +6,21 @@
       <menuContribution
             allPopups="false"
             locationURI="popup:org.eclipse.emf.codegen.ecore.genmodel.presentation.GenModelEditorID?after=additions">
-         <command
-               commandId="com.opcoach.genmodeladdon.generateSourceFolder"
-               style="push">
+         <menu
+               icon="icons/opcoach.png"
+               id="com.opcoach.menu"
+               label="OPCoach">
+            <command
+                  commandId="com.opcoach.genmodeladdon.generateSourceFolder"
+                  style="push">
+            </command>
             <visibleWhen
                   checkEnabled="false">
                <reference
                      definitionId="com.opcoach.genmodeladdon.ui.genModelSelected">
                </reference>
             </visibleWhen>
-         </command>
+         </menu>
       </menuContribution>
    </extension>
    <extension
