@@ -64,9 +64,8 @@ class GenerateDevStructure {
 		proj.refreshLocal(20, null)
 
 		// Add the factory override extension
-		val gfoe = new GenerateFactoryOverrideExtension(projectName, "http://www.op....A RENSEIGNER",
-			gp.factoryClassName)
-		gfoe.finish
+		val gfoe = new GenerateFactoryOverrideExtension(projectName)
+		gfoe.generateOverideExtension(gp.getEcorePackage().nsURI, gp.computePackageNameForClasses + "." + gp.computeFactoryClassName)
 	}
 
 	def generateOverridenFactoryInterface(GenPackage gp, String path) {
@@ -177,6 +176,7 @@ class GenerateDevStructure {
 
 	/** Compute the factory interface name to be generated */
 	def computeFactoryInterfaceName(GenPackage gp) {
+
 		/*println("factory Classname :" + gp.factoryClassName)
 		println("factory Instancename :" + gp.factoryInstanceName)
 		println("factory Interface name :" + gp.factoryInterfaceName)
