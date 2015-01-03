@@ -2,6 +2,9 @@ package com.opcoach.genmodeladdon.core
 
 import java.io.File
 import java.io.FileWriter
+import java.util.HashMap
+import java.util.Map
+import org.eclipse.core.resources.IResource
 import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.emf.codegen.ecore.genmodel.GenClass
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel
@@ -13,6 +16,9 @@ class GenerateDevStructure {
 	String interfacePattern
 	String projectName
 	GenModel genModel
+	public Map<String, Object> filesNotGenerated = new HashMap()
+
+	
 
 	/** Build the generator with 2 parameters
 	 * @param cpattern : the class name pattern used for generation ({0}Impl for instance)
@@ -22,11 +28,13 @@ class GenerateDevStructure {
 		genModel = gm
 		classPattern = cPattern
 		interfacePattern = iPattern
+		projectName = gm.extractProjectName
+		// Reset the files not generated... (they are kept to ask if they must override existing files)
+		filesNotGenerated.clear
 	}
 
 	new(GenModel gm) {
 		this(gm, "{0}ExtImpl", "{0}Ext")
-		projectName = gm.extractProjectName
 	}
 
 	def generateDevStructure() {
@@ -61,11 +69,12 @@ class GenerateDevStructure {
 		gp.generateOverridenFactoryInterface(interfaceAbsolutePath)
 		gp.generateOverridenFactoryClass(srcAbsolutePath)
 
-		proj.refreshLocal(20, null)
+		proj.refreshLocal(IResource.DEPTH_INFINITE, null)
 
 		// Add the factory override extension
 		val gfoe = new GenerateFactoryOverrideExtension(projectName)
-		gfoe.generateOverideExtension(gp.getEcorePackage().nsURI, gp.computePackageNameForClasses + "." + gp.computeFactoryClassName)
+		gfoe.generateOverideExtension(gp.getEcorePackage().nsURI,
+			gp.computePackageNameForClasses + "." + gp.computeFactoryClassName)
 	}
 
 	def generateOverridenFactoryInterface(GenPackage gp, String path) {
@@ -88,14 +97,25 @@ class GenerateDevStructure {
 		generateFile(path + gc.computeInterfaceName + ".java", gc.generateInterfaceContent)
 	}
 
+	// Generate the file only if it does not exists.. If it exists keep the content and ask confirmation later
 	def generateFile(String filename, Object contents) {
 
-		// Open the file and generate contents
-		val fw = new FileWriter(filename)
-		fw.write(contents.toString)
-		fw.flush
-		fw.close
+		// Check if file already exists...
+		val f = new File(filename)
+		if (f.exists()) {
+			println("The file " + filename + " already exists. Confirmation will be asked")
+			filesNotGenerated.put(filename, contents)
+		} else {
+
+			// Open the file and generate contents
+			val fw = new FileWriter(filename)
+			fw.write(contents.toString)
+			fw.flush
+			fw.close
+		}
 	}
+	
+
 
 	def generateClassContent(GenClass gc) '''
 		package «gc.genPackage.computePackageNameForClasses»;
@@ -167,22 +187,11 @@ class GenerateDevStructure {
 	/** Compute the interface name to be generated */
 	def computeInterfaceName(GenClass gc) {
 
-		/* 	println("importedClassName :" + gc.importedClassName)
-		println("qualifiedClassName :" + gc.qualifiedClassName)
-		println("importedInterfaceName :" + gc.importedInterfaceName)
-*/
 		interfacePattern.replace("{0}", gc.ecoreClass.name)
 	}
 
 	/** Compute the factory interface name to be generated */
 	def computeFactoryInterfaceName(GenPackage gp) {
-
-		/*println("factory Classname :" + gp.factoryClassName)
-		println("factory Instancename :" + gp.factoryInstanceName)
-		println("factory Interface name :" + gp.factoryInterfaceName)
-		println("factory name : " + gp.factoryName)
-		println("qualifiedAdapterFactoryClassName  : " + gp.qualifiedAdapterFactoryClassName)
-*/
 		gp.prefix + "Factory"
 	}
 
