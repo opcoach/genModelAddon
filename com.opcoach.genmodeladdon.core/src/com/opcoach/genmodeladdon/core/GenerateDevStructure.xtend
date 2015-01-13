@@ -14,27 +14,29 @@ class GenerateDevStructure {
 
 	String classPattern
 	String interfacePattern
+	String srcDevDirectory
+
 	String projectName
 	GenModel genModel
 	public Map<String, Object> filesNotGenerated = new HashMap()
-
-	
 
 	/** Build the generator with 2 parameters
 	 * @param cpattern : the class name pattern used for generation ({0}Impl for instance)
 	 * @param ipattern : the interface name pattern used for generation ({0} for instance)
 	 */
-	new(GenModel gm, String cPattern, String iPattern) {
+	new(GenModel gm, String cPattern, String iPattern, String srcDir) {
 		genModel = gm
 		classPattern = cPattern
 		interfacePattern = iPattern
+		srcDevDirectory = srcDir
 		projectName = gm.extractProjectName
+
 		// Reset the files not generated... (they are kept to ask if they must override existing files)
 		filesNotGenerated.clear
 	}
 
 	new(GenModel gm) {
-		this(gm, "{0}ExtImpl", "{0}Ext")
+		this(gm, "{0}ExtImpl", "{0}Ext", "src")
 	}
 
 	def generateDevStructure() {
@@ -47,12 +49,13 @@ class GenerateDevStructure {
 
 		val root = ResourcesPlugin.workspace.root
 		val proj = root.getProject(projectName)
-		val srcFolder = proj.getFolder("src/" + gp.computePackageNameForClasses.replace(".", "/"))
+		val srcFolder = proj.getFolder(srcDevDirectory + "/" + gp.computePackageNameForClasses.replace(".", "/"))
 		val srcAbsolutePath = srcFolder.location.toOSString + "/"
 		val f = new File(srcAbsolutePath)
 		if(!f.exists) f.mkdirs
 
-		val interfaceFolder = proj.getFolder("src/" + gp.computePackageNameForInterfaces.replace(".", "/"))
+		val interfaceFolder = proj.getFolder(
+			srcDevDirectory + "/" + gp.computePackageNameForInterfaces.replace(".", "/"))
 		val interfaceAbsolutePath = interfaceFolder.location.toOSString + "/"
 		val f2 = new File(interfaceAbsolutePath)
 		if(!f2.exists) f.mkdirs
@@ -103,7 +106,6 @@ class GenerateDevStructure {
 		// Check if file already exists...
 		val f = new File(filename)
 		if (f.exists()) {
-			println("The file " + filename + " already exists. Confirmation will be asked")
 			filesNotGenerated.put(filename, contents)
 		} else {
 
@@ -114,8 +116,13 @@ class GenerateDevStructure {
 			fw.close
 		}
 	}
-	
 
+	def getSrcAbsolutePath() {
+		val root = ResourcesPlugin.workspace.root
+		val proj = root.getProject(projectName)
+		val srcFolder = proj.getFolder(srcDevDirectory + "/")
+		srcFolder.location.toOSString + "/"
+	}
 
 	def generateClassContent(GenClass gc) '''
 		package «gc.genPackage.computePackageNameForClasses»;

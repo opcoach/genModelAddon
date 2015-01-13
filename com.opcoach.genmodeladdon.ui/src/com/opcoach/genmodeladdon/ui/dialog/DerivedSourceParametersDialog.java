@@ -29,6 +29,7 @@ public class DerivedSourceParametersDialog extends Dialog
 	private GenModel genModel;
 	private String interfacePattern;
 	private String classPattern;
+	private String srcDir;
 
 	/**
 	 * Create the dialog.
@@ -137,7 +138,9 @@ public class DerivedSourceParametersDialog extends Dialog
 		String ip = genModel.getInterfaceNamePattern() == null ? DEFAULT_INTERFACE_PATTERN : genModel
 				.getInterfaceNamePattern();
 		genInterfacePattern.setText(ip);
-		genSourceDir.setText(genModel.getModelDirectory());
+		// Get the gen source directory (remove the model project name)
+		String genSrcDirTxt = genModel.getModelDirectory().replace(genModel.getModelProjectDirectory() +"/", "");
+		genSourceDir.setText(genSrcDirTxt);
 
 		if (cp.equals(DEFAULT_CLASS_IMPL_PATTERN))
 			devClassPattern.setText(cp + "Ext");
@@ -149,7 +152,7 @@ public class DerivedSourceParametersDialog extends Dialog
 		else
 			devInterfacePattern.setText(DEFAULT_INTERFACE_PATTERN);
 
-		devSourceDir.setText(genModel.getModelProjectDirectory() + "/src");
+		devSourceDir.setText("src");
 	}
 
 	/**
@@ -183,6 +186,11 @@ public class DerivedSourceParametersDialog extends Dialog
 	{
 		return classPattern;
 	}
+	
+	public String getSrcDir()
+	{
+		return srcDir;
+	}
 
 	@Override
 	protected void okPressed()
@@ -191,6 +199,7 @@ public class DerivedSourceParametersDialog extends Dialog
 		// Remember of entered values
 		classPattern = devClassPattern.getText();
 		interfacePattern = devInterfacePattern.getText();
+		srcDir = devSourceDir.getText();
 
 		super.okPressed();
 	}

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="com.opcoach.genmodeladdon.feature"
-      label="Feature"
+      label="Emf override generated code feature"
       version="1.0.0.qualifier"
       provider-name="OPCOACH">
 
@@ -10,21 +10,19 @@
    </description>
 
    <copyright url="http://www.example.com/copyright">
-      [Enter Copyright Description here.]
+      @ 2015 OPCoach
    </copyright>
 
    <license url="http://www.example.com/license">
-      [Enter License Description here.]
+      This feature is distributed under EPL License
    </license>
 
    <requires>
-      <import plugin="org.eclipse.xtend" version="2.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.emf.codegen.ecore" version="2.10.2" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.xtext.xbase.lib" version="2.7.3" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.resources" version="3.9.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.runtime" version="3.10.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.pde.core" version="3.10.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.pde.ui" version="3.8.101" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.emf.codegen.ecore"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.pde.core"/>
+      <import plugin="org.eclipse.pde.ui"/>
       <import plugin="org.eclipse.ui"/>
       <import plugin="com.opcoach.genmodeladdon.core" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.expressions"/>

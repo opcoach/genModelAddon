@@ -44,8 +44,9 @@ public class GeneratedDerivedSourceFolder extends AbstractHandler
 				{
 					String ip = dial.getDevInterfacePattern();
 					String cp = dial.getDevClassPattern();
+					String src = dial.getSrcDir();
 
-					GenerateDevStructure gds = new GenerateDevStructure(gm, cp, ip);
+					GenerateDevStructure gds = new GenerateDevStructure(gm, cp, ip, src);
 					gds.generateDevStructure();
 
 					Map<String, Object> filesNotGenerated = gds.filesNotGenerated;
@@ -74,6 +75,9 @@ public class GeneratedDerivedSourceFolder extends AbstractHandler
 							}
 						}
 					}
+					
+					// Display a dialog to explain where files have been generated.
+					MessageDialog.openInformation(parentShell, "Files generated", "Files have been generated in this directory : \n\n" + gds.getSrcAbsolutePath());
 				}
 			}
 		}
