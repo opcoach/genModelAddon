@@ -4,7 +4,7 @@ Bundle-Name: Core
 Bundle-SymbolicName: com.opcoach.genmodeladdon.core
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: OPCOACH
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.eclipse.xtend;bundle-version="2.0.0";resolution:=optional,
  org.eclipse.emf.codegen.ecore;visibility:=reexport,
  org.eclipse.xtext.xbase.lib;bundle-version="2.7.3";resolution:=optional,

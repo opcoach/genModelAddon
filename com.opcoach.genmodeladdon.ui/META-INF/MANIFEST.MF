@@ -4,7 +4,7 @@ Bundle-Name: Genmodeladdon
 Bundle-SymbolicName: com.opcoach.genmodeladdon.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: OPCOACH
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  com.opcoach.genmodeladdon.core;bundle-version="1.0.0",
