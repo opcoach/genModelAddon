@@ -155,7 +155,7 @@ class GenerateDevStructure {
 			
 			/** Provide a getInstance method to get the factory in the correct type.
 			  * The eINSTANCE has been overriden with the correct type declared 
-			  * in the override_factory extension (see plugin.xml extension)
+			  * in the override_factory extension 
 			*/
 			public static «gp.computeFactoryInterfaceName» getInstance() { return («gp.computeFactoryInterfaceName») eINSTANCE; }
 			

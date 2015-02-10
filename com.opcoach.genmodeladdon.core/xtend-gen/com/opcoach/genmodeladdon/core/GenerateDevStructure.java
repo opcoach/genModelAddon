@@ -303,7 +303,7 @@ public class GenerateDevStructure {
     _builder.append("* The eINSTANCE has been overriden with the correct type declared ");
     _builder.newLine();
     _builder.append("\t  ");
-    _builder.append("* in the override_factory extension (see plugin.xml extension)");
+    _builder.append("* in the override_factory extension ");
     _builder.newLine();
     _builder.append("\t");
     _builder.append("*/");
