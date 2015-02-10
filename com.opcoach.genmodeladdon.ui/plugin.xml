@@ -5,14 +5,15 @@
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"
-            locationURI="popup:org.eclipse.emf.codegen.ecore.genmodel.presentation.GenModelEditorID?after=additions">
+            locationURI="popup:org.eclipse.emf.codegen.ecore.genmodel.presentation.GenModelEditorID?before=open-actions">
          <menu
                icon="icons/opcoach.png"
                id="com.opcoach.menu"
                label="OPCoach">
             <command
                   commandId="com.opcoach.genmodeladdon.generateSourceFolder"
-                  style="push">
+                  style="push"
+                  tooltip="Generate a derived source folder extending the default EMF generated one.\nGenerate also the appropriate &apos;override_factory&apos; extension and manage overriden classes.">
             </command>
             <visibleWhen
                   checkEnabled="false">
