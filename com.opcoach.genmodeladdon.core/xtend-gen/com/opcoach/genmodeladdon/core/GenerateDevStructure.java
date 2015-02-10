@@ -273,9 +273,9 @@ public class GenerateDevStructure {
     _builder.append(";");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
-    _builder.append("// This factory  overrides the generated factory and returns the new generated interfaces");
+    _builder.append("/** This factory  overrides the generated factory and returns the new generated interfaces */");
     _builder.newLine();
-    _builder.append("interface ");
+    _builder.append("public interface ");
     String _computeFactoryInterfaceName = this.computeFactoryInterfaceName(gp);
     _builder.append(_computeFactoryInterfaceName, "");
     _builder.append(" extends ");
@@ -284,6 +284,31 @@ public class GenerateDevStructure {
     _builder.append(" ");
     _builder.newLineIfNotEmpty();
     _builder.append("{");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.append("/** Provide a getInstance method to get the factory in the correct type.");
+    _builder.newLine();
+    _builder.append("\t  ");
+    _builder.append("* The eINSTANCE has been overriden with the correct type declared ");
+    _builder.newLine();
+    _builder.append("\t  ");
+    _builder.append("* in the override_factory extension (see plugin.xml extension)");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.append("*/");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.append("public static ");
+    String _computeFactoryInterfaceName_1 = this.computeFactoryInterfaceName(gp);
+    _builder.append(_computeFactoryInterfaceName_1, "\t");
+    _builder.append(" getInstance() { return (");
+    String _computeFactoryInterfaceName_2 = this.computeFactoryInterfaceName(gp);
+    _builder.append(_computeFactoryInterfaceName_2, "\t");
+    _builder.append(") eINSTANCE; }");
+    _builder.newLineIfNotEmpty();
+    _builder.append("\t");
     _builder.newLine();
     {
       EList<GenClass> _genClasses = gp.getGenClasses();
@@ -334,16 +359,26 @@ public class GenerateDevStructure {
         _builder.newLineIfNotEmpty();
       }
     }
+    _builder.append("import ");
+    String _computePackageNameForInterfaces_1 = this.computePackageNameForInterfaces(gp);
+    _builder.append(_computePackageNameForInterfaces_1, "");
+    _builder.append(".");
+    String _computeFactoryInterfaceName = this.computeFactoryInterfaceName(gp);
+    _builder.append(_computeFactoryInterfaceName, "");
+    _builder.append(";");
+    _builder.newLineIfNotEmpty();
     _builder.newLine();
     _builder.append("// This factory  overrides the generated factory and returns the new generated interfaces");
     _builder.newLine();
-    _builder.append("class ");
+    _builder.append("public class ");
     String _computeFactoryClassName = this.computeFactoryClassName(gp);
     _builder.append(_computeFactoryClassName, "");
     _builder.append(" extends ");
     String _computeGeneratedFactoryClassName = this.computeGeneratedFactoryClassName(gp);
     _builder.append(_computeGeneratedFactoryClassName, "");
-    _builder.append(" ");
+    _builder.append(" implements ");
+    String _computeFactoryInterfaceName_1 = this.computeFactoryInterfaceName(gp);
+    _builder.append(_computeFactoryInterfaceName_1, "");
     _builder.newLineIfNotEmpty();
     _builder.append("{");
     _builder.newLine();
@@ -421,7 +456,8 @@ public class GenerateDevStructure {
    */
   public String computeFactoryClassName(final GenPackage gp) {
     String _prefix = gp.getPrefix();
-    return (_prefix + "ExtendedFactory");
+    String _replace = this.classPattern.replace("{0}", "Factory");
+    return (_prefix + _replace);
   }
   
   /**

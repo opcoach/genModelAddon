@@ -149,9 +149,16 @@ class GenerateDevStructure {
 	def generateInterfaceFactoryContent(GenPackage gp) '''
 		package «gp.computePackageNameForInterfaces»;
 		
-		// This factory  overrides the generated factory and returns the new generated interfaces
-		interface «gp.computeFactoryInterfaceName» extends «gp.computeGeneratedFactoryInterfaceName» 
+		/** This factory  overrides the generated factory and returns the new generated interfaces */
+		public interface «gp.computeFactoryInterfaceName» extends «gp.computeGeneratedFactoryInterfaceName» 
 		{
+			
+			/** Provide a getInstance method to get the factory in the correct type.
+			  * The eINSTANCE has been overriden with the correct type declared 
+			  * in the override_factory extension (see plugin.xml extension)
+			*/
+			public static «gp.computeFactoryInterfaceName» getInstance() { return («gp.computeFactoryInterfaceName») eINSTANCE; }
+			
 			«FOR gc : gp.genClasses»
 				«gc.generateFactoryDef»
 			«ENDFOR»
@@ -168,9 +175,10 @@ class GenerateDevStructure {
 		«FOR gc : gp.genClasses»
 			import «gp.computePackageNameForInterfaces».«gc.computeInterfaceName»;
 		«ENDFOR»
+		import «gp.computePackageNameForInterfaces».«gp.computeFactoryInterfaceName»;
 		
 		// This factory  overrides the generated factory and returns the new generated interfaces
-		class «gp.computeFactoryClassName» extends «gp.computeGeneratedFactoryClassName» 
+		public class «gp.computeFactoryClassName» extends «gp.computeGeneratedFactoryClassName» implements «gp.computeFactoryInterfaceName»
 		{
 			«FOR gc : gp.genClasses»
 				«gc.generateCreateMethod»
@@ -204,7 +212,7 @@ class GenerateDevStructure {
 
 	/** Compute the factory class name to be generated */
 	def computeFactoryClassName(GenPackage gp) {
-		gp.prefix + "ExtendedFactory"
+		gp.prefix + classPattern.replace("{0}", "Factory")
 	}
 
 	/** Compute the package name for class */
