@@ -63,9 +63,9 @@ class GenerateDevStructure {
 		println("Generate classes in    : " + srcAbsolutePath)
 		println("Generate interfaces in : " + interfaceAbsolutePath)
 
-		for (c : gp.genClasses) {
-			generateOverridenClass(c, srcAbsolutePath)
-			generateOverridenInterface(c, interfaceAbsolutePath)
+		for (c : gp.genClasses.filter[!isDynamic]) {
+				generateOverridenClass(c, srcAbsolutePath)
+				generateOverridenInterface(c, interfaceAbsolutePath)
 		}
 
 		// Generate factory interface and implementation
@@ -159,7 +159,7 @@ class GenerateDevStructure {
 			*/
 			public static «gp.computeFactoryInterfaceName» getInstance() { return («gp.computeFactoryInterfaceName») eINSTANCE; }
 			
-			«FOR gc : gp.genClasses»
+			«FOR gc : gp.genClasses.filter[!isDynamic]»
 				«gc.generateFactoryDef»
 			«ENDFOR»
 		}
@@ -172,15 +172,16 @@ class GenerateDevStructure {
 	def generateClassFactoryContent(GenPackage gp) '''
 		package «gp.computePackageNameForClasses»;
 		
-		«FOR gc : gp.genClasses»
-			import «gp.computePackageNameForInterfaces».«gc.computeInterfaceName»;
+		«FOR gc : gp.genClasses.filter[!isDynamic]»
+		import «gp.computePackageNameForInterfaces».«gc.computeInterfaceName»;
 		«ENDFOR»
 		import «gp.computePackageNameForInterfaces».«gp.computeFactoryInterfaceName»;
 		
 		// This factory  overrides the generated factory and returns the new generated interfaces
-		public class «gp.computeFactoryClassName» extends «gp.computeGeneratedFactoryClassName» implements «gp.computeFactoryInterfaceName»
+		public class «gp.computeFactoryClassName» extends «gp.computeGeneratedFactoryClassName» implements «gp.
+			computeFactoryInterfaceName»
 		{
-			«FOR gc : gp.genClasses»
+			«FOR gc : gp.genClasses.filter[!isDynamic]»
 				«gc.generateCreateMethod»
 			«ENDFOR»
 		}

@@ -23,7 +23,9 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.InputOutput;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.StringExtensions;
 
 @SuppressWarnings("all")
@@ -100,7 +102,14 @@ public class GenerateDevStructure {
       InputOutput.<String>println(("Generate classes in    : " + srcAbsolutePath));
       InputOutput.<String>println(("Generate interfaces in : " + interfaceAbsolutePath));
       EList<GenClass> _genClasses = gp.getGenClasses();
-      for (final GenClass c : _genClasses) {
+      final Function1<GenClass, Boolean> _function = new Function1<GenClass, Boolean>() {
+        public Boolean apply(final GenClass it) {
+          boolean _isDynamic = it.isDynamic();
+          return Boolean.valueOf((!_isDynamic));
+        }
+      };
+      Iterable<GenClass> _filter = IterableExtensions.<GenClass>filter(_genClasses, _function);
+      for (final GenClass c : _filter) {
         {
           this.generateOverridenClass(c, srcAbsolutePath);
           this.generateOverridenInterface(c, interfaceAbsolutePath);
@@ -312,7 +321,14 @@ public class GenerateDevStructure {
     _builder.newLine();
     {
       EList<GenClass> _genClasses = gp.getGenClasses();
-      for(final GenClass gc : _genClasses) {
+      final Function1<GenClass, Boolean> _function = new Function1<GenClass, Boolean>() {
+        public Boolean apply(final GenClass it) {
+          boolean _isDynamic = it.isDynamic();
+          return Boolean.valueOf((!_isDynamic));
+        }
+      };
+      Iterable<GenClass> _filter = IterableExtensions.<GenClass>filter(_genClasses, _function);
+      for(final GenClass gc : _filter) {
         _builder.append("\t");
         CharSequence _generateFactoryDef = this.generateFactoryDef(gc);
         _builder.append(_generateFactoryDef, "\t");
@@ -348,7 +364,14 @@ public class GenerateDevStructure {
     _builder.newLine();
     {
       EList<GenClass> _genClasses = gp.getGenClasses();
-      for(final GenClass gc : _genClasses) {
+      final Function1<GenClass, Boolean> _function = new Function1<GenClass, Boolean>() {
+        public Boolean apply(final GenClass it) {
+          boolean _isDynamic = it.isDynamic();
+          return Boolean.valueOf((!_isDynamic));
+        }
+      };
+      Iterable<GenClass> _filter = IterableExtensions.<GenClass>filter(_genClasses, _function);
+      for(final GenClass gc : _filter) {
         _builder.append("import ");
         String _computePackageNameForInterfaces = this.computePackageNameForInterfaces(gp);
         _builder.append(_computePackageNameForInterfaces, "");
@@ -384,7 +407,14 @@ public class GenerateDevStructure {
     _builder.newLine();
     {
       EList<GenClass> _genClasses_1 = gp.getGenClasses();
-      for(final GenClass gc_1 : _genClasses_1) {
+      final Function1<GenClass, Boolean> _function_1 = new Function1<GenClass, Boolean>() {
+        public Boolean apply(final GenClass it) {
+          boolean _isDynamic = it.isDynamic();
+          return Boolean.valueOf((!_isDynamic));
+        }
+      };
+      Iterable<GenClass> _filter_1 = IterableExtensions.<GenClass>filter(_genClasses_1, _function_1);
+      for(final GenClass gc_1 : _filter_1) {
         _builder.append("\t");
         CharSequence _generateCreateMethod = this.generateCreateMethod(gc_1);
         _builder.append(_generateCreateMethod, "\t");
