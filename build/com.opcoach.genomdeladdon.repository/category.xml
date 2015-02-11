@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/com.opcoach.genmodeladdon.feature_1.0.0.qualifier.jar" id="com.opcoach.genmodeladdon.feature" version="1.0.0.qualifier">
+      <category name="com.opcoach.genModelAddon"/>
+   </feature>
+   <category-def name="com.opcoach.genModelAddon" label="Addon for genmodel">
+      <description>
+         This category contains an addon to generate a code structure so as to override properly the EMF generated code.
+      </description>
+   </category-def>
+</site>

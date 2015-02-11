@@ -3,6 +3,9 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
+# remove target maven directories
+target/
+
 # Package Files #
 *.jar
 *.war
