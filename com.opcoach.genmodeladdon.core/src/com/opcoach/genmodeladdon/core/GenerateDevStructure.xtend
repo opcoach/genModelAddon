@@ -64,13 +64,13 @@ class GenerateDevStructure {
 		println("Generate interfaces in : " + interfaceAbsolutePath)
 
 		for (c : gp.genClasses.filter[!isDynamic]) {
-				generateOverridenClass(c, srcAbsolutePath)
-				generateOverridenInterface(c, interfaceAbsolutePath)
+				generateOverriddenClass(c, srcAbsolutePath)
+				generateOverriddenInterface(c, interfaceAbsolutePath)
 		}
 
 		// Generate factory interface and implementation
-		gp.generateOverridenFactoryInterface(interfaceAbsolutePath)
-		gp.generateOverridenFactoryClass(srcAbsolutePath)
+		gp.generateOverriddenFactoryInterface(interfaceAbsolutePath)
+		gp.generateOverriddenFactoryClass(srcAbsolutePath)
 
 		proj.refreshLocal(IResource.DEPTH_INFINITE, null)
 
@@ -80,22 +80,22 @@ class GenerateDevStructure {
 			gp.computePackageNameForClasses + "." + gp.computeFactoryClassName)
 	}
 
-	def generateOverridenFactoryInterface(GenPackage gp, String path) {
+	def generateOverriddenFactoryInterface(GenPackage gp, String path) {
 		val filename = path + gp.computeFactoryInterfaceName + ".java"
 		generateFile(filename, gp.generateInterfaceFactoryContent)
 	}
 
-	def generateOverridenFactoryClass(GenPackage gp, String path) {
+	def generateOverriddenFactoryClass(GenPackage gp, String path) {
 		val filename = path + gp.computeFactoryClassName + ".java"
 		generateFile(filename, gp.generateClassFactoryContent)
 	}
 
-	def generateOverridenClass(GenClass gc, String path) {
+	def generateOverriddenClass(GenClass gc, String path) {
 
 		generateFile(path + gc.computeClassname + ".java", gc.generateClassContent)
 	}
 
-	def generateOverridenInterface(GenClass gc, String path) {
+	def generateOverriddenInterface(GenClass gc, String path) {
 
 		generateFile(path + gc.computeInterfaceName + ".java", gc.generateInterfaceContent)
 	}
@@ -154,7 +154,7 @@ class GenerateDevStructure {
 		{
 			
 			/** Provide a getInstance method to get the factory in the correct type.
-			  * The eINSTANCE has been overriden with the correct type declared 
+			  * The eINSTANCE has been overridden with the correct type declared 
 			  * in the override_factory extension 
 			*/
 			public static «gp.computeFactoryInterfaceName» getInstance() { return («gp.computeFactoryInterfaceName») eINSTANCE; }

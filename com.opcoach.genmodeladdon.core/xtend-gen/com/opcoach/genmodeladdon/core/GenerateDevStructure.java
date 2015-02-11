@@ -111,12 +111,12 @@ public class GenerateDevStructure {
       Iterable<GenClass> _filter = IterableExtensions.<GenClass>filter(_genClasses, _function);
       for (final GenClass c : _filter) {
         {
-          this.generateOverridenClass(c, srcAbsolutePath);
-          this.generateOverridenInterface(c, interfaceAbsolutePath);
+          this.generateOverriddenClass(c, srcAbsolutePath);
+          this.generateOverriddenInterface(c, interfaceAbsolutePath);
         }
       }
-      this.generateOverridenFactoryInterface(gp, interfaceAbsolutePath);
-      this.generateOverridenFactoryClass(gp, srcAbsolutePath);
+      this.generateOverriddenFactoryInterface(gp, interfaceAbsolutePath);
+      this.generateOverriddenFactoryClass(gp, srcAbsolutePath);
       proj.refreshLocal(IResource.DEPTH_INFINITE, null);
       final GenerateFactoryOverrideExtension gfoe = new GenerateFactoryOverrideExtension(this.projectName);
       EPackage _ecorePackage = gp.getEcorePackage();
@@ -131,7 +131,7 @@ public class GenerateDevStructure {
     }
   }
   
-  public Object generateOverridenFactoryInterface(final GenPackage gp, final String path) {
+  public Object generateOverriddenFactoryInterface(final GenPackage gp, final String path) {
     Object _xblockexpression = null;
     {
       String _computeFactoryInterfaceName = this.computeFactoryInterfaceName(gp);
@@ -143,7 +143,7 @@ public class GenerateDevStructure {
     return _xblockexpression;
   }
   
-  public Object generateOverridenFactoryClass(final GenPackage gp, final String path) {
+  public Object generateOverriddenFactoryClass(final GenPackage gp, final String path) {
     Object _xblockexpression = null;
     {
       String _computeFactoryClassName = this.computeFactoryClassName(gp);
@@ -155,7 +155,7 @@ public class GenerateDevStructure {
     return _xblockexpression;
   }
   
-  public Object generateOverridenClass(final GenClass gc, final String path) {
+  public Object generateOverriddenClass(final GenClass gc, final String path) {
     String _computeClassname = this.computeClassname(gc);
     String _plus = (path + _computeClassname);
     String _plus_1 = (_plus + ".java");
@@ -163,7 +163,7 @@ public class GenerateDevStructure {
     return this.generateFile(_plus_1, _generateClassContent);
   }
   
-  public Object generateOverridenInterface(final GenClass gc, final String path) {
+  public Object generateOverriddenInterface(final GenClass gc, final String path) {
     String _computeInterfaceName = this.computeInterfaceName(gc);
     String _plus = (path + _computeInterfaceName);
     String _plus_1 = (_plus + ".java");
@@ -300,7 +300,7 @@ public class GenerateDevStructure {
     _builder.append("/** Provide a getInstance method to get the factory in the correct type.");
     _builder.newLine();
     _builder.append("\t  ");
-    _builder.append("* The eINSTANCE has been overriden with the correct type declared ");
+    _builder.append("* The eINSTANCE has been overridden with the correct type declared ");
     _builder.newLine();
     _builder.append("\t  ");
     _builder.append("* in the override_factory extension ");
