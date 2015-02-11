@@ -218,9 +218,9 @@ class GenerateDevStructure {
 
 	/** Compute the package name for class */
 	def computePackageNameForClasses(GenPackage gp) {
-		val basePackage = if(gp.basePackage == null) "" else gp.basePackage
+		val basePackage = if(gp.basePackage == null) "" else gp.basePackage + "."
 		val packSuffix = if(gp.classPackageSuffix == null) "" else "." + gp.classPackageSuffix
-		basePackage + "." + gp.packageName.toLowerCase + packSuffix
+		basePackage + gp.packageName.toLowerCase + packSuffix
 	}
 
 	/** Compute the package name for interfaces */

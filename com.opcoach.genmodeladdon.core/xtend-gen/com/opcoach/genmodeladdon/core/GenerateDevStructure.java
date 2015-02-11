@@ -502,7 +502,8 @@ public class GenerateDevStructure {
       if (_equals) {
         _xifexpression = "";
       } else {
-        _xifexpression = gp.getBasePackage();
+        String _basePackage_1 = gp.getBasePackage();
+        _xifexpression = (_basePackage_1 + ".");
       }
       final String basePackage = _xifexpression;
       String _xifexpression_1 = null;
@@ -517,7 +518,7 @@ public class GenerateDevStructure {
       final String packSuffix = _xifexpression_1;
       String _packageName = gp.getPackageName();
       String _lowerCase = _packageName.toLowerCase();
-      String _plus = ((basePackage + ".") + _lowerCase);
+      String _plus = (basePackage + _lowerCase);
       _xblockexpression = (_plus + packSuffix);
     }
     return _xblockexpression;
