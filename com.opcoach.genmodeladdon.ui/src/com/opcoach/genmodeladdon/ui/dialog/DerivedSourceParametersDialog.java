@@ -74,6 +74,7 @@ public class DerivedSourceParametersDialog extends Dialog
 
 		genInterfacePattern = new Text(grpParametersSetIn, SWT.BORDER);
 		genInterfacePattern.setEditable(false);
+		genInterfacePattern.setEnabled(false);
 		genInterfacePattern
 				.setToolTipText("This value comes from the genModel file. {0} is the name of the EClass. A good idea here is to prefix default names with M to mean 'Model' or 'G' to mean 'Generated'. \nExample : M{0}  for the EClass 'Car' will generate the 'MCar' interface");
 		genInterfacePattern.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -85,6 +86,7 @@ public class DerivedSourceParametersDialog extends Dialog
 
 		genClassPattern = new Text(grpParametersSetIn, SWT.BORDER);
 		genClassPattern.setEditable(false);
+		genClassPattern.setEnabled(false);
 		genClassPattern
 				.setToolTipText("This value comes from the genModel file. {0} is the name of the EClass. A good idea here is to prefix default names with M to mean 'Model' or 'G' to mean 'Generated'. \nExample : M{0}Impl  for the EClass 'Car' will generate the 'MCarImpl' class");
 		genClassPattern.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
