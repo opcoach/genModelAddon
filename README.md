@@ -1,4 +1,6 @@
 genModelAddon
 =============
 
-An EMF addon to generate a source structure to separate the model generated code from the overriden code
+An EMF addon to create the sources and folders so as to separate the EMF generated model code and the overridden code
+
+<a href="http://opcoach.github.io/genModelAddon/"><strong>Go to the home page of the project</strong></a>
