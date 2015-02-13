@@ -451,7 +451,7 @@ header {
   padding-top: 40px;
   padding-bottom: 40px;
   font-family: 'Architects Daughter', 'Helvetica Neue', Helvetica, Arial, serif;
-  background: #2e7bcf url(../images/header-bg.jpg) 0 0 repeat-x;
+  background: #48A5AE url(../images/pattern-8rz6.png) 0 0 repeat-x;
   border-bottom: solid 1px #275da1;
 }
 
@@ -473,7 +473,7 @@ header h2 {
   font-size: 26px;
   font-weight: normal;
   line-height: 1.3;
-  color: #9ddcff;
+  color: #4B4B4D;
   letter-spacing: 0;
 }
 
@@ -518,7 +518,7 @@ aside#sidebar p.repo-owner a {
 
 a.button {
   width: 134px;
-  height: 58px;
+  height: 70px;
   padding-top: 22px;
   padding-left: 68px;
   font-family: 'Architects Daughter', 'Helvetica Neue', Helvetica, Arial, serif;
@@ -541,7 +541,7 @@ aside a.button {
   width: 138px;
   padding-left: 64px;
   margin-bottom: 20px;
-  font-size: 21px;
+  font-size: 18px;
   background: transparent url(../images/download-button.png) 0 0 no-repeat;
 }
 
@@ -834,9 +834,9 @@ footer a:hover {
     margin-top: 15px;
     font-size: 13px;
     line-height: 1;
-    color: #2879d0;
+    color: #4B4B4D;
     text-align: center;
-    background-color: #9ddcff;
+    background-color: #FABD43;
     background-image: none;
     border-radius: 5px;
     -moz-border-radius: 5px;
