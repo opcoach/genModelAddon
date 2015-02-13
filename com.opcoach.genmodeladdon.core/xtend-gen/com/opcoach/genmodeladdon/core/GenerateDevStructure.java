@@ -5,6 +5,7 @@ import com.opcoach.genmodeladdon.core.GenerateFactoryOverrideExtension;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -126,6 +127,10 @@ public class GenerateDevStructure {
       String _computeFactoryClassName = this.computeFactoryClassName(gp);
       String _plus_3 = (_plus_2 + _computeFactoryClassName);
       gfoe.generateOverideExtension(_nsURI, _plus_3);
+      List<GenPackage> _subGenPackages = gp.getSubGenPackages();
+      for (final GenPackage sp : _subGenPackages) {
+        this.generateDevStructure(sp);
+      }
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }

@@ -41,7 +41,8 @@ class GenerateDevStructure {
 
 	def generateDevStructure() {
 		for (p : genModel.genPackages) {
-			generateDevStructure(p)
+			p.generateDevStructure()
+			
 		}
 	}
 
@@ -78,6 +79,10 @@ class GenerateDevStructure {
 		val gfoe = new GenerateFactoryOverrideExtension(projectName)
 		gfoe.generateOverideExtension(gp.getEcorePackage().nsURI,
 			gp.computePackageNameForClasses + "." + gp.computeFactoryClassName)
+			
+		// Iterate on subpackages 
+		for (sp : gp.subGenPackages)
+			 sp.generateDevStructure()
 	}
 
 	def generateOverriddenFactoryInterface(GenPackage gp, String path) {
