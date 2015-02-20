@@ -154,16 +154,17 @@ class GenerateDevStructure {
 	def generateInterfaceFactoryContent(GenPackage gp) '''
 		package «gp.computePackageNameForInterfaces»;
 		
+		import «gp.computePackageNameForClasses».«gp.computeFactoryClassName»;
+		
 		/** This factory  overrides the generated factory and returns the new generated interfaces */
 		public interface «gp.computeFactoryInterfaceName» extends «gp.computeGeneratedFactoryInterfaceName» 
 		{
 			
-			/** Provide a getInstance method to get the factory in the correct type.
-			  * The eINSTANCE has been overridden with the correct type declared 
-			  * in the override_factory extension 
+			/** Specialize the eINSTANCE initialization with the new interface type 
+			  * (overriden in the override_factory extension)
 			*/
-			public static «gp.computeFactoryInterfaceName» getInstance() { return («gp.computeFactoryInterfaceName») eINSTANCE; }
-			
+			«gp.computeFactoryInterfaceName» eINSTANCE = «gp.computeFactoryClassName».init();
+						
 			«FOR gc : gp.genClasses.filter[!isDynamic]»
 				«gc.generateFactoryDef»
 			«ENDFOR»
@@ -176,16 +177,33 @@ class GenerateDevStructure {
 
 	def generateClassFactoryContent(GenPackage gp) '''
 		package «gp.computePackageNameForClasses»;
+
+		import org.eclipse.emf.ecore.plugin.EcorePlugin;
 		
 		«FOR gc : gp.genClasses.filter[!isDynamic]»
 		import «gp.computePackageNameForInterfaces».«gc.computeInterfaceName»;
 		«ENDFOR»
 		import «gp.computePackageNameForInterfaces».«gp.computeFactoryInterfaceName»;
 		
+		
 		// This factory  overrides the generated factory and returns the new generated interfaces
 		public class «gp.computeFactoryClassName» extends «gp.computeGeneratedFactoryClassName» implements «gp.
 			computeFactoryInterfaceName»
 		{
+			
+			public static «gp.computeFactoryInterfaceName» init() {
+				
+				try {
+					Object fact = «gp.computeGeneratedFactoryClassName».init();
+					if ((fact != null) && (fact instanceof «gp.computeFactoryInterfaceName»))
+							return («gp.computeFactoryInterfaceName») fact;
+					}
+				catch (Exception exception) {
+					EcorePlugin.INSTANCE.log(exception);
+				}
+				return new «gp.computeFactoryClassName»(); 
+		   }
+			
 			«FOR gc : gp.genClasses.filter[!isDynamic]»
 				«gc.generateCreateMethod»
 			«ENDFOR»
