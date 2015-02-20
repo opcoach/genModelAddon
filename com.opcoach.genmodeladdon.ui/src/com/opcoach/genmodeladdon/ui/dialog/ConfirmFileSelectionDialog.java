@@ -128,7 +128,7 @@ public class ConfirmFileSelectionDialog extends MessageDialog
 
 		Button deselectAll = new Button(selectComposite, SWT.PUSH);
 		deselectAll.setImage(getLocalImage(IMG_CHECKBOX_UNSELECTED));
-		selectAll.setToolTipText("Unselect all");
+		deselectAll.setToolTipText("Unselect all");
 		deselectAll.addSelectionListener(new SelectionAdapter()
 			{
 				@Override
