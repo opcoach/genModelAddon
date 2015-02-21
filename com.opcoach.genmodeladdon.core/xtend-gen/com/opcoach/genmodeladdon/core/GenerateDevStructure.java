@@ -37,6 +37,8 @@ public class GenerateDevStructure {
   
   private String srcDevDirectory;
   
+  private boolean generateFiles = false;
+  
   private String projectName;
   
   private GenModel genModel;
@@ -62,7 +64,11 @@ public class GenerateDevStructure {
     this(gm, "{0}ExtImpl", "{0}Ext", "src");
   }
   
-  public void generateDevStructure() {
+  /**
+   * Generate the file structure. If genFiles is false just compute the files to be generated
+   */
+  public void generateDevStructure(final boolean genFiles) {
+    this.generateFiles = genFiles;
     EList<GenPackage> _genPackages = this.genModel.getGenPackages();
     for (final GenPackage p : _genPackages) {
       this.generateDevStructure(p);
@@ -186,11 +192,13 @@ public class GenerateDevStructure {
         if (_exists) {
           _xifexpression = this.filesNotGenerated.put(filename, contents);
         } else {
-          final FileWriter fw = new FileWriter(filename);
-          String _string = contents.toString();
-          fw.write(_string);
-          fw.flush();
-          fw.close();
+          if (this.generateFiles) {
+            final FileWriter fw = new FileWriter(filename);
+            String _string = contents.toString();
+            fw.write(_string);
+            fw.flush();
+            fw.close();
+          }
         }
         _xblockexpression = _xifexpression;
       }
@@ -314,7 +322,7 @@ public class GenerateDevStructure {
     _builder.append("/** Specialize the eINSTANCE initialization with the new interface type ");
     _builder.newLine();
     _builder.append("\t  ");
-    _builder.append("* (overriden in the override_factory extension)");
+    _builder.append("* (overridden in the override_factory extension)");
     _builder.newLine();
     _builder.append("\t");
     _builder.append("*/");
@@ -468,7 +476,7 @@ public class GenerateDevStructure {
     _builder.append(_computeFactoryClassName_1, "\t\t");
     _builder.append("(); ");
     _builder.newLineIfNotEmpty();
-    _builder.append("   ");
+    _builder.append("\t\t ");
     _builder.append("}");
     _builder.newLine();
     _builder.append("\t");

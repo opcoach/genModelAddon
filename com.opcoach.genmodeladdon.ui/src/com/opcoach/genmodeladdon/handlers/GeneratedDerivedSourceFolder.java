@@ -54,22 +54,32 @@ public class GeneratedDerivedSourceFolder extends AbstractHandler
 					String cp = dial.getDevClassPattern();
 					String src = dial.getSrcDir();
 
+					// Try to generate to check the files that could be
+					// overridden
 					GenerateDevStructure gds = new GenerateDevStructure(gm, cp, ip, src);
-					gds.generateDevStructure();
+					gds.generateDevStructure(false);
 
 					Map<String, Object> filesNotGenerated = gds.filesNotGenerated;
 					StringBuffer filesInError = new StringBuffer();
 
+					int confirmCode = ConfirmFileSelectionDialog.OK;
+					ConfirmFileSelectionDialog cfs = null;
+
 					if (!filesNotGenerated.isEmpty())
 					{
-						ConfirmFileSelectionDialog cfs = new ConfirmFileSelectionDialog(parentShell, filesNotGenerated,
-								src);
-						int confirmCode = cfs.open();
+						cfs = new ConfirmFileSelectionDialog(parentShell, filesNotGenerated, src);
+						confirmCode = cfs.open();
+					}
 
-						if (confirmCode == ConfirmFileSelectionDialog.OK)
+					if (confirmCode == ConfirmFileSelectionDialog.OK)
+					{
+						// Now can generate really the files.
+						gds.generateDevStructure(true);
+
+						// Must ask if the not generated files can override
+						// existing files...
+						if (cfs != null)
 						{
-							// Must ask if the not generated files can override
-							// existing files...
 							for (String fn : cfs.getFilesToBeGenerated())
 							{
 								// Open the file and generate contents
@@ -92,22 +102,24 @@ public class GeneratedDerivedSourceFolder extends AbstractHandler
 
 							}
 						}
-					}
 
-					// Display a sum up dialog
-					if (filesInError.length() == 0)
-						MessageDialog.openInformation(parentShell, "Files generated",
-								"Files have been generated in this directory : \n\n" + gds.getSrcAbsolutePath());
-					else
-					{
-						MessageDialog.openWarning(
-								parentShell,
-								"Files generated with errors",
-								"Some errors occured during the generation.\n\n These files were not generated : \n"
-										+ filesInError
-										+ "\n\nThe other files have been generated without any error here : \n"
-										+ gds.getSrcAbsolutePath() + "\n\n---------------------------------------------------\nCheck the logs in : "
-										+ Platform.getLogFileLocation().toPortableString());
+						// Display a sum up dialog
+						if (filesInError.length() == 0)
+							MessageDialog.openInformation(parentShell, "Files generated",
+									"Files have been generated in this directory : \n\n" + gds.getSrcAbsolutePath());
+						else
+						{
+							MessageDialog
+									.openWarning(
+											parentShell,
+											"Files generated with errors",
+											"Some errors occured during the generation.\n\n These files were not generated : \n"
+													+ filesInError
+													+ "\n\nThe other files have been generated without any error here : \n"
+													+ gds.getSrcAbsolutePath()
+													+ "\n\n---------------------------------------------------\nCheck the logs in : "
+													+ Platform.getLogFileLocation().toPortableString());
+						}
 					}
 
 				}

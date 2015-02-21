@@ -15,6 +15,7 @@ class GenerateDevStructure {
 	String classPattern
 	String interfacePattern
 	String srcDevDirectory
+	var generateFiles = false
 
 	String projectName
 	GenModel genModel
@@ -39,14 +40,16 @@ class GenerateDevStructure {
 		this(gm, "{0}ExtImpl", "{0}Ext", "src")
 	}
 
-	def generateDevStructure() {
+	/** Generate the file structure. If genFiles is false just compute the files to be generated */
+	def generateDevStructure(boolean genFiles) {
+		generateFiles = genFiles
 		for (p : genModel.genPackages) {
 			p.generateDevStructure()
-			
+
 		}
 	}
 
-	def generateDevStructure(GenPackage gp) {
+	def void generateDevStructure(GenPackage gp) {
 
 		val root = ResourcesPlugin.workspace.root
 		val proj = root.getProject(projectName)
@@ -65,8 +68,8 @@ class GenerateDevStructure {
 		println("Generate interfaces in : " + interfaceAbsolutePath)
 
 		for (c : gp.genClasses.filter[!isDynamic]) {
-				generateOverriddenClass(c, srcAbsolutePath)
-				generateOverriddenInterface(c, interfaceAbsolutePath)
+			generateOverriddenClass(c, srcAbsolutePath)
+			generateOverriddenInterface(c, interfaceAbsolutePath)
 		}
 
 		// Generate factory interface and implementation
@@ -79,10 +82,10 @@ class GenerateDevStructure {
 		val gfoe = new GenerateFactoryOverrideExtension(projectName)
 		gfoe.generateOverideExtension(gp.getEcorePackage().nsURI,
 			gp.computePackageNameForClasses + "." + gp.computeFactoryClassName)
-			
+
 		// Iterate on subpackages 
 		for (sp : gp.subGenPackages)
-			 sp.generateDevStructure()
+			sp.generateDevStructure()
 	}
 
 	def generateOverriddenFactoryInterface(GenPackage gp, String path) {
@@ -113,12 +116,14 @@ class GenerateDevStructure {
 		if (f.exists()) {
 			filesNotGenerated.put(filename, contents)
 		} else {
+			if (generateFiles) {
 
-			// Open the file and generate contents
-			val fw = new FileWriter(filename)
-			fw.write(contents.toString)
-			fw.flush
-			fw.close
+				// Open the file and generate contents
+				val fw = new FileWriter(filename)
+				fw.write(contents.toString)
+				fw.flush
+				fw.close
+			}
 		}
 	}
 
@@ -161,7 +166,7 @@ class GenerateDevStructure {
 		{
 			
 			/** Specialize the eINSTANCE initialization with the new interface type 
-			  * (overriden in the override_factory extension)
+			  * (overridden in the override_factory extension)
 			*/
 			«gp.computeFactoryInterfaceName» eINSTANCE = «gp.computeFactoryClassName».init();
 						
@@ -177,11 +182,11 @@ class GenerateDevStructure {
 
 	def generateClassFactoryContent(GenPackage gp) '''
 		package «gp.computePackageNameForClasses»;
-
+		
 		import org.eclipse.emf.ecore.plugin.EcorePlugin;
 		
 		«FOR gc : gp.genClasses.filter[!isDynamic]»
-		import «gp.computePackageNameForInterfaces».«gc.computeInterfaceName»;
+			import «gp.computePackageNameForInterfaces».«gc.computeInterfaceName»;
 		«ENDFOR»
 		import «gp.computePackageNameForInterfaces».«gp.computeFactoryInterfaceName»;
 		
@@ -202,7 +207,7 @@ class GenerateDevStructure {
 					EcorePlugin.INSTANCE.log(exception);
 				}
 				return new «gp.computeFactoryClassName»(); 
-		   }
+				 }
 			
 			«FOR gc : gp.genClasses.filter[!isDynamic]»
 				«gc.generateCreateMethod»
