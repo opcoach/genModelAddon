@@ -46,7 +46,7 @@
 <p> Then enter the values expected in the dialog and generate : </p>
 <div align="center"><img  src="images/genModelAddonDialog.png" width=300/><br/></div>
 <p>You will get in the 'dev source directory' all interfaces and classes that extend the default generation. The 'override_factory' extension point is also extended and initialized with the correct factory.</p>
-<p>In your code use now your specific factory using the getInstance() method : 
+<p>In your code use now your specific factory using the eINSTANCE on the new Interface : 
 
  <pre><code>
  
@@ -55,8 +55,8 @@ MProjectFactory mfactory = MProjectFactory.eINSTANCE;
 MTask mt = mfactory.createTask();
  
 // Now the ProjectFactory extends the MProjectFactory and 
-// creates instances of the developer objects 
-ProjectFactory factory = ProjectFactory.getInstance(); 
+// creates instances of the developer objects. You can get it directly like this : 
+ProjectFactory factory = ProjectFactory.eINSTANCE; 
 Task t = factory.createTask();
  </code></pre> </p>
 
