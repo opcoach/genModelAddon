@@ -31,7 +31,7 @@ import org.eclipse.swt.widgets.Table;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
-/** A specific dialog to select the files that should be overriden */
+/** A specific dialog to select the files that should be overridden */
 public class ConfirmFileSelectionDialog extends MessageDialog
 {
 	private Map<String, Object> filesNotYetGenerated;

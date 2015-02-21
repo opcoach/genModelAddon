@@ -13,7 +13,7 @@
             <command
                   commandId="com.opcoach.genmodeladdon.generateSourceFolder"
                   style="push"
-                  tooltip="Generate a derived source folder extending the default EMF generated one.\nGenerate also the appropriate &apos;override_factory&apos; extension and manage overriden classes.">
+                  tooltip="Generate a derived source folder extending the default EMF generated one.\nGenerate also the appropriate &apos;override_factory&apos; extension and manage overridden classes.">
             </command>
             <visibleWhen
                   checkEnabled="false">

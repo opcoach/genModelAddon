@@ -98,7 +98,7 @@ public class DerivedSourceParametersDialog extends Dialog
 		grpParametersForGeneration.setLayout(new GridLayout(2, false));
 
 		Label lblDevSourceDirectory = new Label(grpParametersForGeneration, SWT.NONE);
-		lblDevSourceDirectory.setToolTipText("For overriden source directory, convention is to have 'src'");
+		lblDevSourceDirectory.setToolTipText("For overridden source directory, convention is to have 'src'");
 		lblDevSourceDirectory.setText("Dev source directory :");
 
 		devSourceDir = new Text(grpParametersForGeneration, SWT.BORDER);
