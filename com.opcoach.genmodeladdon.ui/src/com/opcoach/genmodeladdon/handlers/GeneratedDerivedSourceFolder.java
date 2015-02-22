@@ -9,6 +9,10 @@ import java.util.Map;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
@@ -101,6 +105,15 @@ public class GeneratedDerivedSourceFolder extends AbstractHandler
 								}
 
 							}
+						}
+						
+						// Refresh the workspace.
+						IProject proj = ResourcesPlugin.getWorkspace().getRoot().getProject(GenerateAntFileHandler.extractProjectName(gm));
+						try
+						{
+							proj.refreshLocal(IResource.DEPTH_INFINITE, null);
+						} catch (CoreException e)
+						{
 						}
 
 						// Display a sum up dialog

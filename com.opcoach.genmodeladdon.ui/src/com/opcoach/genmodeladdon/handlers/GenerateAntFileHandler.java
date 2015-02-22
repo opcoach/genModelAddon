@@ -8,8 +8,11 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -63,11 +66,20 @@ public class GenerateAntFileHandler extends AbstractHandler
 						fw.write(gen.generateAntFileContent(modelName).toString());
 						fw.flush();
 						fw.close();
+						
+						// Add a refresh
+						IProject proj = ResourcesPlugin.getWorkspace().getRoot().getProject(extractProjectName(gm));
+						proj.refreshLocal(IResource.DEPTH_ONE, null);
+						
 					} catch (IOException e)
 					{
 						MessageDialog.openWarning(parentShell, "Ant file could not be generated",
 								"It was not possible to generate the file : " + ANT_FILENAME
 										+ "\n\n The reason is : \n\n" + e.getMessage());
+					} catch (CoreException e)
+					{
+						MessageDialog.openWarning(parentShell, "Could not refresh the workspace",
+								"It was not possible refresh the workspace. You should do it by hand");
 					}
 				}
 
@@ -86,7 +98,7 @@ public class GenerateAntFileHandler extends AbstractHandler
 		return f;
 	}
 
-	private String extractProjectName(GenModel gm)
+	static String extractProjectName(GenModel gm)
 	{
 		String genModelUri = gm.eResource().getURI().toString();
 		String nameStartingWithProjectName = genModelUri.replace("platform:/resource/", "");
