@@ -1,20 +1,15 @@
 package com.opcoach.genmodeladdon.core
 
+import java.io.FileInputStream
 import java.io.FileOutputStream
+import org.apache.commons.io.IOUtils
 import org.eclipse.core.resources.IProject
+import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.FileLocator
 import org.eclipse.core.runtime.IPath
 import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.core.runtime.Path
 import org.eclipse.core.runtime.Platform
-import org.eclipse.jdt.core.IJavaProject
-import org.eclipse.jdt.core.JavaCore
-import org.apache.commons.io.IOUtils
-import java.io.FileInputStream
-import org.eclipse.core.resources.ResourcesPlugin
-import org.eclipse.core.resources.IResource
-import java.io.File
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl
 
 class EMFPatternExtractor implements Runnable {
 	static final String EMF_CODEGEN_PLUGIN_SN = "org.eclipse.emf.codegen.ecore"
