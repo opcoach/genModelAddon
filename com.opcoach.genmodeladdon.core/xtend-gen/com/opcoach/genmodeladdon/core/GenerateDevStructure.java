@@ -110,6 +110,7 @@ public class GenerateDevStructure {
       InputOutput.<String>println(("Generate interfaces in : " + interfaceAbsolutePath));
       EList<GenClass> _genClasses = gp.getGenClasses();
       final Function1<GenClass, Boolean> _function = new Function1<GenClass, Boolean>() {
+        @Override
         public Boolean apply(final GenClass it) {
           boolean _isDynamic = it.isDynamic();
           return Boolean.valueOf((!_isDynamic));
@@ -340,6 +341,7 @@ public class GenerateDevStructure {
     {
       EList<GenClass> _genClasses = gp.getGenClasses();
       final Function1<GenClass, Boolean> _function = new Function1<GenClass, Boolean>() {
+        @Override
         public Boolean apply(final GenClass it) {
           boolean _isDynamic = it.isDynamic();
           return Boolean.valueOf((!_isDynamic));
@@ -386,6 +388,7 @@ public class GenerateDevStructure {
     {
       EList<GenClass> _genClasses = gp.getGenClasses();
       final Function1<GenClass, Boolean> _function = new Function1<GenClass, Boolean>() {
+        @Override
         public Boolean apply(final GenClass it) {
           boolean _isDynamic = it.isDynamic();
           return Boolean.valueOf((!_isDynamic));
@@ -484,6 +487,7 @@ public class GenerateDevStructure {
     {
       EList<GenClass> _genClasses_1 = gp.getGenClasses();
       final Function1<GenClass, Boolean> _function_1 = new Function1<GenClass, Boolean>() {
+        @Override
         public Boolean apply(final GenClass it) {
           boolean _isDynamic = it.isDynamic();
           return Boolean.valueOf((!_isDynamic));

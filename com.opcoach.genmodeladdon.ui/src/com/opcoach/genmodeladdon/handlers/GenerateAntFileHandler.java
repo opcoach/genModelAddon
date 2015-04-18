@@ -69,6 +69,7 @@ public class GenerateAntFileHandler extends AbstractHandler
 						
 						// Add a refresh
 						IProject proj = ResourcesPlugin.getWorkspace().getRoot().getProject(extractProjectName(gm));
+						
 						proj.refreshLocal(IResource.DEPTH_ONE, null);
 						
 					} catch (IOException e)

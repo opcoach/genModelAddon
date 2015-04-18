@@ -27,6 +27,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
+import com.opcoach.genmodeladdon.core.EMFPatternExtractor;
 import com.opcoach.genmodeladdon.core.GenerateDevStructure;
 import com.opcoach.genmodeladdon.ui.dialog.ConfirmFileSelectionDialog;
 import com.opcoach.genmodeladdon.ui.dialog.DerivedSourceParametersDialog;
@@ -109,6 +110,9 @@ public class GeneratedDerivedSourceFolder extends AbstractHandler
 						
 						// Refresh the workspace.
 						IProject proj = ResourcesPlugin.getWorkspace().getRoot().getProject(GenerateAntFileHandler.extractProjectName(gm));
+						//Extract EMF templates to modify
+						EMFPatternExtractor extractor = new EMFPatternExtractor(proj, cp);
+						extractor.run();
 						try
 						{
 							proj.refreshLocal(IResource.DEPTH_INFINITE, null);
