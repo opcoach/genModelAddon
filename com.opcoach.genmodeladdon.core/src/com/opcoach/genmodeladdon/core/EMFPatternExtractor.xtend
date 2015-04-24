@@ -18,11 +18,12 @@ class EMFPatternExtractor implements Runnable {
 	static final String TARGET_MODEL_PATH = "model"
 	static final String TARGET_CLASS_TEMPLATE_FILE = "Class.javajet"
 	static final String REPLACED = "public<%if \\(genClass\\.isAbstract\\(\\)\\) \\{%> abstract<%\\}%> class <%=genClass\\.getClassName\\(\\)%><%=genClass\\.getTypeParameters\\(\\)\\.trim\\(\\)%><%=genClass\\.getClassExtends\\(\\)%><%=genClass\\.getClassImplements\\(\\)%>"
+	static final String DECLARATION_REPLACED = "final GenModel genModel=genPackage.getGenModel();"
 
 	final IProject targetProject
 
 	final String replacement
-
+	
 	new(IProject targetProject, String replacement) {
 		this.targetProject = targetProject
 		this.replacement = replacement
@@ -44,10 +45,19 @@ class EMFPatternExtractor implements Runnable {
 		}
 
 		var content = IOUtils.toString(new FileInputStream(file.location.toFile), ResourcesPlugin.getEncoding());
-		val replacementSplit = replacement.split("\\{0\\}")
-		val lineReplacement = "public<%if (genClass.isAbstract()) {%> abstract<%}%> class 
-			<%=genClass.getClassName()%><%=genClass.getTypeParameters().trim()%><% if (!genClass.getClassExtends().contains(\"MinimalEObjectImpl.Container\")){%>"+ replacementSplit.get(0) +"<%=genClass.getClassExtends().replace(\"Impl\",\"\")%>"+ replacementSplit.get(1) +"<%}else{%><%=genClass.getClassExtends()%><%}%><%=genClass.getClassImplements()%>"
-		content = content.replaceFirst(REPLACED, lineReplacement);
+		val replacementSplit = replacement.split(
+			"\\{0\\}"
+		)
+				
+		
+		
+		val lineReplacement = "<% final String devClassPattern= \"" + this.replacement +"\";%>\npublic<%if (genClass.isAbstract()) {%> abstract<%}%> class 
+			<%=genClass.getClassName()%><%=genClass.getTypeParameters().trim()%><% if (!genClass.getClassExtends().contains(\"MinimalEObjectImpl.Container\")){%>" +
+			" extends <%=devClassPattern.replaceFirst(\"\\\\\\\\{0\\\\\\\\}\",genClass.getClassExtendsGenClass().getEcoreClass().getName())%>" +
+			//replacementSplit.get(0) + "<%=genClass.getClassExtends().replace(\"Impl\",\"\")%>" +
+			//replacementSplit.get(1) 
+			 "<%}else{%><%=genClass.getClassExtends()%><%}%><%=genClass.getClassImplements()%>"
+		content = content.replaceFirst(REPLACED, lineReplacement)
 		IOUtils.write(content, new FileOutputStream(file.location.toFile), ResourcesPlugin.getEncoding());
 
 	}
