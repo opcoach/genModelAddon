@@ -75,8 +75,6 @@ public class EMFPatternExtractor implements Runnable {
       FileInputStream _fileInputStream = new FileInputStream(_file);
       String _encoding = ResourcesPlugin.getEncoding();
       String content = IOUtils.toString(_fileInputStream, _encoding);
-      final String[] replacementSplit = this.replacement.split(
-        "\\{0\\}");
       final String lineReplacement = (((("<% final String devClassPattern= \"" + this.replacement) + "\";%>\npublic<%if (genClass.isAbstract()) {%> abstract<%}%> class \n\t\t\t<%=genClass.getClassName()%><%=genClass.getTypeParameters().trim()%><% if (!genClass.getClassExtends().contains(\"MinimalEObjectImpl.Container\")){%>") + 
         " extends <%=devClassPattern.replaceFirst(\"\\\\\\\\{0\\\\\\\\}\",genClass.getClassExtendsGenClass().getEcoreClass().getName())%>") + 
         "<%}else{%><%=genClass.getClassExtends()%><%}%><%=genClass.getClassImplements()%>");
