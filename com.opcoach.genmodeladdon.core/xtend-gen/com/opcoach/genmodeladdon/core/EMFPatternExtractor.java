@@ -30,17 +30,20 @@ public class EMFPatternExtractor implements Runnable {
   
   private final static String TARGET_CLASS_TEMPLATE_FILE = "Class.javajet";
   
-  private final static String REPLACED = "public<%if \\(genClass\\.isAbstract\\(\\)\\) \\{%> abstract<%\\}%> class <%=genClass\\.getClassName\\(\\)%><%=genClass\\.getTypeParameters\\(\\)\\.trim\\(\\)%><%=genClass\\.getClassExtends\\(\\)%><%=genClass\\.getClassImplements\\(\\)%>";
+  private final static String CLASS_REPLACED = "public<%if \\(genClass\\.isAbstract\\(\\)\\) \\{%> abstract<%\\}%> class <%=genClass\\.getClassName\\(\\)%><%=genClass\\.getTypeParameters\\(\\)\\.trim\\(\\)%><%=genClass\\.getClassExtends\\(\\)%><%=genClass\\.getClassImplements\\(\\)%>";
   
-  private final static String DECLARATION_REPLACED = "final GenModel genModel=genPackage.getGenModel();";
+  private final static String INTERFACE_REPLACED = "public interface <%=genClass\\.getInterfaceName\\(\\)%><%=genClass\\.getTypeParameters\\(\\).trim\\(\\)%><%=genClass\\.getInterfaceExtends\\(\\)%>";
   
   private final IProject targetProject;
   
-  private final String replacement;
+  private final String devClassPattern;
   
-  public EMFPatternExtractor(final IProject targetProject, final String replacement) {
+  private final String devInterfacePattern;
+  
+  public EMFPatternExtractor(final IProject targetProject, final String cp, final String ip) {
     this.targetProject = targetProject;
-    this.replacement = replacement;
+    this.devClassPattern = cp;
+    this.devInterfacePattern = ip;
   }
   
   public InputStream extractClassTemplateIncurrentPlugin() {
@@ -75,11 +78,17 @@ public class EMFPatternExtractor implements Runnable {
       FileInputStream _fileInputStream = new FileInputStream(_file);
       String _encoding = ResourcesPlugin.getEncoding();
       String content = IOUtils.toString(_fileInputStream, _encoding);
-      final String lineReplacement = (((("<% final String devClassPattern= \"" + this.replacement) + "\";%>\npublic<%if (genClass.isAbstract()) {%> abstract<%}%> class \n\t\t\t<%=genClass.getClassName()%><%=genClass.getTypeParameters().trim()%><% if (!genClass.getClassExtends().contains(\"MinimalEObjectImpl.Container\")){%>") + 
+      final String classReplacement = ((((("<% final String devClassPattern= \"" + this.devClassPattern) + 
+        "\";%>\npublic<%if (genClass.isAbstract()) {%> abstract<%}%> class ") + 
+        "<%=genClass.getClassName()%><%=genClass.getTypeParameters().trim()%><% if (!genClass.getClassExtends().contains(\"MinimalEObjectImpl.Container\")){%>") + 
         " extends <%=devClassPattern.replaceFirst(\"\\\\\\\\{0\\\\\\\\}\",genClass.getClassExtendsGenClass().getEcoreClass().getName())%>") + 
         "<%}else{%><%=genClass.getClassExtends()%><%}%><%=genClass.getClassImplements()%>");
-      String _replaceFirst = content.replaceFirst(EMFPatternExtractor.REPLACED, lineReplacement);
+      String _replaceFirst = content.replaceFirst(EMFPatternExtractor.CLASS_REPLACED, classReplacement);
       content = _replaceFirst;
+      final String interfaceReplacement = (("<% final String devInterfacePattern= \"" + this.devInterfacePattern) + 
+        "\";%>\npublic interface <%=genClass.getInterfaceName()%><%=genClass.getTypeParameters().trim()%><% if (!genClass.getClassExtends().contains(\"EObject\")){%> extends <%=devInterfacePattern.replaceFirst(\"\\\\\\\\{0\\\\\\\\}\",genClass.getClassExtendsGenClass().getEcoreClass().getName())%><%}else{%><%=genClass.getInterfaceExtends()%><%}%>");
+      String _replaceFirst_1 = content.replaceFirst(EMFPatternExtractor.INTERFACE_REPLACED, interfaceReplacement);
+      content = _replaceFirst_1;
       IPath _location_1 = file.getLocation();
       File _file_1 = _location_1.toFile();
       FileOutputStream _fileOutputStream = new FileOutputStream(_file_1);
