@@ -1,6 +1,18 @@
 package com.opcoach.genmodeladdon.ui.dialog;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ILog;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.QualifiedName;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
@@ -14,12 +26,21 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.osgi.framework.FrameworkUtil;
 
 public class DerivedSourceParametersDialog extends Dialog
 {
+	private static final String DEFAULT_SRC_DEV = "src";
+	// Define the properties constants to retrieve values in dialog.
+	private static final String PLUGIN_ID = "com.opcoach.genmodeladdon.ui";
+	private static final QualifiedName PROP_INTERFACE_PATTERN = new QualifiedName(PLUGIN_ID, "interfacePattern");
+	private static final QualifiedName PROP_CLASS_PATTERN = new QualifiedName(PLUGIN_ID, "classPattern");
+	private static final QualifiedName PROP_SRCDIR = new QualifiedName(PLUGIN_ID, "srcDir");
 
+	// Constants for the default name patterns
 	private static final String DEFAULT_INTERFACE_PATTERN = "{0}";
 	private static final String DEFAULT_CLASS_IMPL_PATTERN = "{0}Impl";
+
 	private Text genInterfacePattern;
 	private Text genClassPattern;
 	private Text genSourceDir;
@@ -38,7 +59,7 @@ public class DerivedSourceParametersDialog extends Dialog
 	 */
 	public DerivedSourceParametersDialog(Shell parentShell)
 	{
-		super(parentShell);		
+		super(parentShell);
 	}
 
 	/**
@@ -69,7 +90,8 @@ public class DerivedSourceParametersDialog extends Dialog
 		genSourceDir.setBounds(0, 0, 259, 19);
 
 		Label lblInterafacePatternName = new Label(grpParametersSetIn, SWT.NONE);
-		lblInterafacePatternName.setToolTipText("This value comes from the genModel file. {0} is the name of the EClass. A good idea here is to prefix default names with M to mean 'Model' or 'G' to mean 'Generated'. \nExample : M{0}  for the EClass 'Car' will generate the 'MCar' interface");
+		lblInterafacePatternName
+				.setToolTipText("This value comes from the genModel file. {0} is the name of the EClass. A good idea here is to prefix default names with M to mean 'Model' or 'G' to mean 'Generated'. \nExample : M{0}  for the EClass 'Car' will generate the 'MCar' interface");
 		lblInterafacePatternName.setText("Gen Interface pattern name :");
 
 		genInterfacePattern = new Text(grpParametersSetIn, SWT.BORDER);
@@ -80,7 +102,8 @@ public class DerivedSourceParametersDialog extends Dialog
 		genInterfacePattern.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		Label lblClassPatternName = new Label(grpParametersSetIn, SWT.NONE);
-		lblClassPatternName.setToolTipText("This value comes from the genModel file. {0} is the name of the EClass. A good idea here is to prefix default names with M to mean 'Model' or 'G' to mean 'Generated'. \nExample : M{0}Impl  for the EClass 'Car' will generate the 'MCarImpl' class");
+		lblClassPatternName
+				.setToolTipText("This value comes from the genModel file. {0} is the name of the EClass. A good idea here is to prefix default names with M to mean 'Model' or 'G' to mean 'Generated'. \nExample : M{0}Impl  for the EClass 'Car' will generate the 'MCarImpl' class");
 		lblClassPatternName.setText("Gen Class pattern name :");
 		lblClassPatternName.setBounds(0, 0, 138, 14);
 
@@ -132,10 +155,19 @@ public class DerivedSourceParametersDialog extends Dialog
 		genModel = gm;
 	}
 
+	private IFile getGenModelFile()
+	{
+		URI genModelUri = genModel.eResource().getURI();
+		IPath p = new Path(genModelUri.toString().replaceFirst("platform:/resource", ""));
+		IWorkspaceRoot ws = ResourcesPlugin.getWorkspace().getRoot();
+		return ws.getFile(p);
+	}
+
 	public void updateValues()
 	{
 
-		// Set the default values depending on values found in genmodel
+		// Set the default values depending on values found in genmodel and in
+		// properties.
 		String cp = genModel.getClassNamePattern() == null ? DEFAULT_CLASS_IMPL_PATTERN : genModel
 				.getClassNamePattern();
 		genClassPattern.setText(cp);
@@ -143,20 +175,26 @@ public class DerivedSourceParametersDialog extends Dialog
 				.getInterfaceNamePattern();
 		genInterfacePattern.setText(ip);
 		// Get the gen source directory (remove the model project name)
-		String genSrcDirTxt = genModel.getModelDirectory().replace(genModel.getModelProjectDirectory() +"/", "");
+		String genSrcDirTxt = genModel.getModelDirectory().replace(genModel.getModelProjectDirectory() + "/", "");
 		genSourceDir.setText(genSrcDirTxt);
+
+		// Try to restore the previous properties if they exist.
+		IFile f = getGenModelFile();
+		String cpProp = getProperty(f, PROP_CLASS_PATTERN);
+		String ipProp = getProperty(f, PROP_INTERFACE_PATTERN);
+		String srcProp = getProperty(f, PROP_SRCDIR);
 
 		if (cp.equals(DEFAULT_CLASS_IMPL_PATTERN))
 			devClassPattern.setText(cp + "Ext");
 		else
-			devClassPattern.setText(DEFAULT_CLASS_IMPL_PATTERN);
+			devClassPattern.setText(cpProp != null ? cpProp : DEFAULT_CLASS_IMPL_PATTERN);
 
 		if (ip.equals(DEFAULT_INTERFACE_PATTERN))
 			devInterfacePattern.setText(ip + "Ext");
 		else
-			devInterfacePattern.setText(DEFAULT_INTERFACE_PATTERN);
+			devInterfacePattern.setText(ipProp != null ? ipProp : DEFAULT_INTERFACE_PATTERN);
 
-		devSourceDir.setText("src");
+		devSourceDir.setText(srcProp != null ? srcProp : DEFAULT_SRC_DEV);
 	}
 
 	/**
@@ -190,7 +228,7 @@ public class DerivedSourceParametersDialog extends Dialog
 	{
 		return classPattern;
 	}
-	
+
 	public String getSrcDir()
 	{
 		return srcDir;
@@ -205,6 +243,38 @@ public class DerivedSourceParametersDialog extends Dialog
 		interfacePattern = devInterfacePattern.getText();
 		srcDir = devSourceDir.getText();
 
+		// Store this values in properties...
+		IFile f = getGenModelFile();
+		setProperty(f, PROP_SRCDIR, srcDir);
+		setProperty(f, PROP_CLASS_PATTERN, classPattern);
+		setProperty(f, PROP_INTERFACE_PATTERN, interfacePattern);
+
 		super.okPressed();
 	}
+
+	private String getProperty(IFile f, QualifiedName qn)
+	{
+		String result = null;
+		try
+		{
+			result = f.getPersistentProperty(qn);
+		} catch (Exception e)
+		{
+			result = null;
+		}
+		return result;
+	}
+
+	private void setProperty(IFile f, QualifiedName qn, String value)
+	{
+		try
+		{
+			f.setPersistentProperty(qn, value);
+		} catch (Exception e)
+		{
+			ILog logger = Platform.getLog(FrameworkUtil.getBundle(this.getClass()));
+			logger.log(new Status(IStatus.WARNING, PLUGIN_ID, "Unable to store the property : " + qn, e));
+		}
+	}
+
 }
