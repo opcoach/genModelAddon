@@ -105,10 +105,12 @@ public class GeneratedDerivedSourceFolder extends AbstractHandler
 
 							}
 						}
-						
+
 						// Refresh the workspace.
-						IProject proj = ResourcesPlugin.getWorkspace().getRoot().getProject(GenerateAntFileHandler.extractProjectName(gm));
-						//Extract EMF templates to modify the way to inherit from ancestor
+						IProject proj = ResourcesPlugin.getWorkspace().getRoot()
+								.getProject(GenerateAntFileHandler.extractProjectName(gm));
+						// Extract EMF templates to modify the way to inherit
+						// from ancestor
 						EMFPatternExtractor extractor = new EMFPatternExtractor(proj, cp, ip);
 						extractor.run();
 						try

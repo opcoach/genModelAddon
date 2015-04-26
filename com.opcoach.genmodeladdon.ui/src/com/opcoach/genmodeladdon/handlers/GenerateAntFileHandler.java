@@ -45,17 +45,16 @@ public class GenerateAntFileHandler extends AbstractHandler
 					createFile = MessageDialog.openConfirm(parentShell, "This ant file exists",
 							"Do you really want to override this file " + ANT_FILENAME + " ?");
 				}
-				
+
 				if (createFile)
 				{
 
 					GenerateAntFileForCodeGeneration gen = new GenerateAntFileForCodeGeneration();
 					String s = gm.eResource().toString();
 					int pos = s.lastIndexOf(File.separator);
-					String modelName = s.substring(pos+1);
+					String modelName = s.substring(pos + 1);
 					pos = modelName.indexOf(".genmodel");
-					modelName = modelName.substring(0,pos);
-					
+					modelName = modelName.substring(0, pos);
 
 					try
 					{
@@ -65,12 +64,12 @@ public class GenerateAntFileHandler extends AbstractHandler
 						fw.write(gen.generateAntFileContent(modelName).toString());
 						fw.flush();
 						fw.close();
-						
+
 						// Add a refresh
 						IProject proj = ResourcesPlugin.getWorkspace().getRoot().getProject(extractProjectName(gm));
-						
+
 						proj.refreshLocal(IResource.DEPTH_ONE, null);
-						
+
 					} catch (IOException e)
 					{
 						MessageDialog.openWarning(parentShell, "Ant file could not be generated",

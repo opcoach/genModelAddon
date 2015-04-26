@@ -155,11 +155,10 @@ public class ConfirmFileSelectionDialog extends MessageDialog
 
 		return registry.get(key);
 	}
-	
+
 	public Collection<String> getFilesToBeGenerated()
 	{
 		return filesToBeGenerated;
 	}
-
 
 }
