@@ -2,6 +2,7 @@ package com.opcoach.genmodeladdon.handlers;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -12,9 +13,14 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -33,11 +39,13 @@ import com.opcoach.genmodeladdon.ui.dialog.DerivedSourceParametersDialog;
 public class GeneratedDerivedSourceFolder extends AbstractHandler
 {
 
+	private Shell parentShell;
+
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
 
-		Shell parentShell = HandlerUtil.getActiveShell(event);
+		parentShell = HandlerUtil.getActiveShell(event);
 		ISelection sel = HandlerUtil.getCurrentSelection(event);
 		if (sel instanceof IStructuredSelection)
 		{
@@ -56,6 +64,10 @@ public class GeneratedDerivedSourceFolder extends AbstractHandler
 					String ip = dial.getDevInterfacePattern();
 					String cp = dial.getDevClassPattern();
 					String src = dial.getSrcDir();
+
+					// Check the genModel dynamic templates.
+					if (!checkGenModelTemplates(gm))
+						return null;
 
 					// Try to generate to check the files that could be
 					// overridden
@@ -146,4 +158,73 @@ public class GeneratedDerivedSourceFolder extends AbstractHandler
 		return null;
 	}
 
+	/**
+	 * This method checks if the genModel has a dynamic templates property and a
+	 * template directory set to projectName/templates
+	 */
+	private boolean checkGenModelTemplates(GenModel gm)
+	{
+		StringBuffer changes = new StringBuffer();
+		boolean result = true;
+
+		if (!gm.isDynamicTemplates())
+		{
+			gm.setDynamicTemplates(true);
+			changes.append("The dynamic template property must be set to true");
+		}
+
+		String expectedTemplateDir = "/" + getProjectName(gm) + "/templates";
+		String currentTemplateDir = gm.getTemplateDirectory();
+		if (!expectedTemplateDir.equals(currentTemplateDir))
+		{
+			gm.setTemplateDirectory(expectedTemplateDir);
+			if ((currentTemplateDir != null) && (currentTemplateDir.length() > 0))
+			{
+				changes.append("\nThe  template directory must be changed :  \n");
+				changes.append("\n   Previous value was : " + currentTemplateDir);
+				changes.append("\n   New value is       : " + expectedTemplateDir);
+
+			} else
+			{
+				changes.append("The template directory has been set to : " + expectedTemplateDir);
+			}
+		}
+
+		// Inform user of changes and save the file.
+		if (changes.length() > 0)
+		{
+			if (result = MessageDialog.openConfirm(parentShell, "Your genModel file must be updated",
+					"Do you confirm the following changes on your gen model : \n\n" + changes))
+			{
+				final Map<Object, Object> opt = new HashMap<Object, Object>();
+				opt.put(Resource.OPTION_SAVE_ONLY_IF_CHANGED, Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER);
+				opt.put(Resource.OPTION_LINE_DELIMITER, Resource.OPTION_LINE_DELIMITER_UNSPECIFIED);
+				try
+				{
+					gm.eResource().save(opt);
+				} catch (IOException e)
+				{
+					MessageDialog.openInformation(parentShell, "genModel could not be saved",
+							"The genmodel could not be saved.\nReason is : " + e.getMessage());
+					Bundle bundle = FrameworkUtil.getBundle(this.getClass());
+					ILog logger = Platform.getLog(bundle);
+					logger.log(new Status(IStatus.WARNING, bundle.getSymbolicName(),
+							"Unable to save the genModel in : " + gm.eResource(), e));
+				}
+			}
+
+		}
+
+		return result;
+
+	}
+
+	/** Extract the project name from the resource of genmodel */
+	private String getProjectName(GenModel gm)
+	{
+		URI genModelUri = gm.eResource().getURI();
+		String p = genModelUri.toString().replaceFirst("platform:/resource/", "");
+		int pos = p.indexOf("/");
+		return p.substring(0, pos);
+	}
 }
