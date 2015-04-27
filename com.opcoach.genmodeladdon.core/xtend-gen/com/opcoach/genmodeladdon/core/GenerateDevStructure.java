@@ -4,16 +4,20 @@ import com.google.common.base.Objects;
 import com.opcoach.genmodeladdon.core.GenerateFactoryOverrideExtension;
 import java.io.File;
 import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.codegen.ecore.genmodel.GenClass;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.codegen.ecore.genmodel.GenPackage;
@@ -22,7 +26,11 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.xtend2.lib.StringConcatenation;
+import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.InputOutput;
@@ -80,6 +88,7 @@ public class GenerateDevStructure {
       IWorkspace _workspace = ResourcesPlugin.getWorkspace();
       final IWorkspaceRoot root = _workspace.getRoot();
       final IProject proj = root.getProject(this.projectName);
+      this.setFolderAsSourceFolder(proj, this.srcDevDirectory);
       String _computePackageNameForClasses = this.computePackageNameForClasses(gp);
       String _replace = _computePackageNameForClasses.replace(".", "/");
       String _plus = ((this.srcDevDirectory + "/") + _replace);
@@ -137,6 +146,50 @@ public class GenerateDevStructure {
       List<GenPackage> _subGenPackages = gp.getSubGenPackages();
       for (final GenPackage sp : _subGenPackages) {
         this.generateDevStructure(sp);
+      }
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  /**
+   * add the srcDir as a source directory in the java project, if it is not yet added
+   */
+  public void setFolderAsSourceFolder(final IProject proj, final String srcDir) {
+    try {
+      String _name = proj.getName();
+      String _plus = ("/" + _name);
+      String _plus_1 = (_plus + "/");
+      final String expectedSrcDir = (_plus_1 + srcDir);
+      final IProjectNature nat = proj.getNature(JavaCore.NATURE_ID);
+      if ((nat instanceof IJavaProject)) {
+        boolean found = false;
+        final IJavaProject jvp = ((IJavaProject) nat);
+        IClasspathEntry[] _resolvedClasspath = jvp.getResolvedClasspath(false);
+        for (final IClasspathEntry cpe : _resolvedClasspath) {
+          boolean _and = false;
+          if (!(!found)) {
+            _and = false;
+          } else {
+            IPath _path = cpe.getPath();
+            String _string = _path.toString();
+            boolean _equals = expectedSrcDir.equals(_string);
+            _and = _equals;
+          }
+          if (_and) {
+            int _entryKind = cpe.getEntryKind();
+            boolean _equals_1 = (_entryKind == IClasspathEntry.CPE_SOURCE);
+            found = _equals_1;
+          }
+        }
+        if ((!found)) {
+          final Path path = new Path(expectedSrcDir);
+          final IClasspathEntry srcEntry = JavaCore.newSourceEntry(path);
+          IClasspathEntry[] _rawClasspath = jvp.getRawClasspath();
+          final ArrayList<IClasspathEntry> newClassPath = new ArrayList<IClasspathEntry>((Collection<? extends IClasspathEntry>)Conversions.doWrapArray(_rawClasspath));
+          newClassPath.add(srcEntry);
+          jvp.setRawClasspath(((IClasspathEntry[])Conversions.unwrapArray(newClassPath, IClasspathEntry.class)), null);
+        }
       }
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);

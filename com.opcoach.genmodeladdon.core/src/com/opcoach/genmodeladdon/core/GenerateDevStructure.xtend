@@ -2,13 +2,19 @@ package com.opcoach.genmodeladdon.core
 
 import java.io.File
 import java.io.FileWriter
+import java.util.ArrayList
 import java.util.HashMap
 import java.util.Map
+import org.eclipse.core.resources.IProject
 import org.eclipse.core.resources.IResource
 import org.eclipse.core.resources.ResourcesPlugin
+import org.eclipse.core.runtime.Path
 import org.eclipse.emf.codegen.ecore.genmodel.GenClass
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel
 import org.eclipse.emf.codegen.ecore.genmodel.GenPackage
+import org.eclipse.jdt.core.IClasspathEntry
+import org.eclipse.jdt.core.IJavaProject
+import org.eclipse.jdt.core.JavaCore
 
 class GenerateDevStructure {
 
@@ -53,6 +59,11 @@ class GenerateDevStructure {
 
 		val root = ResourcesPlugin.workspace.root
 		val proj = root.getProject(projectName)
+		
+		// Add the srcDir as source folder if it is not yet the case
+		setFolderAsSourceFolder(proj, srcDevDirectory)
+		
+		// Then create inside the package directory if not exists
 		val srcFolder = proj.getFolder(srcDevDirectory + "/" + gp.computePackageNameForClasses.replace(".", "/"))
 		val srcAbsolutePath = srcFolder.location.toOSString + "/"
 		val f = new File(srcAbsolutePath)
@@ -86,6 +97,33 @@ class GenerateDevStructure {
 		// Iterate on subpackages 
 		for (sp : gp.subGenPackages)
 			sp.generateDevStructure()
+	}
+
+	/** add the srcDir as a source directory in the java project, if it is not yet added */
+	def setFolderAsSourceFolder(IProject proj, String srcDir) {
+		val expectedSrcDir = "/" + proj.name + "/" + srcDir
+		val nat = proj.getNature(JavaCore::NATURE_ID)
+
+		if (nat instanceof IJavaProject) {
+			var found = false;
+
+			val jvp = nat as IJavaProject
+			for (cpe : jvp.getResolvedClasspath(false)) {
+				if (!found && expectedSrcDir.equals(cpe.path.toString())) {
+					found = cpe.entryKind == IClasspathEntry::CPE_SOURCE
+				}
+			}
+
+			// Add the path if not still added ! 
+			if (!found) {
+				val path = new Path(expectedSrcDir)
+				val srcEntry = JavaCore::newSourceEntry(path)
+				val newClassPath = new ArrayList<IClasspathEntry>(jvp.rawClasspath)
+				newClassPath.add(srcEntry)
+				jvp.setRawClasspath(newClassPath, null);
+			}
+		}
+
 	}
 
 	def generateOverriddenFactoryInterface(GenPackage gp, String path) {
