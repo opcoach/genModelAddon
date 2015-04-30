@@ -67,10 +67,10 @@
 
 	<!-- the modules that should be built together -->
 	<modules>
-		<module>../../com.opcoach.genmodeladdon.core</module>
-		<module>../../com.opcoach.genmodeladdon.ui</module>
-		<module>../com.opcoach.genmodeladdon.feature</module>
 		<module>../com.opcoach.genmodeladdon.repository</module>
+		<module>../com.opcoach.genmodeladdon.feature</module>
+		<module>../../com.opcoach.genmodeladdon.ui</module>
+		<module>../../com.opcoach.genmodeladdon.core</module>
 	</modules>
 
 </project>

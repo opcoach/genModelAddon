@@ -15,6 +15,7 @@ import org.eclipse.emf.codegen.ecore.genmodel.GenPackage
 import org.eclipse.jdt.core.IClasspathEntry
 import org.eclipse.jdt.core.IJavaProject
 import org.eclipse.jdt.core.JavaCore
+import org.eclipse.core.runtime.NullProgressMonitor
 
 class GenerateDevStructure {
 
@@ -120,7 +121,7 @@ class GenerateDevStructure {
 				val srcEntry = JavaCore::newSourceEntry(path)
 				val newClassPath = new ArrayList<IClasspathEntry>(jvp.rawClasspath)
 				newClassPath.add(srcEntry)
-				jvp.setRawClasspath(newClassPath, null);
+				jvp.setRawClasspath(newClassPath, new NullProgressMonitor);
 			}
 		}
 
