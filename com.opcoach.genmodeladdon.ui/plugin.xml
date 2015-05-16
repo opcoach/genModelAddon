@@ -1,47 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.4"?>
 <plugin>
-   <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            allPopups="false"
-            locationURI="popup:org.eclipse.emf.codegen.ecore.genmodel.presentation.GenModelEditorID?before=open-actions">
-         <menu
-               icon="icons/opcoach.png"
-               id="com.opcoach.menu"
-               label="OPCoach">
-            <command
-                  commandId="com.opcoach.genmodeladdon.generateSourceFolder"
-                  style="push"
-                  tooltip="Generate a derived source folder extending the default EMF generated one.\nGenerate also the appropriate &apos;override_factory&apos; extension and manage overridden classes.">
-            </command>
-            <command
-                  commandId="com.opcoach.genmodeladdon.ui.generateAntFile"
-                  style="push"
-                  tooltip="This command will generate a simple ant file that can generate automatically the EMF code ">
-            </command>
-            <visibleWhen
-                  checkEnabled="false">
-               <reference
-                     definitionId="com.opcoach.genmodeladdon.ui.genModelSelected">
-               </reference>
-            </visibleWhen>
-         </menu>
-      </menuContribution>
-   </extension>
-   <extension
-         point="org.eclipse.ui.commands">
-      <command
-            defaultHandler="com.opcoach.genmodeladdon.handlers.GeneratedDerivedSourceFolder"
-            id="com.opcoach.genmodeladdon.generateSourceFolder"
-            name="Generate Derived Source Folder">
-      </command>
-      <command
-            defaultHandler="com.opcoach.genmodeladdon.handlers.GenerateAntFileHandler"
-            id="com.opcoach.genmodeladdon.ui.generateAntFile"
-            name="Generate Ant file for code generation">
-      </command>
-   </extension>
+
    <extension
          point="org.eclipse.core.expressions.definitions">
       <definition
@@ -52,6 +11,14 @@
             </instanceof>
          </iterate>
       </definition>
+   </extension>
+   <extension
+         id="com.opcoach.genmodeladdon.ui.fragment"
+         point="org.eclipse.e4.workbench.model">
+      <fragment
+            apply="always"
+            uri="fragment.e4xmi">
+      </fragment>
    </extension>
 
 </plugin>
