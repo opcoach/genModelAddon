@@ -15,7 +15,7 @@
 		<repository>
 			<id>luna</id>
 			<layout>p2</layout>
-			<url>http://download.eclipse.org/releases/luna/</url>
+			<url>http://download.eclipse.org/releases/mars</url>
 		</repository>
 		<repository>
 			<id>eclipse.xtend</id>
@@ -67,10 +67,10 @@
 
 	<!-- the modules that should be built together -->
 	<modules>
-		<module>../com.opcoach.genmodeladdon.repository</module>
-		<module>../com.opcoach.genmodeladdon.feature</module>
-		<module>../../com.opcoach.genmodeladdon.ui</module>
 		<module>../../com.opcoach.genmodeladdon.core</module>
+		<module>../../com.opcoach.genmodeladdon.ui</module>
+		<module>../com.opcoach.genmodeladdon.feature</module>
+		<module>../com.opcoach.genmodeladdon.repository</module>
 	</modules>
 
 </project>

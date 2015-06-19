@@ -2,7 +2,7 @@
 <feature
       id="com.opcoach.genmodeladdon.feature"
       label="Emf override generated code feature"
-      version="1.2.0.qualifier"
+      version="1.3.0.qualifier"
       provider-name="OPCOACH">
 
    <description url="http://www.example.com/description">
@@ -19,18 +19,21 @@
 
    <requires>
       <import plugin="org.eclipse.emf.codegen.ecore"/>
+      <import plugin="org.eclipse.xtext.xbase.lib" version="2.7.3" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.pde.core"/>
-      <import plugin="org.eclipse.pde.ui"/>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="com.opcoach.genmodeladdon.core" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.expressions"/>
-      <import plugin="com.google.guava" version="10.0.1"/>
-      <import plugin="org.eclipse.xtext.xbase.lib" version="2.7.3" match="greaterOrEqual"/>
       <import plugin="org.apache.commons.io"/>
       <import plugin="org.eclipse.jdt.core" version="3.10.2" match="greaterOrEqual"/>
+      <import plugin="com.opcoach.genmodeladdon.core" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.core.expressions"/>
       <import plugin="org.eclipse.core.resources" version="3.9.1" match="greaterOrEqual"/>
+      <import plugin="com.google.guava" version="10.0.1"/>
+      <import plugin="org.eclipse.e4.ui.model.workbench" version="1.1.0.v20140512-1820" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.e4.ui.services" version="1.1.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.jface" version="3.10.2" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.e4.core.di" version="1.4.0" match="greaterOrEqual"/>
+      <import plugin="javax.inject"/>
    </requires>
 
    <plugin
