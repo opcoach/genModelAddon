@@ -12,13 +12,19 @@ import org.eclipse.core.runtime.Path
 import org.eclipse.core.runtime.Platform
 
 class EMFPatternExtractor implements Runnable {
-	static final String EMF_CODEGEN_PLUGIN_SN = "org.eclipse.emf.codegen.ecore"
+	static final String EMF_CODEGEN_PLUGIN_SN = "com.opcoach.genmodeladdon.core"
 	static final String EMF_CODEGEN_CLASSGEN_PATH = "/templates/model/Class.javajet"
 	static final String TARGET_SOURCE_PATH = "templates"
 	static final String TARGET_MODEL_PATH = "model"
 	static final String TARGET_CLASS_TEMPLATE_FILE = "Class.javajet"
 	static final String CLASS_REPLACED = "public<%if \\(genClass\\.isAbstract\\(\\)\\) \\{%> abstract<%\\}%> class <%=genClass\\.getClassName\\(\\)%><%=genClass\\.getTypeParameters\\(\\)\\.trim\\(\\)%><%=genClass\\.getClassExtends\\(\\)%><%=genClass\\.getClassImplements\\(\\)%>"
 	static final String INTERFACE_REPLACED = "public interface <%=genClass\\.getInterfaceName\\(\\)%><%=genClass\\.getTypeParameters\\(\\).trim\\(\\)%><%=genClass\\.getInterfaceExtends\\(\\)%>"
+
+  static final String DEV_CLASS_PATTERN = "%DEV_CLASS_PATTERN%";
+  static final String DEV_INTERFACE_PATTERN = "%DEV_INTERFACE_PATTERN%";
+  static final String GEN_CLASS_PATTERN = "%GEN_CLASS_PATTERN%";
+  static final String GEN_INTERFACE_PATTERN = "%GEN_INTERFACE_PATTERN%";
+ 
 	final IProject targetProject
 
 	final String devClassPattern
@@ -47,23 +53,27 @@ class EMFPatternExtractor implements Runnable {
 
 		var content = IOUtils.toString(new FileInputStream(file.location.toFile), ResourcesPlugin.getEncoding());
 
-		val classReplacement = "<% final String devClassPattern= \"" + this.devClassPattern +
+	/* 	val classReplacement = "<% final String devClassPattern= \"" + this.devClassPattern +
 			"\";%>\npublic<%if (genClass.isAbstract()) {%> abstract<%}%> class " +
 			"<%=genClass.getClassName()%><%=genClass.getTypeParameters().trim()%><% if (!genClass.getClassExtends().contains(\"MinimalEObjectImpl.Container\")){%>" +
 			" extends <%=devClassPattern.replaceFirst(\"\\\\\\\\{0\\\\\\\\}\",genClass.getClassExtendsGenClass().getEcoreClass().getName())%>" +
 			"<%}else{%><%=genClass.getClassExtends()%><%}%><%=genClass.getClassImplements()%>"
 		content = content.replaceFirst(CLASS_REPLACED,	classReplacement)
-				
+		*/		
 				
 	//	public interface <%=genClass.getInterfaceName()%><%=genClass.getTypeParameters().trim()%><%=genClass.getInterfaceExtends()%>
 				
 				
 				
-				
+	/* 			
 		val interfaceReplacement = "<% final String devInterfacePattern= \"" + this.devInterfacePattern + 
 		"\";%>\npublic interface <%=genClass.getInterfaceName()%><%=genClass.getTypeParameters().trim()%><% if (!genClass.getClassExtends().contains(\"EObject\")){%> extends <%=devInterfacePattern.replaceFirst(\"\\\\\\\\{0\\\\\\\\}\",genClass.getClassExtendsGenClass().getEcoreClass().getName())%><%}else{%><%=genClass.getInterfaceExtends()%><%}%>"
 
 		content = content.replaceFirst(INTERFACE_REPLACED, interfaceReplacement)
+		*/
+		
+		content = content.replaceFirst(DEV_CLASS_PATTERN, devClassPattern);
+		content = content.replaceFirst(DEV_INTERFACE_PATTERN, devInterfacePattern);
 		
 			IOUtils.write(content, new FileOutputStream(file.location.toFile), ResourcesPlugin.getEncoding());
 

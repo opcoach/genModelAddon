@@ -20,7 +20,7 @@ import org.osgi.framework.Bundle;
 
 @SuppressWarnings("all")
 public class EMFPatternExtractor implements Runnable {
-  private final static String EMF_CODEGEN_PLUGIN_SN = "org.eclipse.emf.codegen.ecore";
+  private final static String EMF_CODEGEN_PLUGIN_SN = "com.opcoach.genmodeladdon.core";
   
   private final static String EMF_CODEGEN_CLASSGEN_PATH = "/templates/model/Class.javajet";
   
@@ -33,6 +33,14 @@ public class EMFPatternExtractor implements Runnable {
   private final static String CLASS_REPLACED = "public<%if \\(genClass\\.isAbstract\\(\\)\\) \\{%> abstract<%\\}%> class <%=genClass\\.getClassName\\(\\)%><%=genClass\\.getTypeParameters\\(\\)\\.trim\\(\\)%><%=genClass\\.getClassExtends\\(\\)%><%=genClass\\.getClassImplements\\(\\)%>";
   
   private final static String INTERFACE_REPLACED = "public interface <%=genClass\\.getInterfaceName\\(\\)%><%=genClass\\.getTypeParameters\\(\\).trim\\(\\)%><%=genClass\\.getInterfaceExtends\\(\\)%>";
+  
+  private final static String DEV_CLASS_PATTERN = "%DEV_CLASS_PATTERN%";
+  
+  private final static String DEV_INTERFACE_PATTERN = "%DEV_INTERFACE_PATTERN%";
+  
+  private final static String GEN_CLASS_PATTERN = "%GEN_CLASS_PATTERN%";
+  
+  private final static String GEN_INTERFACE_PATTERN = "%GEN_INTERFACE_PATTERN%";
   
   private final IProject targetProject;
   
@@ -78,16 +86,9 @@ public class EMFPatternExtractor implements Runnable {
       FileInputStream _fileInputStream = new FileInputStream(_file);
       String _encoding = ResourcesPlugin.getEncoding();
       String content = IOUtils.toString(_fileInputStream, _encoding);
-      final String classReplacement = ((((("<% final String devClassPattern= \"" + this.devClassPattern) + 
-        "\";%>\npublic<%if (genClass.isAbstract()) {%> abstract<%}%> class ") + 
-        "<%=genClass.getClassName()%><%=genClass.getTypeParameters().trim()%><% if (!genClass.getClassExtends().contains(\"MinimalEObjectImpl.Container\")){%>") + 
-        " extends <%=devClassPattern.replaceFirst(\"\\\\\\\\{0\\\\\\\\}\",genClass.getClassExtendsGenClass().getEcoreClass().getName())%>") + 
-        "<%}else{%><%=genClass.getClassExtends()%><%}%><%=genClass.getClassImplements()%>");
-      String _replaceFirst = content.replaceFirst(EMFPatternExtractor.CLASS_REPLACED, classReplacement);
+      String _replaceFirst = content.replaceFirst(EMFPatternExtractor.DEV_CLASS_PATTERN, this.devClassPattern);
       content = _replaceFirst;
-      final String interfaceReplacement = (("<% final String devInterfacePattern= \"" + this.devInterfacePattern) + 
-        "\";%>\npublic interface <%=genClass.getInterfaceName()%><%=genClass.getTypeParameters().trim()%><% if (!genClass.getClassExtends().contains(\"EObject\")){%> extends <%=devInterfacePattern.replaceFirst(\"\\\\\\\\{0\\\\\\\\}\",genClass.getClassExtendsGenClass().getEcoreClass().getName())%><%}else{%><%=genClass.getInterfaceExtends()%><%}%>");
-      String _replaceFirst_1 = content.replaceFirst(EMFPatternExtractor.INTERFACE_REPLACED, interfaceReplacement);
+      String _replaceFirst_1 = content.replaceFirst(EMFPatternExtractor.DEV_INTERFACE_PATTERN, this.devInterfacePattern);
       content = _replaceFirst_1;
       IPath _location_1 = file.getLocation();
       File _file_1 = _location_1.toFile();
