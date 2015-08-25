@@ -28,6 +28,7 @@ public abstract class GenerateParentHandler {
 		return isel.getFirstElement() instanceof GenModel;
 	}
 	
+	@CanExecute
 	public boolean canExecuteWithObject(@Named(IServiceConstants.ACTIVE_SELECTION) GenModel gm)
 	{
 		return true;
