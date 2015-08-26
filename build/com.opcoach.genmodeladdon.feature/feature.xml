@@ -6,15 +6,24 @@
       provider-name="OPCOACH">
 
    <description url="http://www.example.com/description">
-      This feature is used to generate a &apos;src&apos; directory extending the EMF generated directory.
+      This feature is used to generate a &apos;src&apos; directory extending
+the EMF generated directory.
+
+The home page of this project is here : http://opcoach.github.io/genModelAddon/
    </description>
 
-   <copyright url="http://www.example.com/copyright">
+   <copyright>
       @ 2015 OPCoach
    </copyright>
 
    <license url="http://www.example.com/license">
-      This feature is distributed under EPL License
+      This feature is distributed under EPL License.
+
+Thank you to star this project on its github page : 
+https://github.com/opcoach/genModelAddon 
+
+Get the home page of this project here : 
+http://opcoach.github.io/genModelAddon/
    </license>
 
    <requires>
