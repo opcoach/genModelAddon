@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.4"?>
 <plugin>
+
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"
             locationURI="popup:org.eclipse.emf.codegen.ecore.genmodel.presentation.GenModelEditorID?before=open-actions">
          <menu
+               label="OPCoach"
                icon="icons/opcoach.png"
-               id="com.opcoach.menu"
-               label="OPCoach">
+               id="com.opcoach.menu">
             <command
                   commandId="com.opcoach.genmodeladdon.generateSourceFolder"
                   style="push"
@@ -33,13 +33,13 @@
          point="org.eclipse.ui.commands">
       <command
             defaultHandler="com.opcoach.genmodeladdon.handlers.GeneratedDerivedSourceFolder"
-            id="com.opcoach.genmodeladdon.generateSourceFolder"
-            name="Generate Derived Source Folder">
+            name="Generate Derived Source Folder"
+            id="com.opcoach.genmodeladdon.generateSourceFolder">
       </command>
       <command
             defaultHandler="com.opcoach.genmodeladdon.handlers.GenerateAntFileHandler"
-            id="com.opcoach.genmodeladdon.ui.generateAntFile"
-            name="Generate Ant file for code generation">
+            name="Generate Ant file for code generation"
+            id="com.opcoach.genmodeladdon.ui.generateAntFile">
       </command>
    </extension>
    <extension
@@ -52,6 +52,14 @@
             </instanceof>
          </iterate>
       </definition>
+   </extension>
+   <extension
+         id="com.opcoach.genmodeladdon.ui.fragment"
+         point="org.eclipse.e4.workbench.model">
+      <fragment
+            apply="notexists"
+            uri="fragment.e4xmi">
+      </fragment>
    </extension>
 
 </plugin>
