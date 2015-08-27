@@ -135,6 +135,7 @@ public class GenerateDevStructure {
       }
       this.generateOverriddenFactoryInterface(gp, interfaceAbsolutePath);
       this.generateOverriddenFactoryClass(gp, srcAbsolutePath);
+      this.generateOverriddenPackageInterface(gp, interfaceAbsolutePath);
       proj.refreshLocal(IResource.DEPTH_INFINITE, null);
       final GenerateFactoryOverrideExtension gfoe = new GenerateFactoryOverrideExtension(this.projectName);
       EPackage _ecorePackage = gp.getEcorePackage();
@@ -218,6 +219,18 @@ public class GenerateDevStructure {
       final String filename = (_plus + ".java");
       CharSequence _generateClassFactoryContent = this.generateClassFactoryContent(gp);
       _xblockexpression = this.generateFile(filename, _generateClassFactoryContent);
+    }
+    return _xblockexpression;
+  }
+  
+  public Object generateOverriddenPackageInterface(final GenPackage gp, final String path) {
+    Object _xblockexpression = null;
+    {
+      String _computePackageInterfaceName = this.computePackageInterfaceName(gp);
+      String _plus = (path + _computePackageInterfaceName);
+      final String filename = (_plus + ".java");
+      CharSequence _generateInterfacePackageContent = this.generateInterfacePackageContent(gp);
+      _xblockexpression = this.generateFile(filename, _generateInterfacePackageContent);
     }
     return _xblockexpression;
   }
@@ -410,6 +423,39 @@ public class GenerateDevStructure {
         _builder.newLineIfNotEmpty();
       }
     }
+    _builder.append("}");
+    _builder.newLine();
+    return _builder;
+  }
+  
+  public CharSequence generateInterfacePackageContent(final GenPackage gp) {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("package ");
+    String _computePackageNameForInterfaces = this.computePackageNameForInterfaces(gp);
+    _builder.append(_computePackageNameForInterfaces, "");
+    _builder.append(";");
+    _builder.newLineIfNotEmpty();
+    _builder.append("\t\t");
+    _builder.newLine();
+    _builder.append("/** This package interface extends  the generated package interface ");
+    _builder.newLine();
+    _builder.append("    ");
+    _builder.append("It is necessary because its name is used in the EMF generated code) ");
+    _builder.newLine();
+    _builder.append("*/");
+    _builder.newLine();
+    _builder.append("public interface ");
+    String _computePackageInterfaceName = this.computePackageInterfaceName(gp);
+    _builder.append(_computePackageInterfaceName, "");
+    _builder.append(" extends ");
+    String _computeGeneratedPackageInterfaceName = this.computeGeneratedPackageInterfaceName(gp);
+    _builder.append(_computeGeneratedPackageInterfaceName, "");
+    _builder.append(" ");
+    _builder.newLineIfNotEmpty();
+    _builder.append("{");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.newLine();
     _builder.append("}");
     _builder.newLine();
     return _builder;
@@ -617,6 +663,14 @@ public class GenerateDevStructure {
   }
   
   /**
+   * Compute the factory interface name to be generated
+   */
+  public String computePackageInterfaceName(final GenPackage gp) {
+    String _prefix = gp.getPrefix();
+    return (_prefix + "Package");
+  }
+  
+  /**
    * Compute the factory class name to be generated
    */
   public String computeFactoryClassName(final GenPackage gp) {
@@ -795,6 +849,31 @@ public class GenerateDevStructure {
         String _packageName_1 = gp.getPackageName();
         String _firstUpper_1 = StringExtensions.toFirstUpper(_packageName_1);
         _xifexpression = (_firstUpper_1 + "Factory");
+      }
+      _xblockexpression = _xifexpression;
+    }
+    return _xblockexpression;
+  }
+  
+  /**
+   * Compute the generated package interface name depending on interface.
+   */
+  public String computeGeneratedPackageInterfaceName(final GenPackage gp) {
+    String _xblockexpression = null;
+    {
+      GenModel _genModel = gp.getGenModel();
+      final String interfacePattern = _genModel.getInterfaceNamePattern();
+      String _xifexpression = null;
+      boolean _notEquals = (!Objects.equal(interfacePattern, null));
+      if (_notEquals) {
+        String _packageName = gp.getPackageName();
+        String _firstUpper = StringExtensions.toFirstUpper(_packageName);
+        String _plus = (_firstUpper + "Package");
+        _xifexpression = interfacePattern.replace("{0}", _plus);
+      } else {
+        String _packageName_1 = gp.getPackageName();
+        String _firstUpper_1 = StringExtensions.toFirstUpper(_packageName_1);
+        _xifexpression = (_firstUpper_1 + "Package");
       }
       _xblockexpression = _xifexpression;
     }

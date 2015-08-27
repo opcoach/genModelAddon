@@ -88,6 +88,9 @@ class GenerateDevStructure {
 		gp.generateOverriddenFactoryInterface(interfaceAbsolutePath)
 		gp.generateOverriddenFactoryClass(srcAbsolutePath)
 
+		// Generate  package interface (used to have a dev interface compliant with generated code)
+		gp.generateOverriddenPackageInterface(interfaceAbsolutePath)
+
 		proj.refreshLocal(IResource.DEPTH_INFINITE, null)
 
 		// Add the factory override extension
@@ -136,6 +139,13 @@ class GenerateDevStructure {
 		val filename = path + gp.computeFactoryClassName + ".java"
 		generateFile(filename, gp.generateClassFactoryContent)
 	}
+	
+	def generateOverriddenPackageInterface(GenPackage gp, String path) {
+		val filename = path + gp.computePackageInterfaceName + ".java"
+		generateFile(filename, gp.generateInterfacePackageContent)
+	}
+
+	
 
 	def generateOverriddenClass(GenClass gc, String path) {
 
@@ -214,6 +224,18 @@ class GenerateDevStructure {
 			«ENDFOR»
 		}
 	'''
+	
+		def generateInterfacePackageContent(GenPackage gp) '''
+		package «gp.computePackageNameForInterfaces»;
+				
+		/** This package interface extends  the generated package interface 
+		    It is necessary because its name is used in the EMF generated code) 
+		*/
+		public interface «gp.computePackageInterfaceName» extends «gp.computeGeneratedPackageInterfaceName» 
+		{
+			
+		}
+	'''
 
 	def generateFactoryDef(GenClass gc) '''
 		public «gc.computeInterfaceName» create«gc.ecoreClass.name»();
@@ -253,6 +275,7 @@ class GenerateDevStructure {
 			«ENDFOR»
 		}
 	'''
+	
 
 	def generateCreateMethod(GenClass gc) '''
 		public «gc.computeInterfaceName» create«gc.ecoreClass.name»()
@@ -276,6 +299,11 @@ class GenerateDevStructure {
 	/** Compute the factory interface name to be generated */
 	def computeFactoryInterfaceName(GenPackage gp) {
 		gp.prefix + "Factory"
+	}
+
+	/** Compute the factory interface name to be generated */
+	def computePackageInterfaceName(GenPackage gp) {
+		gp.prefix + "Package"
 	}
 
 	/** Compute the factory class name to be generated */
@@ -347,6 +375,18 @@ class GenerateDevStructure {
 			interfacePattern.replace("{0}", gp.packageName.toFirstUpper + "Factory")
 		else
 			gp.packageName.toFirstUpper + "Factory"
+	}
+	
+	/** Compute the generated package interface name depending on interface. */
+	def computeGeneratedPackageInterfaceName(GenPackage gp) {
+
+		// Get the class pattern defined in genmodel (if none, this is {0}Impl)
+		val interfacePattern = gp.genModel.interfaceNamePattern
+
+		if (interfacePattern != null)
+			interfacePattern.replace("{0}", gp.packageName.toFirstUpper + "Package")
+		else
+			gp.packageName.toFirstUpper + "Package"
 	}
 
 	private def extractProjectName(GenModel gm) {
