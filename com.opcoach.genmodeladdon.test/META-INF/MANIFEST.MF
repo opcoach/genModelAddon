@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: com.opcoach.genmodeladdon.test
-Bundle-SymbolicName: com.opcoach.genmodeladdon.test; singleton:=true
-Bundle-Version: 0.1.0.qualifier
-Require-Bundle: org.eclipse.emf.ecore
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6

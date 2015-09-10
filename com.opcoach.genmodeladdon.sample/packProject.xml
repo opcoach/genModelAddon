@@ -1,0 +1,23 @@
+<project name="Pack current project" default="default" basedir="..">
+	
+	<eclipse.convertPath property="zipDir" resourcePath="com.opcoach.genmodeladdon.sample" />
+		<property name="resultFile" location="${zipDir}/sampleProject.zip" />
+
+
+	<!-- ================================= 
+          target: default              
+         ================================= -->
+	<target name="default" depends="zipProject" description="description">
+		<echo message="Result file generated :  ${resultFile}" />
+
+	</target>
+
+
+	<target name="zipProject">
+		<zip basedir="${zipDir}" destfile="${resultFile}" excludes="packProject.xml,sampleProject.zip" />
+		<eclipse.refreshLocal resource="com.opcoach.genmodeladdon.sample"/>
+		
+	</target>
+
+
+</project>
