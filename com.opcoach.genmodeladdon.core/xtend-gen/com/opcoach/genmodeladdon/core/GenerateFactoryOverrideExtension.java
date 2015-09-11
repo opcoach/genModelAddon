@@ -5,6 +5,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.osgi.service.resolver.BundleDescription;
 import org.eclipse.pde.core.plugin.IExtensionsModelFactory;
 import org.eclipse.pde.core.plugin.IPluginAttribute;
 import org.eclipse.pde.core.plugin.IPluginBase;
@@ -13,9 +14,12 @@ import org.eclipse.pde.core.plugin.IPluginExtension;
 import org.eclipse.pde.core.plugin.IPluginModelBase;
 import org.eclipse.pde.core.plugin.IPluginObject;
 import org.eclipse.pde.core.plugin.PluginRegistry;
+import org.eclipse.pde.internal.core.PDECore;
+import org.eclipse.pde.internal.core.PluginModelManager;
 import org.eclipse.pde.internal.core.bundle.WorkspaceBundlePluginModel;
 import org.eclipse.pde.internal.core.project.PDEProject;
 import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class GenerateFactoryOverrideExtension {
@@ -28,7 +32,22 @@ public class GenerateFactoryOverrideExtension {
       final IProject project = root.getProject(projectName);
       final IFile pluginXml = PDEProject.getPluginXml(project);
       final IFile manifest = PDEProject.getManifest(project);
-      final IPluginModelBase registryModel = PluginRegistry.findModel(projectName);
+      final IPluginModelBase registryModel = PluginRegistry.findModel(project);
+      InputOutput.<String>println(((("Registry model for \'" + projectName) + "\' is : ") + registryModel));
+      PDECore _default = PDECore.getDefault();
+      PluginModelManager _modelManager = _default.getModelManager();
+      IPluginModelBase[] _allModels = _modelManager.getAllModels();
+      String _plus = ("All models : " + _allModels);
+      InputOutput.<String>println(_plus);
+      PDECore _default_1 = PDECore.getDefault();
+      PluginModelManager _modelManager_1 = _default_1.getModelManager();
+      IPluginModelBase[] _allModels_1 = _modelManager_1.getAllModels();
+      for (final IPluginModelBase ipmd : _allModels_1) {
+        BundleDescription _bundleDescription = ipmd.getBundleDescription();
+        String _name = _bundleDescription.getName();
+        String _plus_1 = ("Model  :" + _name);
+        InputOutput.<String>println(_plus_1);
+      }
       WorkspaceBundlePluginModel _workspaceBundlePluginModel = new WorkspaceBundlePluginModel(manifest, pluginXml);
       this.fModel = _workspaceBundlePluginModel;
       IPluginBase _pluginBase = registryModel.getPluginBase();

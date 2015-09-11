@@ -7,6 +7,7 @@ import org.eclipse.pde.core.plugin.IPluginObject
 import org.eclipse.pde.core.plugin.PluginRegistry
 import org.eclipse.pde.internal.core.bundle.WorkspaceBundlePluginModel
 import org.eclipse.pde.internal.core.project.PDEProject
+import org.eclipse.pde.internal.core.PDECore
 
 // From class PointSelectionPage
 class GenerateFactoryOverrideExtension {
@@ -22,7 +23,12 @@ class GenerateFactoryOverrideExtension {
 		val pluginXml = PDEProject.getPluginXml(project);
 		val manifest = PDEProject.getManifest(project);
 
-		val registryModel = PluginRegistry.findModel(projectName)
+		val registryModel = PluginRegistry.findModel(project)
+		println("Registry model for '" + projectName + "' is : " + registryModel)
+		println("All models : " + PDECore.getDefault().getModelManager().allModels)
+		for (ipmd : PDECore.getDefault().getModelManager().allModels)
+			println("Model  :" + ipmd.bundleDescription.name)
+
 		fModel = new WorkspaceBundlePluginModel(manifest, pluginXml);
 
 		// The registry Model is not modifiable but contains some existing extensions. 
