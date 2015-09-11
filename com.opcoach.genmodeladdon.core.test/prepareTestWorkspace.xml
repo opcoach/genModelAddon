@@ -1,0 +1,30 @@
+<project name="Pack current project" default="default">
+
+	<property name="wsRoot" value="/tmp/genDev" />
+	<property name="projectTemplate" value="" />
+
+	<property name="zipFile" value="XXXX" />
+	<property name="zipFileLocation" location="${zipFile}" />
+	<property name="destDir" location="${wsRoot}/" />
+
+
+	<!-- ================================= 
+          target: default              
+         ================================= -->
+	<target name="default" depends="zipProject" description="description">
+	</target>
+
+
+	<target name="zipProject">
+		<echo message="--------------------------------------------------------------" />
+		<echo message="---> Workspace project generated here ${destDir}" />
+		<echo message="---> ZipFile value is : ${zipFile}"  />
+		<echo message="---> destDir value is : ${destDir}" />
+		<echo message="--------------------------------------------------------------" />
+		<mkdir dir="${destDir}"/>
+		<unzip src="${zipFile}" dest="${wsRoot}" />
+
+	</target>
+
+
+</project>
