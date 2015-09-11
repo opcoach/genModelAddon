@@ -8,12 +8,12 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<tycho-version>0.22.0</tycho-version>
+		<tycho-version>0.23.0</tycho-version>
 	</properties>
 
 	<repositories>
 		<repository>
-			<id>luna</id>
+			<id>mars</id>
 			<layout>p2</layout>
 			<url>http://download.eclipse.org/releases/mars</url>
 		</repository>
@@ -21,8 +21,8 @@
 			<id>eclipse.xtend</id>
 			<layout>p2</layout>
 			<url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</url>
-		</repository>		
-		
+		</repository>
+
 	</repositories>
 
 	<build>
@@ -40,11 +40,8 @@
 				<artifactId>target-platform-configuration</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
-				<!-- 
-					<dependency-resolution>
-						<optionalDependencies>ignore</optionalDependencies>
-					</dependency-resolution>
-				 -->
+					<!-- <dependency-resolution> <optionalDependencies>ignore</optionalDependencies> 
+						</dependency-resolution> -->
 					<environments>
 
 						<environment>
@@ -65,9 +62,12 @@
 		</plugins>
 	</build>
 
+	
 	<!-- the modules that should be built together -->
 	<modules>
 		<module>../../com.opcoach.genmodeladdon.core</module>
+		<module>../../com.opcoach.genmodeladdon.sample</module>
+		<module>../../com.opcoach.genmodeladdon.core.test</module>
 		<module>../../com.opcoach.genmodeladdon.ui</module>
 		<module>../com.opcoach.genmodeladdon.feature</module>
 		<module>../com.opcoach.genmodeladdon.repository</module>
