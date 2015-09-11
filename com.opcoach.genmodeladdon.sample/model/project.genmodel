@@ -6,7 +6,8 @@
     interfaceNamePattern="M{0}" classNamePattern="M{0}Impl" operationReflection="true"
     importOrganizing="true">
   <foreignModel>project.ecore</foreignModel>
-  <genPackages prefix="Project" disposableProviderFactory="true" ecorePackage="project.ecore#/">
+  <genPackages prefix="Project" basePackage="com.opcoach" disposableProviderFactory="true"
+      ecorePackage="project.ecore#/">
     <genClasses ecoreClass="project.ecore#//Person">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute project.ecore#//Person/taille"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute project.ecore#//Person/poids"/>
