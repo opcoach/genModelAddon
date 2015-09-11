@@ -31,13 +31,25 @@ class GenerateDevStructure {
 	/** Build the generator with 2 parameters
 	 * @param cpattern : the class name pattern used for generation ({0}Impl for instance)
 	 * @param ipattern : the interface name pattern used for generation ({0} for instance)
+	 * @param srcDir : the source directory (relative path) in project
 	 */
 	new(GenModel gm, String cPattern, String iPattern, String srcDir) {
+		this(gm, cPattern, iPattern, srcDir, gm.extractProjectName)
+
+	}
+
+	/** Build the generator with 4 parameters
+	 * @param cpattern : the class name pattern used for generation ({0}Impl for instance)
+	 * @param ipattern : the interface name pattern used for generation ({0} for instance)
+	 * @param srcDir : the source directory (relative path) in project
+	 * @param pname : the project name.
+	 */
+	new(GenModel gm, String cPattern, String iPattern, String srcDir, String pName) {
 		genModel = gm
 		classPattern = cPattern
 		interfacePattern = iPattern
 		srcDevDirectory = srcDir
-		projectName = gm.extractProjectName
+		projectName = pName
 
 		// Reset the files not generated... (they are kept to ask if they must override existing files)
 		filesNotGenerated.clear
@@ -60,10 +72,10 @@ class GenerateDevStructure {
 
 		val root = ResourcesPlugin.workspace.root
 		val proj = root.getProject(projectName)
-		
+
 		// Add the srcDir as source folder if it is not yet the case
 		setFolderAsSourceFolder(proj, srcDevDirectory)
-		
+
 		// Then create inside the package directory if not exists
 		val srcFolder = proj.getFolder(srcDevDirectory + "/" + gp.computePackageNameForClasses.replace(".", "/"))
 		val srcAbsolutePath = srcFolder.location.toOSString + "/"
@@ -112,7 +124,7 @@ class GenerateDevStructure {
 			var found = false;
 
 			val jvp = nat as IJavaProject
-			for (cpe : jvp.getResolvedClasspath(false)) {
+			for (cpe : jvp.getResolvedClasspath(true)) {
 				if (!found && expectedSrcDir.equals(cpe.path.toString())) {
 					found = cpe.entryKind == IClasspathEntry::CPE_SOURCE
 				}
@@ -139,13 +151,11 @@ class GenerateDevStructure {
 		val filename = path + gp.computeFactoryClassName + ".java"
 		generateFile(filename, gp.generateClassFactoryContent)
 	}
-	
+
 	def generateOverriddenPackageInterface(GenPackage gp, String path) {
 		val filename = path + gp.computePackageInterfaceName + ".java"
 		generateFile(filename, gp.generateInterfacePackageContent)
 	}
-
-	
 
 	def generateOverriddenClass(GenClass gc, String path) {
 
@@ -224,8 +234,8 @@ class GenerateDevStructure {
 			«ENDFOR»
 		}
 	'''
-	
-		def generateInterfacePackageContent(GenPackage gp) '''
+
+	def generateInterfacePackageContent(GenPackage gp) '''
 		package «gp.computePackageNameForInterfaces»;
 				
 		/** This package interface extends  the generated package interface 
@@ -275,7 +285,6 @@ class GenerateDevStructure {
 			«ENDFOR»
 		}
 	'''
-	
 
 	def generateCreateMethod(GenClass gc) '''
 		public «gc.computeInterfaceName» create«gc.ecoreClass.name»()
@@ -376,7 +385,7 @@ class GenerateDevStructure {
 		else
 			gp.packageName.toFirstUpper + "Factory"
 	}
-	
+
 	/** Compute the generated package interface name depending on interface. */
 	def computeGeneratedPackageInterfaceName(GenPackage gp) {
 
@@ -389,12 +398,13 @@ class GenerateDevStructure {
 			gp.packageName.toFirstUpper + "Package"
 	}
 
-	private def extractProjectName(GenModel gm) {
+	private static def extractProjectName(GenModel gm) {
 		println("URI of genmodel : " + gm.eResource.URI)
 		val genModelUri = gm.eResource.URI.toString
 		val nameStartingWithProjectName = genModelUri.replace("platform:/resource/", "")
 		val pos = nameStartingWithProjectName.indexOf("/")
 		return nameStartingWithProjectName.substring(0, pos)
+
 	}
 
 }

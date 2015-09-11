@@ -58,14 +58,25 @@ public class GenerateDevStructure {
    * Build the generator with 2 parameters
    * @param cpattern : the class name pattern used for generation ({0}Impl for instance)
    * @param ipattern : the interface name pattern used for generation ({0} for instance)
+   * @param srcDir : the source directory (relative path) in project
    */
   public GenerateDevStructure(final GenModel gm, final String cPattern, final String iPattern, final String srcDir) {
+    this(gm, cPattern, iPattern, srcDir, GenerateDevStructure.extractProjectName(gm));
+  }
+  
+  /**
+   * Build the generator with 4 parameters
+   * @param cpattern : the class name pattern used for generation ({0}Impl for instance)
+   * @param ipattern : the interface name pattern used for generation ({0} for instance)
+   * @param srcDir : the source directory (relative path) in project
+   * @param pname : the project name.
+   */
+  public GenerateDevStructure(final GenModel gm, final String cPattern, final String iPattern, final String srcDir, final String pName) {
     this.genModel = gm;
     this.classPattern = cPattern;
     this.interfacePattern = iPattern;
     this.srcDevDirectory = srcDir;
-    String _extractProjectName = this.extractProjectName(gm);
-    this.projectName = _extractProjectName;
+    this.projectName = pName;
     this.filesNotGenerated.clear();
   }
   
@@ -167,7 +178,7 @@ public class GenerateDevStructure {
       if ((nat instanceof IJavaProject)) {
         boolean found = false;
         final IJavaProject jvp = ((IJavaProject) nat);
-        IClasspathEntry[] _resolvedClasspath = jvp.getResolvedClasspath(false);
+        IClasspathEntry[] _resolvedClasspath = jvp.getResolvedClasspath(true);
         for (final IClasspathEntry cpe : _resolvedClasspath) {
           boolean _and = false;
           if (!(!found)) {
@@ -880,7 +891,7 @@ public class GenerateDevStructure {
     return _xblockexpression;
   }
   
-  private String extractProjectName(final GenModel gm) {
+  private static String extractProjectName(final GenModel gm) {
     Resource _eResource = gm.eResource();
     URI _uRI = _eResource.getURI();
     String _plus = ("URI of genmodel : " + _uRI);
