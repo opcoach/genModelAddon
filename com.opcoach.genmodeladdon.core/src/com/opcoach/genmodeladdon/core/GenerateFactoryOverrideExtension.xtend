@@ -24,11 +24,6 @@ class GenerateFactoryOverrideExtension {
 		val manifest = PDEProject.getManifest(project);
 
 		val registryModel = PluginRegistry.findModel(project)
-		println("Registry model for '" + projectName + "' is : " + registryModel)
-		println("All models : " + PDECore.getDefault().getModelManager().allModels)
-		for (ipmd : PDECore.getDefault().getModelManager().allModels)
-			println("Model  :" + ipmd.bundleDescription.name)
-
 		fModel = new WorkspaceBundlePluginModel(manifest, pluginXml);
 
 		// The registry Model is not modifiable but contains some existing extensions. 
