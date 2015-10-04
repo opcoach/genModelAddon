@@ -30,17 +30,9 @@ public class EMFPatternExtractor implements Runnable {
   
   private final static String TARGET_CLASS_TEMPLATE_FILE = "Class.javajet";
   
-  private final static String CLASS_REPLACED = "public<%if \\(genClass\\.isAbstract\\(\\)\\) \\{%> abstract<%\\}%> class <%=genClass\\.getClassName\\(\\)%><%=genClass\\.getTypeParameters\\(\\)\\.trim\\(\\)%><%=genClass\\.getClassExtends\\(\\)%><%=genClass\\.getClassImplements\\(\\)%>";
-  
-  private final static String INTERFACE_REPLACED = "public interface <%=genClass\\.getInterfaceName\\(\\)%><%=genClass\\.getTypeParameters\\(\\).trim\\(\\)%><%=genClass\\.getInterfaceExtends\\(\\)%>";
-  
   private final static String DEV_CLASS_PATTERN = "%DEV_CLASS_PATTERN%";
   
   private final static String DEV_INTERFACE_PATTERN = "%DEV_INTERFACE_PATTERN%";
-  
-  private final static String GEN_CLASS_PATTERN = "%GEN_CLASS_PATTERN%";
-  
-  private final static String GEN_INTERFACE_PATTERN = "%GEN_INTERFACE_PATTERN%";
   
   private final IProject targetProject;
   
