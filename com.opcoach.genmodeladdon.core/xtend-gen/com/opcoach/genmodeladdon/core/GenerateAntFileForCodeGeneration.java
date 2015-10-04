@@ -6,9 +6,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
@@ -66,19 +63,16 @@ public class GenerateAntFileForCodeGeneration {
   }
   
   public File getAntFile(final GenModel gm) {
-    IWorkspace _workspace = ResourcesPlugin.getWorkspace();
-    final IWorkspaceRoot root = _workspace.getRoot();
-    String _projectName = GenerateCommon.getProjectName(gm);
-    final IProject proj = root.getProject(_projectName);
-    IPath _location = proj.getLocation();
-    String _oSString = _location.toOSString();
+    final IProject proj = GenerateCommon.getProject(gm);
+    final IPath location = proj.getLocation();
+    String _oSString = location.toOSString();
     String _plus = (_oSString + File.separator);
     final String srcAbsolutePath = (_plus + GenerateAntFileForCodeGeneration.ANT_FILENAME);
     final File f = new File(srcAbsolutePath);
     return f;
   }
   
-  public void generateAntFile(final GenModel gm) throws IOException, CoreException {
+  public File generateAntFile(final GenModel gm) throws IOException, CoreException {
     Resource _eResource = gm.eResource();
     final String s = _eResource.toString();
     int pos = s.lastIndexOf(File.separator);
@@ -101,5 +95,6 @@ public class GenerateAntFileForCodeGeneration {
     fw.close();
     final IProject proj = GenerateCommon.getProject(gm);
     proj.refreshLocal(IResource.DEPTH_ONE, null);
+    return f;
   }
 }

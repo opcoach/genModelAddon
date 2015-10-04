@@ -4,7 +4,6 @@ import java.io.File
 import java.io.FileWriter
 import java.io.IOException
 import org.eclipse.core.resources.IResource
-import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.CoreException
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel
 
@@ -31,9 +30,9 @@ class GenerateAntFileForCodeGeneration {
 	'''
 
 	def File getAntFile(GenModel gm) {
-		val root = ResourcesPlugin.getWorkspace().getRoot();
-		val proj = root.getProject(GenerateCommon.getProjectName(gm));
-		val srcAbsolutePath = proj.getLocation().toOSString() + File.separator + ANT_FILENAME;
+		val proj = GenerateCommon.getProject(gm);
+		val location = proj.getLocation()
+		val srcAbsolutePath = location.toOSString() + File.separator + ANT_FILENAME;
 		val f = new File(srcAbsolutePath);
 		return f;
 	}
@@ -58,6 +57,8 @@ class GenerateAntFileForCodeGeneration {
 		val proj = GenerateCommon.getProject(gm);
 
 		proj.refreshLocal(IResource.DEPTH_ONE, null);
+		
+		return f
 	}
 
 }
