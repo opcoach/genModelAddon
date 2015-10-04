@@ -4,8 +4,8 @@ import static org.junit.Assert.fail;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.codegen.ecore.Generator;
 import org.eclipse.emf.codegen.ecore.genmodel.GenClass;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.codegen.ecore.genmodel.GenPackage;
@@ -33,7 +34,10 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.junit.BeforeClass;
 import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleException;
 
+import com.opcoach.genmodeladdon.core.EMFPatternExtractor;
+import com.opcoach.genmodeladdon.core.GenerateAntFileForCodeGeneration;
 import com.opcoach.genmodeladdon.core.GenerateDevStructure;
 
 public class GenModelAddonTestCase
@@ -47,13 +51,27 @@ public class GenModelAddonTestCase
 
 	protected static IProject sampleProject;
 
+	static
+	{
+		// Start manually the jdt.ui and catch the bad exception..
+		// Actually we don't need this plugin but it appears with dependencies
+		Bundle jdtUI = Platform.getBundle("org.eclipse.jdt.ui");
+		try
+		{
+			if (jdtUI != null)
+				jdtUI.start();
+		} catch (BundleException e)
+		{
+		}
+	}
+
 	@BeforeClass
 	public static void init() throws IOException
 	{
 		// Copy the sample project in the runtime workspace
 		IWorkspaceRoot root = initWorkspace();
 
-		// The the genModel
+		// Read the genModel
 		readSampleGenModel(root);
 
 		// Create the generator.
@@ -61,10 +79,78 @@ public class GenModelAddonTestCase
 
 		// Remember of sample project
 		sampleProject = root.getProject(SAMPLE_PROJECT);
-		
-		// Generate the dev structure... (should also generate the EMF stuff)
+
+		// Install the templates
+		// Extract EMF templates to modify the way to inherit from ancestor
+		EMFPatternExtractor extractor = new EMFPatternExtractor(sampleProject, "{0}Impl", "{0}");
+		extractor.run();
+		refreshWorkspace();
+
+		gm.setDynamicTemplates(true);
+
+		String gmt = gen.setGenModelTemplates(gm, true);
+		System.out.println("Result of setGenModelTEmpal " + gmt);
+
+		// Generate the dev structure...
 		gen.generateDevStructure(true);
 
+		// Generate the ant file to generate emf code
+		File antFile = generateAntFile(sampleProject, gm);
+
+		refreshWorkspace();
+
+		// Once dev structure is generated and ant file too, can call it !
+		generateGenModelCode(antFile);
+
+	}
+
+	private static void refreshWorkspace()
+	{
+		try
+		{
+			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
+		} catch (CoreException e)
+		{
+		}
+	}
+
+	private static File generateAntFile(IProject proj, GenModel gm)
+	{
+		System.out.println("-------> GENERATE THE ANT FILE -----");
+
+		GenerateAntFileForCodeGeneration gen = new GenerateAntFileForCodeGeneration();
+		try
+		{
+			return gen.generateAntFile(gm);
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+		} catch (CoreException e)
+		{
+			e.printStackTrace();
+		}
+
+		System.out.println("-------> END GENERATE THE ANT FILE -----");
+		return null;
+	}
+
+	/** generate the source code using the ant generated task */
+	private static void generateGenModelCode(File f)
+	{
+
+		System.out.println("--------- START GENERATE THE EMF CODE -------------");
+		System.out.println("sur : " + f.getAbsolutePath());
+
+		AntRunner runner = new AntRunner();
+		runner.setBuildFileLocation(f.getAbsolutePath());
+		try
+		{
+			runner.run();
+		} catch (CoreException e)
+		{
+			e.printStackTrace();
+		}
+		System.out.println("--------- END GENERATE THE EMF CODE -------------");
 
 	}
 
@@ -236,6 +322,15 @@ public class GenModelAddonTestCase
 		}
 
 		return null;
+	}
+
+	/** Extract the project name from the resource of genmodel */
+	protected static String getProjectName(GenModel gm)
+	{
+		URI genModelUri = gm.eResource().getURI();
+		String p = genModelUri.toString().replaceFirst("platform:/resource/", "");
+		int pos = p.indexOf("/");
+		return p.substring(0, pos);
 	}
 
 }

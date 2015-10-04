@@ -60,9 +60,27 @@ public class TestInterfaceGeneration extends GenModelAddonTestCase
 	}
 
 	@Test
-	public void testGenerateInterfaces()
+	public void interfaceProjectMustExtendsMProject()
 	{
 		assertFileContains("src/com/opcoach/project/Project.java", "public interface Project extends MProject");
 	}
 
+	@Test
+	public void interfaceMDocumentationProjectMustExtendsProject()
+	{
+		assertFileContains("src-gen/com/opcoach/project/documentation/MDocumentationProject.java", "public interface MDocumentationProject extends Project");
+	}
+
+	@Test
+	public void interfaceDocumentationProjectMustExtendsMDocumentationProject()
+	{
+		assertFileContains("src/com/opcoach/project/documentation/DocumentationProject.java", "public interface DocumentationProject extends MDocumentationProject");
+	}
+
+
+	
+	
+	
+	
+	
 }
