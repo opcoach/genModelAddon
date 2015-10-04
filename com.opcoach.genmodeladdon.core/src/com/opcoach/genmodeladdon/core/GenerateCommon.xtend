@@ -1,26 +1,35 @@
 package com.opcoach.genmodeladdon.core
 
+import java.io.File
 import org.eclipse.core.resources.IProject
 import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel
 
 /** A class to provide some generation common methods */
- class  GenerateCommon {
- 	 	
-	
-	
-	/** Extract the project name from the resource of genmodel */
-	def static String getProjectName(GenModel gm)
-	{
+class GenerateCommon {
+
+	/** Extract the project name from the genmodel resource */
+	def static String getProjectName(GenModel gm) {
 		val genModelUri = gm.eResource().getURI();
-		val p = genModelUri.toString().replaceFirst("platform:/resource/", "");
-		val pos = p.indexOf("/");
-		return p.substring(0, pos);
+		val gmUriStr = genModelUri.toString()
+		if (gmUriStr.startsWith("platform:/resource/")) {
+			val p = gmUriStr.replaceFirst("platform:/resource/", "");
+			val pos = p.indexOf("/");
+			return p.substring(0, pos);
+		} else if (gmUriStr.startsWith("file:")) {
+			val root = ResourcesPlugin.workspace.root
+			val wsloc = root.locationURI
+			val p = gmUriStr.replaceFirst(wsloc.toString + File.separator, "")
+			val pos = p.indexOf("/");
+			return p.substring(0, pos);
+		}
+		// Unknown ?? 
+		return null
 	}
-	
+
 	/** Find the project from a genmodel */
-	def static IProject getProject(GenModel gm)
-	{
-	    ResourcesPlugin.getWorkspace().getRoot().getProject(getProjectName(gm));
+	def static IProject getProject(GenModel gm) {
+		val projectName = getProjectName(gm)
+		ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 	}
 }
