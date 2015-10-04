@@ -27,6 +27,7 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
 import com.opcoach.genmodeladdon.core.EMFPatternExtractor;
+import com.opcoach.genmodeladdon.core.GenerateCommon;
 import com.opcoach.genmodeladdon.core.GenerateDevStructure;
 import com.opcoach.genmodeladdon.ui.dialog.ConfirmFileSelectionDialog;
 import com.opcoach.genmodeladdon.ui.dialog.DerivedSourceParametersDialog;
@@ -36,7 +37,6 @@ public class GeneratedDerivedSourceFolder extends GenerateParentHandler
 
 	private Shell parentShell;
 
-	
 	@Execute
 	public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell shell,
 			@Named(IServiceConstants.ACTIVE_SELECTION) GenModel gm)
@@ -55,13 +55,30 @@ public class GeneratedDerivedSourceFolder extends GenerateParentHandler
 			String cp = dial.getDevClassPattern();
 			String src = dial.getSrcDir();
 
+			GenerateDevStructure gds = new GenerateDevStructure(gm, cp, ip, src);
+
 			// Check the genModel dynamic templates.
-			if (!checkGenModelTemplates(gm))
-				return ;
+			String changes = gds.setGenModelTemplates(gm, false);
+			if (changes.length() > 0)
+			{
+				if (!confirmSaveGenModelTemplates(gm, changes))
+					return;
+			}
+			
+ 			IProject proj = GenerateCommon.getProject(gm);
+			// Extract EMF templates to modify the way to inherit from ancestor
+			EMFPatternExtractor extractor = new EMFPatternExtractor(proj, cp, ip);
+			extractor.run();
+			try
+			{
+				proj.refreshLocal(IResource.DEPTH_INFINITE, null);
+			} catch (CoreException e)
+			{
+			}
+
 
 			// Try to generate to check the files that could be
 			// overridden
-			GenerateDevStructure gds = new GenerateDevStructure(gm, cp, ip, src);
 			gds.generateDevStructure(false);
 
 			Map<String, Object> filesNotGenerated = gds.filesNotGenerated;
@@ -108,29 +125,14 @@ public class GeneratedDerivedSourceFolder extends GenerateParentHandler
 					}
 				}
 
-				// Refresh the workspace.
-				IProject proj = ResourcesPlugin.getWorkspace().getRoot()
-						.getProject(getProjectName(gm));
-				// Extract EMF templates to modify the way to inherit
-				// from ancestor
-				EMFPatternExtractor extractor = new EMFPatternExtractor(proj, cp, ip);
-				extractor.run();
-				try
-				{
-					proj.refreshLocal(IResource.DEPTH_INFINITE, null);
-				} catch (CoreException e)
-				{
-				}
-
+		
 				// Display a sum up dialog
 				if (filesInError.length() == 0)
 					MessageDialog.openInformation(parentShell, "Files generated",
 							"Files have been generated in this directory : \n\n" + gds.getSrcAbsolutePath());
 				else
 				{
-					MessageDialog.openWarning(
-							parentShell,
-							"Files generated with errors",
+					MessageDialog.openWarning(parentShell, "Files generated with errors",
 							"Some errors occured during the generation.\n\n These files were not generated : \n"
 									+ filesInError
 									+ "\n\nThe other files have been generated without any error here : \n"
@@ -147,33 +149,9 @@ public class GeneratedDerivedSourceFolder extends GenerateParentHandler
 	 * This method checks if the genModel has a dynamic templates property and a
 	 * template directory set to projectName/templates
 	 */
-	private boolean checkGenModelTemplates(GenModel gm)
+	private boolean confirmSaveGenModelTemplates(GenModel gm, String changes)
 	{
-		StringBuffer changes = new StringBuffer();
-		boolean result = true;
-
-		if (!gm.isDynamicTemplates())
-		{
-			gm.setDynamicTemplates(true);
-			changes.append("The dynamic template property must be set to true");
-		}
-
-		String expectedTemplateDir = "/" + getProjectName(gm) + "/templates";
-		String currentTemplateDir = gm.getTemplateDirectory();
-		if (!expectedTemplateDir.equals(currentTemplateDir))
-		{
-			gm.setTemplateDirectory(expectedTemplateDir);
-			if ((currentTemplateDir != null) && (currentTemplateDir.length() > 0))
-			{
-				changes.append("\nThe  template directory must be changed :  \n");
-				changes.append("\n   Previous value was : " + currentTemplateDir);
-				changes.append("\n   New value is       : " + expectedTemplateDir);
-
-			} else
-			{
-				changes.append("The template directory has been set to : " + expectedTemplateDir);
-			}
-		}
+		boolean result = false;
 
 		// Inform user of changes and save the file.
 		if (changes.length() > 0)
@@ -203,6 +181,5 @@ public class GeneratedDerivedSourceFolder extends GenerateParentHandler
 		return result;
 
 	}
-
 
 }

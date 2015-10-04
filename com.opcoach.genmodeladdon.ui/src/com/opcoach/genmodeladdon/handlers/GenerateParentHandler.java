@@ -11,6 +11,8 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 
+import com.opcoach.genmodeladdon.core.GenerateCommon;
+
 public abstract class GenerateParentHandler {
 	
 	/** With compatibility layer, must manage also IStructuredSelection ! */
@@ -40,10 +42,7 @@ public abstract class GenerateParentHandler {
 	/** Extract the project name from the resource of genmodel */
 	protected  String getProjectName(GenModel gm)
 	{
-		URI genModelUri = gm.eResource().getURI();
-		String p = genModelUri.toString().replaceFirst("platform:/resource/", "");
-		int pos = p.indexOf("/");
-		return p.substring(0, pos);
+		return GenerateCommon.getProjectName(gm);
 	}
 	
 
