@@ -4,6 +4,7 @@ import com.google.common.base.Objects;
 import com.opcoach.genmodeladdon.core.GenerateFactoryOverrideExtension;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -16,9 +17,13 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.codegen.ecore.genmodel.GenClass;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.codegen.ecore.genmodel.GenPackage;
@@ -37,6 +42,8 @@ import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.StringExtensions;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 
 @SuppressWarnings("all")
 public class GenerateDevStructure {
@@ -208,6 +215,77 @@ public class GenerateDevStructure {
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
+  }
+  
+  /**
+   * This method checks if the genModel has a dynamic templates property and a
+   * template directory set to projectName/templates
+   * it returns the changes that has been done on genmodel.
+   */
+  public String setGenModelTemplates(final GenModel gm, final boolean forceSave) {
+    final StringBuffer changes = new StringBuffer();
+    boolean _isDynamicTemplates = gm.isDynamicTemplates();
+    boolean _not = (!_isDynamicTemplates);
+    if (_not) {
+      gm.setDynamicTemplates(true);
+      changes.append("The dynamic template property must be set to true");
+    }
+    gm.setImportOrganizing(true);
+    final String expectedTemplateDir = (("/" + this.projectName) + "/templates");
+    final String currentTemplateDir = gm.getTemplateDirectory();
+    boolean _equals = expectedTemplateDir.equals(currentTemplateDir);
+    boolean _not_1 = (!_equals);
+    if (_not_1) {
+      gm.setTemplateDirectory(expectedTemplateDir);
+      boolean _and = false;
+      boolean _notEquals = (!Objects.equal(currentTemplateDir, null));
+      if (!_notEquals) {
+        _and = false;
+      } else {
+        int _length = currentTemplateDir.length();
+        boolean _greaterThan = (_length > 0);
+        _and = _greaterThan;
+      }
+      if (_and) {
+        changes.append("\nThe  template directory must be changed :  \n");
+        changes.append(("\n   Previous value was : " + currentTemplateDir));
+        changes.append(("\n   New value is       : " + expectedTemplateDir));
+      } else {
+        changes.append(("The template directory has been set to : " + expectedTemplateDir));
+      }
+    }
+    boolean _and_1 = false;
+    int _length_1 = changes.length();
+    boolean _greaterThan_1 = (_length_1 > 0);
+    if (!_greaterThan_1) {
+      _and_1 = false;
+    } else {
+      _and_1 = forceSave;
+    }
+    if (_and_1) {
+      final Map<Object, Object> opt = new HashMap<Object, Object>();
+      opt.put(Resource.OPTION_SAVE_ONLY_IF_CHANGED, Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER);
+      opt.put(Resource.OPTION_LINE_DELIMITER, Resource.OPTION_LINE_DELIMITER_UNSPECIFIED);
+      try {
+        Resource _eResource = gm.eResource();
+        _eResource.save(opt);
+      } catch (final Throwable _t) {
+        if (_t instanceof IOException) {
+          final IOException e = (IOException)_t;
+          Class<? extends GenerateDevStructure> _class = this.getClass();
+          final Bundle bundle = FrameworkUtil.getBundle(_class);
+          final ILog logger = Platform.getLog(bundle);
+          String _symbolicName = bundle.getSymbolicName();
+          Resource _eResource_1 = gm.eResource();
+          String _plus = ("Unable to save the genModel in : " + _eResource_1);
+          Status _status = new Status(IStatus.WARNING, _symbolicName, _plus, e);
+          logger.log(_status);
+        } else {
+          throw Exceptions.sneakyThrow(_t);
+        }
+      }
+    }
+    return changes.toString();
   }
   
   public Object generateOverriddenFactoryInterface(final GenPackage gp, final String path) {

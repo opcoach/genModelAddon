@@ -2,20 +2,26 @@ package com.opcoach.genmodeladdon.core
 
 import java.io.File
 import java.io.FileWriter
+import java.io.IOException
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.Map
 import org.eclipse.core.resources.IProject
 import org.eclipse.core.resources.IResource
 import org.eclipse.core.resources.ResourcesPlugin
+import org.eclipse.core.runtime.IStatus
+import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.core.runtime.Path
+import org.eclipse.core.runtime.Platform
+import org.eclipse.core.runtime.Status
 import org.eclipse.emf.codegen.ecore.genmodel.GenClass
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel
 import org.eclipse.emf.codegen.ecore.genmodel.GenPackage
+import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.jdt.core.IClasspathEntry
 import org.eclipse.jdt.core.IJavaProject
 import org.eclipse.jdt.core.JavaCore
-import org.eclipse.core.runtime.NullProgressMonitor
+import org.osgi.framework.FrameworkUtil
 
 class GenerateDevStructure {
 
@@ -141,6 +147,65 @@ class GenerateDevStructure {
 		}
 
 	}
+	
+	/**
+	 * This method checks if the genModel has a dynamic templates property and a
+	 * template directory set to projectName/templates
+	 * it returns the changes that has been done on genmodel.
+	 */
+	def public String setGenModelTemplates(GenModel gm, boolean forceSave)
+	{
+		val changes = new StringBuffer();
+
+		if (!gm.isDynamicTemplates())
+		{
+			gm.setDynamicTemplates(true);
+			changes.append("The dynamic template property must be set to true");
+		}
+		
+		gm.importOrganizing = true;
+
+		val expectedTemplateDir = "/" + projectName + "/templates";
+		val currentTemplateDir = gm.getTemplateDirectory();
+		if (!expectedTemplateDir.equals(currentTemplateDir))
+		{
+			gm.setTemplateDirectory(expectedTemplateDir);
+			if ((currentTemplateDir != null) && (currentTemplateDir.length() > 0))
+			{
+				changes.append("\nThe  template directory must be changed :  \n");
+				changes.append("\n   Previous value was : " + currentTemplateDir);
+				changes.append("\n   New value is       : " + expectedTemplateDir);
+
+			} else
+			{
+				changes.append("The template directory has been set to : " + expectedTemplateDir);
+			}
+		}
+
+		// Inform user of changes and save the file.
+		if ((changes.length() > 0) && forceSave)
+		{
+				val Map<Object, Object> opt = new HashMap<Object, Object>();
+				opt.put(Resource.OPTION_SAVE_ONLY_IF_CHANGED, Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER);
+				opt.put(Resource.OPTION_LINE_DELIMITER, Resource.OPTION_LINE_DELIMITER_UNSPECIFIED);
+				try
+				{
+					gm.eResource().save(opt);
+				} catch (IOException e)
+				{
+					val bundle = FrameworkUtil.getBundle(this.getClass());
+					val logger = Platform.getLog(bundle);
+					logger.log(new Status(IStatus.WARNING, bundle.getSymbolicName(),
+							"Unable to save the genModel in : " + gm.eResource(), e));
+				}
+			
+
+		}
+
+		return changes.toString;
+
+	}
+	
 
 	def generateOverriddenFactoryInterface(GenPackage gp, String path) {
 		val filename = path + gp.computeFactoryInterfaceName + ".java"
