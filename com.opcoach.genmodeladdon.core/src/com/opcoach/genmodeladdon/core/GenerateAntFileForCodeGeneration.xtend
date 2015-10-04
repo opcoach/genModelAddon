@@ -1,7 +1,16 @@
 package com.opcoach.genmodeladdon.core
 
+import java.io.File
+import java.io.FileWriter
+import java.io.IOException
+import org.eclipse.core.resources.IResource
+import org.eclipse.core.resources.ResourcesPlugin
+import org.eclipse.core.runtime.CoreException
+import org.eclipse.emf.codegen.ecore.genmodel.GenModel
+
 class GenerateAntFileForCodeGeneration {
 
+	public final static String ANT_FILENAME = "generateEMFCode.xml";
 
 	def generateAntFileContent(String modelName) '''
 <?xml version="1.0" encoding="UTF-8"?>
@@ -20,5 +29,35 @@ class GenerateAntFileForCodeGeneration {
 	</target>
 </project>
 	'''
+
+	def File getAntFile(GenModel gm) {
+		val root = ResourcesPlugin.getWorkspace().getRoot();
+		val proj = root.getProject(GenerateCommon.getProjectName(gm));
+		val srcAbsolutePath = proj.getLocation().toOSString() + File.separator + ANT_FILENAME;
+		val f = new File(srcAbsolutePath);
+		return f;
+	}
+
+	def generateAntFile(GenModel gm) throws IOException, CoreException {
+		val s = gm.eResource().toString();
+		var pos = s.lastIndexOf(File.separator);
+		var modelName = s.substring(pos + 1);
+		pos = modelName.indexOf(".genmodel");
+		modelName = modelName.substring(0, pos);
+
+		val f = gm.getAntFile;
+
+		if (!f.exists())
+			f.createNewFile();
+		val fw = new FileWriter(f);
+		fw.write(generateAntFileContent(modelName).toString());
+		fw.flush();
+		fw.close();
+
+		// Add a refresh
+		val proj = GenerateCommon.getProject(gm);
+
+		proj.refreshLocal(IResource.DEPTH_ONE, null);
+	}
 
 }

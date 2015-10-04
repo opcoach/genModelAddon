@@ -1,9 +1,24 @@
 package com.opcoach.genmodeladdon.core;
 
+import com.opcoach.genmodeladdon.core.GenerateCommon;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtend2.lib.StringConcatenation;
 
 @SuppressWarnings("all")
 public class GenerateAntFileForCodeGeneration {
+  public final static String ANT_FILENAME = "generateEMFCode.xml";
+  
   public CharSequence generateAntFileContent(final String modelName) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
@@ -48,5 +63,43 @@ public class GenerateAntFileForCodeGeneration {
     _builder.append("</project>");
     _builder.newLine();
     return _builder;
+  }
+  
+  public File getAntFile(final GenModel gm) {
+    IWorkspace _workspace = ResourcesPlugin.getWorkspace();
+    final IWorkspaceRoot root = _workspace.getRoot();
+    String _projectName = GenerateCommon.getProjectName(gm);
+    final IProject proj = root.getProject(_projectName);
+    IPath _location = proj.getLocation();
+    String _oSString = _location.toOSString();
+    String _plus = (_oSString + File.separator);
+    final String srcAbsolutePath = (_plus + GenerateAntFileForCodeGeneration.ANT_FILENAME);
+    final File f = new File(srcAbsolutePath);
+    return f;
+  }
+  
+  public void generateAntFile(final GenModel gm) throws IOException, CoreException {
+    Resource _eResource = gm.eResource();
+    final String s = _eResource.toString();
+    int pos = s.lastIndexOf(File.separator);
+    String modelName = s.substring((pos + 1));
+    int _indexOf = modelName.indexOf(".genmodel");
+    pos = _indexOf;
+    String _substring = modelName.substring(0, pos);
+    modelName = _substring;
+    final File f = this.getAntFile(gm);
+    boolean _exists = f.exists();
+    boolean _not = (!_exists);
+    if (_not) {
+      f.createNewFile();
+    }
+    final FileWriter fw = new FileWriter(f);
+    CharSequence _generateAntFileContent = this.generateAntFileContent(modelName);
+    String _string = _generateAntFileContent.toString();
+    fw.write(_string);
+    fw.flush();
+    fw.close();
+    final IProject proj = GenerateCommon.getProject(gm);
+    proj.refreshLocal(IResource.DEPTH_ONE, null);
   }
 }
