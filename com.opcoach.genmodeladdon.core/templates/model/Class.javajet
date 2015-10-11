@@ -97,18 +97,21 @@
 	
     String replaceDevName(String stringToTranslate)
 	{
-	    String result = stringToTranslate;
+		System.out.println("  -- Start checking : " + stringToTranslate);
+	
 		// Search for the genName string in stringToTransalte
 		for (String key : devNames.keySet())
 		{		
 			if (stringToTranslate.contains(key))
 			{
-				System.out.println("String : " + stringToTranslate + " contains " + key);
+				System.out.println("String : " + stringToTranslate + " contains " + key + " will replace with " + devNames.get(key) );
 				stringToTranslate = stringToTranslate.replaceAll(key, devNames.get(key));
 		   }
 		}
-		System.out.println("Translated : " + stringToTranslate + " into " + result);
-		return result;
+		System.out.println("Translated into : " + stringToTranslate);
+		System.out.println("  -- End of check");
+		
+		return stringToTranslate;
 	}
 	
 	
