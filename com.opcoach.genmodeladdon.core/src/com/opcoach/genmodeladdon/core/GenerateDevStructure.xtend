@@ -263,7 +263,7 @@ class GenerateDevStructure {
 		
 		import «gc.genPackage.computePackageNameForInterfaces».«gc.computeInterfaceName»;
 		
-		// This class can override the generated class and will be instantiated by factory
+		// This class overrides the generated class and will be instantiated by factory
 		public class «gc.computeClassname» extends «gc.computeGeneratedClassName()» implements «gc.computeInterfaceName»
 		{
 		
@@ -273,7 +273,7 @@ class GenerateDevStructure {
 	def generateInterfaceContent(GenClass gc) '''
 		package «gc.genPackage.computePackageNameForInterfaces»;
 		
-		// This interface can override the generated interface and will be returned by factory
+		// This interface overrides the generated interface and will be returned by factory
 		public interface «gc.computeInterfaceName» extends «gc.computeGeneratedInterfaceName()»
 		{
 		

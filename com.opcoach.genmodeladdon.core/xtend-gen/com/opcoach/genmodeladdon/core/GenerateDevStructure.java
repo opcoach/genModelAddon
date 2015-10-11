@@ -399,7 +399,7 @@ public class GenerateDevStructure {
     _builder.append(";");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
-    _builder.append("// This class can override the generated class and will be instantiated by factory");
+    _builder.append("// This class overrides the generated class and will be instantiated by factory");
     _builder.newLine();
     _builder.append("public class ");
     String _computeClassname = this.computeClassname(gc);
@@ -428,7 +428,7 @@ public class GenerateDevStructure {
     _builder.append(";");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
-    _builder.append("// This interface can override the generated interface and will be returned by factory");
+    _builder.append("// This interface overrides the generated interface and will be returned by factory");
     _builder.newLine();
     _builder.append("public interface ");
     String _computeInterfaceName = this.computeInterfaceName(gc);
