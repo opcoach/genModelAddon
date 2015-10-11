@@ -9,6 +9,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtend2.lib.StringConcatenation;
 
@@ -74,7 +75,8 @@ public class GenerateAntFileForCodeGeneration {
   
   public File generateAntFile(final GenModel gm) throws IOException, CoreException {
     Resource _eResource = gm.eResource();
-    final String s = _eResource.toString();
+    URI _uRI = _eResource.getURI();
+    final String s = _uRI.toString();
     int pos = s.lastIndexOf(File.separator);
     String modelName = s.substring((pos + 1));
     int _indexOf = modelName.indexOf(".genmodel");

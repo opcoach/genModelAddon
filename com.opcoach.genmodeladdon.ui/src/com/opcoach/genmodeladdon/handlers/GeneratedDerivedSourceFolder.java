@@ -1,5 +1,6 @@
 package com.opcoach.genmodeladdon.handlers;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
@@ -7,10 +8,6 @@ import java.util.Map;
 
 import javax.inject.Named;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -26,8 +23,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
-import com.opcoach.genmodeladdon.core.EMFPatternExtractor;
-import com.opcoach.genmodeladdon.core.GenerateCommon;
 import com.opcoach.genmodeladdon.core.GenerateDevStructure;
 import com.opcoach.genmodeladdon.ui.dialog.ConfirmFileSelectionDialog;
 import com.opcoach.genmodeladdon.ui.dialog.DerivedSourceParametersDialog;
@@ -64,18 +59,7 @@ public class GeneratedDerivedSourceFolder extends GenerateParentHandler
 				if (!confirmSaveGenModelTemplates(gm, changes))
 					return;
 			}
-			
- 			IProject proj = GenerateCommon.getProject(gm);
-			// Extract EMF templates to modify the way to inherit from ancestor
-			EMFPatternExtractor extractor = new EMFPatternExtractor(proj, cp, ip);
-			extractor.run();
-			try
-			{
-				proj.refreshLocal(IResource.DEPTH_INFINITE, null);
-			} catch (CoreException e)
-			{
-			}
-
+						
 
 			// Try to generate to check the files that could be
 			// overridden
@@ -140,11 +124,28 @@ public class GeneratedDerivedSourceFolder extends GenerateParentHandler
 									+ "\n\n---------------------------------------------------\nCheck the logs in : "
 									+ Platform.getLogFileLocation().toPortableString());
 				}
+				
+				// Generate the next step : ant file and EMF code
+				if (MessageDialog.openConfirm(parentShell, "Confirm next step", 
+						"The EMF code must be regenerated to take this generation code into account. \n"
+						+ " Do you want to do it ? (you will have to do it by hand anyway). "))
+				{
+					// Generate the ant file and call it with the ant Runner
+					// Generate the ant file to generate emf code
+					File antFile = gds.generateAntFile();
+
+					// Once dev structure is generated and ant file too, can call it !
+					gds.generateGenModelCode(antFile);
+					
+					// Then should reorganize imports in the project in package explorer view ! 
+					
+				}
 			}
 
 		}
 	}
 
+	
 	/**
 	 * This method checks if the genModel has a dynamic templates property and a
 	 * template directory set to projectName/templates

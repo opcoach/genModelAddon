@@ -1,6 +1,9 @@
 package com.opcoach.genmodeladdon.core;
 
 import com.google.common.base.Objects;
+import com.opcoach.genmodeladdon.core.EMFPatternExtractor;
+import com.opcoach.genmodeladdon.core.GenerateAntFileForCodeGeneration;
+import com.opcoach.genmodeladdon.core.GenerateCommon;
 import com.opcoach.genmodeladdon.core.GenerateFactoryOverrideExtension;
 import java.io.File;
 import java.io.FileWriter;
@@ -10,6 +13,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.eclipse.ant.core.AntRunner;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
@@ -17,6 +22,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -28,7 +34,6 @@ import org.eclipse.emf.codegen.ecore.genmodel.GenClass;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.codegen.ecore.genmodel.GenPackage;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -45,6 +50,14 @@ import org.eclipse.xtext.xbase.lib.StringExtensions;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
+/**
+ * This class is used to proceed the different steps to generate the development structure
+ * A method is defined for each step :
+ * setGenModelTemplates : will set the dynamic templates and import the Class.javajet if not preset
+ * generateDevStructure : generate the development structure
+ * generateAntFile : generate the ant file to generate the code (usefull for automatic builder)
+ * generateGenModelCode : generate the EMF code using templates (calls the ant file)
+ */
 @SuppressWarnings("all")
 public class GenerateDevStructure {
   private String classPattern;
@@ -55,6 +68,8 @@ public class GenerateDevStructure {
   
   private boolean generateFiles = false;
   
+  private IProject project;
+  
   private String projectName;
   
   private GenModel genModel;
@@ -62,28 +77,20 @@ public class GenerateDevStructure {
   public Map<String, Object> filesNotGenerated = new HashMap<String, Object>();
   
   /**
-   * Build the generator with 2 parameters
+   * Build the generator with 4 parameters
    * @param cpattern : the class name pattern used for generation ({0}Impl for instance)
    * @param ipattern : the interface name pattern used for generation ({0} for instance)
    * @param srcDir : the source directory (relative path) in project
    */
   public GenerateDevStructure(final GenModel gm, final String cPattern, final String iPattern, final String srcDir) {
-    this(gm, cPattern, iPattern, srcDir, GenerateDevStructure.extractProjectName(gm));
-  }
-  
-  /**
-   * Build the generator with 4 parameters
-   * @param cpattern : the class name pattern used for generation ({0}Impl for instance)
-   * @param ipattern : the interface name pattern used for generation ({0} for instance)
-   * @param srcDir : the source directory (relative path) in project
-   * @param pname : the project name.
-   */
-  public GenerateDevStructure(final GenModel gm, final String cPattern, final String iPattern, final String srcDir, final String pName) {
     this.genModel = gm;
     this.classPattern = cPattern;
     this.interfacePattern = iPattern;
     this.srcDevDirectory = srcDir;
-    this.projectName = pName;
+    IProject _project = GenerateCommon.getProject(gm);
+    this.project = _project;
+    String _name = this.project.getName();
+    this.projectName = _name;
     this.filesNotGenerated.clear();
   }
   
@@ -106,12 +113,13 @@ public class GenerateDevStructure {
     try {
       IWorkspace _workspace = ResourcesPlugin.getWorkspace();
       final IWorkspaceRoot root = _workspace.getRoot();
-      final IProject proj = root.getProject(this.projectName);
-      this.setFolderAsSourceFolder(proj, this.srcDevDirectory);
+      IProject _project = root.getProject(this.projectName);
+      this.project = _project;
+      this.setFolderAsSourceFolder(this.project, this.srcDevDirectory);
       String _computePackageNameForClasses = this.computePackageNameForClasses(gp);
       String _replace = _computePackageNameForClasses.replace(".", "/");
       String _plus = ((this.srcDevDirectory + "/") + _replace);
-      final IFolder srcFolder = proj.getFolder(_plus);
+      final IFolder srcFolder = this.project.getFolder(_plus);
       IPath _location = srcFolder.getLocation();
       String _oSString = _location.toOSString();
       final String srcAbsolutePath = (_oSString + "/");
@@ -124,7 +132,7 @@ public class GenerateDevStructure {
       String _computePackageNameForInterfaces = this.computePackageNameForInterfaces(gp);
       String _replace_1 = _computePackageNameForInterfaces.replace(".", "/");
       String _plus_1 = ((this.srcDevDirectory + "/") + _replace_1);
-      final IFolder interfaceFolder = proj.getFolder(_plus_1);
+      final IFolder interfaceFolder = this.project.getFolder(_plus_1);
       IPath _location_1 = interfaceFolder.getLocation();
       String _oSString_1 = _location_1.toOSString();
       final String interfaceAbsolutePath = (_oSString_1 + "/");
@@ -154,7 +162,7 @@ public class GenerateDevStructure {
       this.generateOverriddenFactoryInterface(gp, interfaceAbsolutePath);
       this.generateOverriddenFactoryClass(gp, srcAbsolutePath);
       this.generateOverriddenPackageInterface(gp, interfaceAbsolutePath);
-      proj.refreshLocal(IResource.DEPTH_INFINITE, null);
+      this.project.refreshLocal(IResource.DEPTH_INFINITE, null);
       final GenerateFactoryOverrideExtension gfoe = new GenerateFactoryOverrideExtension(this.projectName);
       EPackage _ecorePackage = gp.getEcorePackage();
       String _nsURI = _ecorePackage.getNsURI();
@@ -175,7 +183,7 @@ public class GenerateDevStructure {
   /**
    * add the srcDir as a source directory in the java project, if it is not yet added
    */
-  public void setFolderAsSourceFolder(final IProject proj, final String srcDir) {
+  private void setFolderAsSourceFolder(final IProject proj, final String srcDir) {
     try {
       String _name = proj.getName();
       String _plus = ("/" + _name);
@@ -220,7 +228,8 @@ public class GenerateDevStructure {
   /**
    * This method checks if the genModel has a dynamic templates property and a
    * template directory set to projectName/templates
-   * it returns the changes that has been done on genmodel.
+   * It also copies the ClassJava.jet from the core project.
+   * it returns the a String containing the changes that has been done on genmodel.
    */
   public String setGenModelTemplates(final GenModel gm, final boolean forceSave) {
     final StringBuffer changes = new StringBuffer();
@@ -254,6 +263,15 @@ public class GenerateDevStructure {
         changes.append(("The template directory has been set to : " + expectedTemplateDir));
       }
     }
+    final IFile classJavajet = this.project.getFile((expectedTemplateDir + "/model/Class.javajet"));
+    boolean _exists = classJavajet.exists();
+    boolean _not_2 = (!_exists);
+    if (_not_2) {
+      final EMFPatternExtractor extractor = new EMFPatternExtractor(this.project, this.classPattern, this.interfacePattern);
+      extractor.run();
+      this.refreshWorkspace();
+      changes.append("\nThe Class.javajet has been installed");
+    }
     boolean _and_1 = false;
     int _length_1 = changes.length();
     boolean _greaterThan_1 = (_length_1 > 0);
@@ -286,6 +304,70 @@ public class GenerateDevStructure {
       }
     }
     return changes.toString();
+  }
+  
+  /**
+   * Generate the ant file and return it (or null.
+   */
+  public File generateAntFile() {
+    InputOutput.<String>println("-------> GENERATE THE ANT FILE -----");
+    final GenerateAntFileForCodeGeneration gen = new GenerateAntFileForCodeGeneration();
+    try {
+      final File antFile = gen.generateAntFile(this.genModel);
+      this.refreshWorkspace();
+      return antFile;
+    } catch (final Throwable _t) {
+      if (_t instanceof IOException) {
+        final IOException e = (IOException)_t;
+        e.printStackTrace();
+      } else if (_t instanceof CoreException) {
+        final CoreException e_1 = (CoreException)_t;
+        e_1.printStackTrace();
+      } else {
+        throw Exceptions.sneakyThrow(_t);
+      }
+    }
+    InputOutput.<String>println("-------> END GENERATE THE ANT FILE -----");
+    return null;
+  }
+  
+  /**
+   * generate the source code using the ant generated task
+   * @param f : the ant file to be called
+   */
+  public void generateGenModelCode(final File f) {
+    InputOutput.<String>println("--------- START GENERATE THE EMF CODE -------------");
+    String _absolutePath = f.getAbsolutePath();
+    String _plus = ("on : " + _absolutePath);
+    InputOutput.<String>println(_plus);
+    final AntRunner runner = new AntRunner();
+    String _absolutePath_1 = f.getAbsolutePath();
+    runner.setBuildFileLocation(_absolutePath_1);
+    try {
+      runner.run();
+    } catch (final Throwable _t) {
+      if (_t instanceof CoreException) {
+        final CoreException e = (CoreException)_t;
+        e.printStackTrace();
+      } else {
+        throw Exceptions.sneakyThrow(_t);
+      }
+    }
+    InputOutput.<String>println("--------- END GENERATE THE EMF CODE -------------");
+  }
+  
+  public void refreshWorkspace() {
+    try {
+      IWorkspace _workspace = ResourcesPlugin.getWorkspace();
+      IWorkspaceRoot _root = _workspace.getRoot();
+      _root.refreshLocal(IResource.DEPTH_INFINITE, null);
+    } catch (final Throwable _t) {
+      if (_t instanceof CoreException) {
+        final CoreException e = (CoreException)_t;
+      } else {
+        throw Exceptions.sneakyThrow(_t);
+      }
+    }
   }
   
   public Object generateOverriddenFactoryInterface(final GenPackage gp, final String path) {
@@ -967,18 +1049,5 @@ public class GenerateDevStructure {
       _xblockexpression = _xifexpression;
     }
     return _xblockexpression;
-  }
-  
-  private static String extractProjectName(final GenModel gm) {
-    Resource _eResource = gm.eResource();
-    URI _uRI = _eResource.getURI();
-    String _plus = ("URI of genmodel : " + _uRI);
-    InputOutput.<String>println(_plus);
-    Resource _eResource_1 = gm.eResource();
-    URI _uRI_1 = _eResource_1.getURI();
-    final String genModelUri = _uRI_1.toString();
-    final String nameStartingWithProjectName = genModelUri.replace("platform:/resource/", "");
-    final int pos = nameStartingWithProjectName.indexOf("/");
-    return nameStartingWithProjectName.substring(0, pos);
   }
 }

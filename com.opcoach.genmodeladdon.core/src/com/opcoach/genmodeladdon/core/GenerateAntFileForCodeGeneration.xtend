@@ -38,7 +38,7 @@ class GenerateAntFileForCodeGeneration {
 	}
 
 	def generateAntFile(GenModel gm) throws IOException, CoreException {
-		val s = gm.eResource().toString();
+		val s = gm.eResource().URI.toString();
 		var pos = s.lastIndexOf(File.separator);
 		var modelName = s.substring(pos + 1);
 		pos = modelName.indexOf(".genmodel");

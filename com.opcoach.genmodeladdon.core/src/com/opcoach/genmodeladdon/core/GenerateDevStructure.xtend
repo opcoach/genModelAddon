@@ -6,9 +6,11 @@ import java.io.IOException
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.Map
+import org.eclipse.ant.core.AntRunner
 import org.eclipse.core.resources.IProject
 import org.eclipse.core.resources.IResource
 import org.eclipse.core.resources.ResourcesPlugin
+import org.eclipse.core.runtime.CoreException
 import org.eclipse.core.runtime.IStatus
 import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.core.runtime.Path
@@ -23,39 +25,40 @@ import org.eclipse.jdt.core.IJavaProject
 import org.eclipse.jdt.core.JavaCore
 import org.osgi.framework.FrameworkUtil
 
+/** This class is used to proceed the different steps to generate the development structure
+ * A method is defined for each step :
+ * setGenModelTemplates : will set the dynamic templates and import the Class.javajet if not preset
+ * generateDevStructure : generate the development structure
+ * generateAntFile : generate the ant file to generate the code (usefull for automatic builder)
+ * generateGenModelCode : generate the EMF code using templates (calls the ant file)
+ */
 class GenerateDevStructure {
 
 	String classPattern
 	String interfacePattern
 	String srcDevDirectory
 	var generateFiles = false
+	// Current project for generation
+	IProject project
 
 	String projectName
 	GenModel genModel
 	public Map<String, Object> filesNotGenerated = new HashMap()
 
-	/** Build the generator with 2 parameters
-	 * @param cpattern : the class name pattern used for generation ({0}Impl for instance)
-	 * @param ipattern : the interface name pattern used for generation ({0} for instance)
-	 * @param srcDir : the source directory (relative path) in project
-	 */
-	new(GenModel gm, String cPattern, String iPattern, String srcDir) {
-		this(gm, cPattern, iPattern, srcDir, gm.extractProjectName)
-
-	}
+	
 
 	/** Build the generator with 4 parameters
 	 * @param cpattern : the class name pattern used for generation ({0}Impl for instance)
 	 * @param ipattern : the interface name pattern used for generation ({0} for instance)
 	 * @param srcDir : the source directory (relative path) in project
-	 * @param pname : the project name.
 	 */
-	new(GenModel gm, String cPattern, String iPattern, String srcDir, String pName) {
+	new(GenModel gm, String cPattern, String iPattern, String srcDir) {
 		genModel = gm
 		classPattern = cPattern
 		interfacePattern = iPattern
 		srcDevDirectory = srcDir
-		projectName = pName
+		project = GenerateCommon.getProject(gm)
+		projectName = project.name
 
 		// Reset the files not generated... (they are kept to ask if they must override existing files)
 		filesNotGenerated.clear
@@ -77,18 +80,18 @@ class GenerateDevStructure {
 	def void generateDevStructure(GenPackage gp) {
 
 		val root = ResourcesPlugin.workspace.root
-		val proj = root.getProject(projectName)
+		project = root.getProject(projectName)
 
 		// Add the srcDir as source folder if it is not yet the case
-		setFolderAsSourceFolder(proj, srcDevDirectory)
+		setFolderAsSourceFolder(project, srcDevDirectory)
 
 		// Then create inside the package directory if not exists
-		val srcFolder = proj.getFolder(srcDevDirectory + "/" + gp.computePackageNameForClasses.replace(".", "/"))
+		val srcFolder = project.getFolder(srcDevDirectory + "/" + gp.computePackageNameForClasses.replace(".", "/"))
 		val srcAbsolutePath = srcFolder.location.toOSString + "/"
 		val f = new File(srcAbsolutePath)
 		if(!f.exists) f.mkdirs
 
-		val interfaceFolder = proj.getFolder(
+		val interfaceFolder = project.getFolder(
 			srcDevDirectory + "/" + gp.computePackageNameForInterfaces.replace(".", "/"))
 		val interfaceAbsolutePath = interfaceFolder.location.toOSString + "/"
 		val f2 = new File(interfaceAbsolutePath)
@@ -109,7 +112,7 @@ class GenerateDevStructure {
 		// Generate  package interface (used to have a dev interface compliant with generated code)
 		gp.generateOverriddenPackageInterface(interfaceAbsolutePath)
 
-		proj.refreshLocal(IResource.DEPTH_INFINITE, null)
+		project.refreshLocal(IResource.DEPTH_INFINITE, null)
 
 		// Add the factory override extension
 		val gfoe = new GenerateFactoryOverrideExtension(projectName)
@@ -122,7 +125,7 @@ class GenerateDevStructure {
 	}
 
 	/** add the srcDir as a source directory in the java project, if it is not yet added */
-	def setFolderAsSourceFolder(IProject proj, String srcDir) {
+	def private setFolderAsSourceFolder(IProject proj, String srcDir) {
 		val expectedSrcDir = "/" + proj.name + "/" + srcDir
 		val nat = proj.getNature(JavaCore::NATURE_ID)
 
@@ -147,65 +150,114 @@ class GenerateDevStructure {
 		}
 
 	}
-	
+
 	/**
 	 * This method checks if the genModel has a dynamic templates property and a
 	 * template directory set to projectName/templates
-	 * it returns the changes that has been done on genmodel.
+	 * It also copies the ClassJava.jet from the core project.
+	 * it returns the a String containing the changes that has been done on genmodel.
 	 */
-	def public String setGenModelTemplates(GenModel gm, boolean forceSave)
-	{
+	def public String setGenModelTemplates(GenModel gm, boolean forceSave) {
 		val changes = new StringBuffer();
 
-		if (!gm.isDynamicTemplates())
-		{
+		if (!gm.isDynamicTemplates()) {
 			gm.setDynamicTemplates(true);
 			changes.append("The dynamic template property must be set to true");
 		}
-		
+
 		gm.importOrganizing = true;
 
 		val expectedTemplateDir = "/" + projectName + "/templates";
 		val currentTemplateDir = gm.getTemplateDirectory();
-		if (!expectedTemplateDir.equals(currentTemplateDir))
-		{
+		if (!expectedTemplateDir.equals(currentTemplateDir)) {
 			gm.setTemplateDirectory(expectedTemplateDir);
-			if ((currentTemplateDir != null) && (currentTemplateDir.length() > 0))
-			{
+			if ((currentTemplateDir != null) && (currentTemplateDir.length() > 0)) {
 				changes.append("\nThe  template directory must be changed :  \n");
 				changes.append("\n   Previous value was : " + currentTemplateDir);
 				changes.append("\n   New value is       : " + expectedTemplateDir);
 
-			} else
-			{
+			} else {
 				changes.append("The template directory has been set to : " + expectedTemplateDir);
 			}
 		}
 
+		// Extract EMF templates to modify the way to inherit from ancestor
+		val classJavajet = project.getFile(expectedTemplateDir + "/model/Class.javajet")
+		if (!classJavajet.exists) {
+			val extractor = new EMFPatternExtractor(project, classPattern, interfacePattern);
+			extractor.run();
+			refreshWorkspace();
+			changes.append("\nThe Class.javajet has been installed")
+		}
+
 		// Inform user of changes and save the file.
-		if ((changes.length() > 0) && forceSave)
-		{
-				val Map<Object, Object> opt = new HashMap<Object, Object>();
-				opt.put(Resource.OPTION_SAVE_ONLY_IF_CHANGED, Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER);
-				opt.put(Resource.OPTION_LINE_DELIMITER, Resource.OPTION_LINE_DELIMITER_UNSPECIFIED);
-				try
-				{
-					gm.eResource().save(opt);
-				} catch (IOException e)
-				{
-					val bundle = FrameworkUtil.getBundle(this.getClass());
-					val logger = Platform.getLog(bundle);
-					logger.log(new Status(IStatus.WARNING, bundle.getSymbolicName(),
-							"Unable to save the genModel in : " + gm.eResource(), e));
-				}
-			
+		if ((changes.length() > 0) && forceSave) {
+			val Map<Object, Object> opt = new HashMap<Object, Object>();
+			opt.put(Resource.OPTION_SAVE_ONLY_IF_CHANGED, Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER);
+			opt.put(Resource.OPTION_LINE_DELIMITER, Resource.OPTION_LINE_DELIMITER_UNSPECIFIED);
+			try {
+				gm.eResource().save(opt);
+			} catch (IOException e) {
+				val bundle = FrameworkUtil.getBundle(this.getClass());
+				val logger = Platform.getLog(bundle);
+				logger.log(new Status(IStatus.WARNING, bundle.getSymbolicName(),
+					"Unable to save the genModel in : " + gm.eResource(), e));
+			}
 
 		}
 
 		return changes.toString;
 
 	}
-	
+
+	/** Generate the ant file and return it (or null.  */
+	def generateAntFile() {
+		println("-------> GENERATE THE ANT FILE -----");
+
+		val gen = new GenerateAntFileForCodeGeneration();
+		try {
+			val antFile = gen.generateAntFile(genModel);
+			refreshWorkspace
+			return antFile
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
+
+		println("-------> END GENERATE THE ANT FILE -----");
+		return null;
+	}
+
+	/** generate the source code using the ant generated task 
+	 * @param f : the ant file to be called */
+	def void generateGenModelCode(File f) {
+
+		println("--------- START GENERATE THE EMF CODE -------------");
+		println("on : " + f.getAbsolutePath());
+
+		val runner = new AntRunner
+		runner.setBuildFileLocation(f.getAbsolutePath());
+
+		// Bundle b = FrameworkUtil.getBundle(GenModelAddonTestCase.class);
+		// runner.setCustomClasspath(new URL[] { b.getEntry("ant_tasks/importer.ecore.tasks.jar")});
+		try {
+			runner.run();
+			
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
+		println("--------- END GENERATE THE EMF CODE -------------");
+
+	}
+
+	def void refreshWorkspace() {
+		try {
+			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
+		} catch (CoreException e) {
+		}
+	}
 
 	def generateOverriddenFactoryInterface(GenPackage gp, String path) {
 		val filename = path + gp.computeFactoryInterfaceName + ".java"
@@ -463,13 +515,5 @@ class GenerateDevStructure {
 			gp.packageName.toFirstUpper + "Package"
 	}
 
-	private static def extractProjectName(GenModel gm) {
-		println("URI of genmodel : " + gm.eResource.URI)
-		val genModelUri = gm.eResource.URI.toString
-		val nameStartingWithProjectName = genModelUri.replace("platform:/resource/", "")
-		val pos = nameStartingWithProjectName.indexOf("/")
-		return nameStartingWithProjectName.substring(0, pos)
-
-	}
 
 }
