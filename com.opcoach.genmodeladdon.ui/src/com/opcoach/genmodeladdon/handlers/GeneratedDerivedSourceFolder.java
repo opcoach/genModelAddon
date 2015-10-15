@@ -3,12 +3,14 @@ package com.opcoach.genmodeladdon.handlers;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Named;
 
 import org.eclipse.core.runtime.ILog;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
@@ -18,6 +20,8 @@ import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.osgi.framework.Bundle;
@@ -50,7 +54,7 @@ public class GeneratedDerivedSourceFolder extends GenerateParentHandler
 			String cp = dial.getDevClassPattern();
 			String src = dial.getSrcDir();
 
-			GenerateDevStructure gds = new GenerateDevStructure(gm, cp, ip, src);
+			final GenerateDevStructure gds = new GenerateDevStructure(gm, cp, ip, src);
 
 			// Check the genModel dynamic templates.
 			String changes = gds.setGenModelTemplates(gm, false);
@@ -132,13 +136,38 @@ public class GeneratedDerivedSourceFolder extends GenerateParentHandler
 				{
 					// Generate the ant file and call it with the ant Runner
 					// Generate the ant file to generate emf code
-					File antFile = gds.generateAntFile();
+					final File antFile = gds.generateAntFile();
 
 					// Once dev structure is generated and ant file too, can call it !
-					gds.generateGenModelCode(antFile);
+					ProgressMonitorDialog pmd = new ProgressMonitorDialog(parentShell);
+					pmd.open();
+					try
+					{
+						pmd.run(true, true, new IRunnableWithProgress()
+							{
+								
+								@Override
+								public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException
+								{
+									monitor.setTaskName("Generating EMF code");
+									gds.generateGenModelCode(antFile, monitor);
+									
+								}
+							});
+					} catch (InvocationTargetException e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (InterruptedException e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					
 					// Then should reorganize imports in the project in package explorer view ! 
-					
+					MessageDialog.openInformation(parentShell, "Don't forget to reorganize imports", 
+							"Generation is finished. \n\n"
+							+ "The last manual step is to reorganize imports on src-gen directory ! ");
 				}
 			}
 

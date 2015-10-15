@@ -91,7 +91,7 @@ public class GenModelAddonTestCase
 		File antFile = gen.generateAntFile();
 
 		// Once dev structure is generated and ant file too, can call it !
-		gen.generateGenModelCode(antFile);
+		gen.generateGenModelCode(antFile, new NullProgressMonitor());
 
 	}
 

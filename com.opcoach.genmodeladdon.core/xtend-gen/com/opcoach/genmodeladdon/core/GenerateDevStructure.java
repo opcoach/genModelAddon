@@ -25,6 +25,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -76,6 +77,8 @@ public class GenerateDevStructure {
   
   public Map<String, Object> filesNotGenerated = new HashMap<String, Object>();
   
+  private String modelName;
+  
   /**
    * Build the generator with 4 parameters
    * @param cpattern : the class name pattern used for generation ({0}Impl for instance)
@@ -91,6 +94,8 @@ public class GenerateDevStructure {
     this.project = _project;
     String _name = this.project.getName();
     this.projectName = _name;
+    String _modelName = GenerateCommon.getModelName(gm);
+    this.modelName = _modelName;
     this.filesNotGenerated.clear();
   }
   
@@ -311,10 +316,11 @@ public class GenerateDevStructure {
    */
   public File generateAntFile() {
     InputOutput.<String>println("-------> GENERATE THE ANT FILE -----");
+    this.refreshWorkspace();
     final GenerateAntFileForCodeGeneration gen = new GenerateAntFileForCodeGeneration();
     try {
-      final File antFile = gen.generateAntFile(this.genModel);
-      this.refreshWorkspace();
+      final File antFile = gen.generateAntFile(this.modelName, this.project);
+      this.project.refreshLocal(1, null);
       return antFile;
     } catch (final Throwable _t) {
       if (_t instanceof IOException) {
@@ -335,7 +341,7 @@ public class GenerateDevStructure {
    * generate the source code using the ant generated task
    * @param f : the ant file to be called
    */
-  public void generateGenModelCode(final File f) {
+  public void generateGenModelCode(final File f, final IProgressMonitor monitor) {
     InputOutput.<String>println("--------- START GENERATE THE EMF CODE -------------");
     String _absolutePath = f.getAbsolutePath();
     String _plus = ("on : " + _absolutePath);
@@ -344,7 +350,8 @@ public class GenerateDevStructure {
     String _absolutePath_1 = f.getAbsolutePath();
     runner.setBuildFileLocation(_absolutePath_1);
     try {
-      runner.run();
+      runner.run(monitor);
+      this.refreshWorkspace();
     } catch (final Throwable _t) {
       if (_t instanceof CoreException) {
         final CoreException e = (CoreException)_t;

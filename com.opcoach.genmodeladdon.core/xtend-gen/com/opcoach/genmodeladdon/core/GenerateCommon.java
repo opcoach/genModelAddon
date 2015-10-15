@@ -55,4 +55,20 @@ public class GenerateCommon {
     }
     return _xblockexpression;
   }
+  
+  /**
+   * Find the model name from the genmodel
+   */
+  public static String getModelName(final GenModel gm) {
+    Resource _eResource = gm.eResource();
+    final URI uri = _eResource.getURI();
+    final String s = uri.toString();
+    int pos = s.lastIndexOf(File.separator);
+    String modelName = s.substring((pos + 1));
+    int _indexOf = modelName.indexOf(".genmodel");
+    pos = _indexOf;
+    String _substring = modelName.substring(0, pos);
+    modelName = _substring;
+    return modelName;
+  }
 }

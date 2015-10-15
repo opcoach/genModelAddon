@@ -1,6 +1,5 @@
 package com.opcoach.genmodeladdon.core;
 
-import com.opcoach.genmodeladdon.core.GenerateCommon;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -8,9 +7,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtend2.lib.StringConcatenation;
 
 @SuppressWarnings("all")
@@ -63,8 +59,7 @@ public class GenerateAntFileForCodeGeneration {
     return _builder;
   }
   
-  public File getAntFile(final GenModel gm) {
-    final IProject proj = GenerateCommon.getProject(gm);
+  public File getAntFile(final IProject proj) {
     final IPath location = proj.getLocation();
     String _oSString = location.toOSString();
     String _plus = (_oSString + File.separator);
@@ -73,17 +68,8 @@ public class GenerateAntFileForCodeGeneration {
     return f;
   }
   
-  public File generateAntFile(final GenModel gm) throws IOException, CoreException {
-    Resource _eResource = gm.eResource();
-    URI _uRI = _eResource.getURI();
-    final String s = _uRI.toString();
-    int pos = s.lastIndexOf(File.separator);
-    String modelName = s.substring((pos + 1));
-    int _indexOf = modelName.indexOf(".genmodel");
-    pos = _indexOf;
-    String _substring = modelName.substring(0, pos);
-    modelName = _substring;
-    final File f = this.getAntFile(gm);
+  public File generateAntFile(final String modelName, final IProject proj) throws IOException, CoreException {
+    final File f = this.getAntFile(proj);
     boolean _exists = f.exists();
     boolean _not = (!_exists);
     if (_not) {
@@ -95,7 +81,6 @@ public class GenerateAntFileForCodeGeneration {
     fw.write(_string);
     fw.flush();
     fw.close();
-    final IProject proj = GenerateCommon.getProject(gm);
     proj.refreshLocal(IResource.DEPTH_ONE, null);
     return f;
   }

@@ -11,6 +11,7 @@ import org.eclipse.core.resources.IProject
 import org.eclipse.core.resources.IResource
 import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.CoreException
+import org.eclipse.core.runtime.IProgressMonitor
 import org.eclipse.core.runtime.IStatus
 import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.core.runtime.Path
@@ -44,8 +45,8 @@ class GenerateDevStructure {
 	String projectName
 	GenModel genModel
 	public Map<String, Object> filesNotGenerated = new HashMap()
-
 	
+	String modelName
 
 	/** Build the generator with 4 parameters
 	 * @param cpattern : the class name pattern used for generation ({0}Impl for instance)
@@ -59,6 +60,7 @@ class GenerateDevStructure {
 		srcDevDirectory = srcDir
 		project = GenerateCommon.getProject(gm)
 		projectName = project.name
+		modelName = GenerateCommon.getModelName(gm)
 
 		// Reset the files not generated... (they are kept to ask if they must override existing files)
 		filesNotGenerated.clear
@@ -213,17 +215,17 @@ class GenerateDevStructure {
 	/** Generate the ant file and return it (or null.  */
 	def generateAntFile() {
 		println("-------> GENERATE THE ANT FILE -----");
-
+		refreshWorkspace
 		val gen = new GenerateAntFileForCodeGeneration();
 		try {
-			val antFile = gen.generateAntFile(genModel);
-			refreshWorkspace
+			val antFile = gen.generateAntFile(modelName, project);
+			project.refreshLocal(1, null)
 			return antFile
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			e.printStackTrace;
 		} catch (CoreException e) {
-			e.printStackTrace();
+			e.printStackTrace;
 		}
 
 		println("-------> END GENERATE THE ANT FILE -----");
@@ -232,7 +234,7 @@ class GenerateDevStructure {
 
 	/** generate the source code using the ant generated task 
 	 * @param f : the ant file to be called */
-	def void generateGenModelCode(File f) {
+	def void generateGenModelCode(File f, IProgressMonitor monitor) {
 
 		println("--------- START GENERATE THE EMF CODE -------------");
 		println("on : " + f.getAbsolutePath());
@@ -243,10 +245,11 @@ class GenerateDevStructure {
 		// Bundle b = FrameworkUtil.getBundle(GenModelAddonTestCase.class);
 		// runner.setCustomClasspath(new URL[] { b.getEntry("ant_tasks/importer.ecore.tasks.jar")});
 		try {
-			runner.run();
-			
+			runner.run(monitor);
+			refreshWorkspace
+
 		} catch (CoreException e) {
-			e.printStackTrace();
+			e.printStackTrace;
 		}
 		println("--------- END GENERATE THE EMF CODE -------------");
 
@@ -514,6 +517,5 @@ class GenerateDevStructure {
 		else
 			gp.packageName.toFirstUpper + "Package"
 	}
-
 
 }

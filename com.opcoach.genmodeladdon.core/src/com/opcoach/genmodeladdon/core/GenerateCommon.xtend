@@ -32,4 +32,16 @@ class GenerateCommon {
 		val projectName = getProjectName(gm)
 		ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 	}
+	
+	/** Find the model name from the genmodel */
+	def static getModelName(GenModel gm)
+	{
+		val uri = gm.eResource.URI
+		val s = uri.toString;
+		var pos = s.lastIndexOf(File.separator);
+		var modelName = s.substring(pos + 1);
+		pos = modelName.indexOf(".genmodel");
+		modelName = modelName.substring(0, pos);
+		return modelName
+	}
 }

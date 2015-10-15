@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import javax.inject.Named;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
@@ -13,6 +14,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 
 import com.opcoach.genmodeladdon.core.GenerateAntFileForCodeGeneration;
+import com.opcoach.genmodeladdon.core.GenerateCommon;
 
 public class GenerateAntFileHandler extends GenerateParentHandler
 {
@@ -24,8 +26,8 @@ public class GenerateAntFileHandler extends GenerateParentHandler
 			@Named(IServiceConstants.ACTIVE_SELECTION) GenModel gm)
 	{
 		GenerateAntFileForCodeGeneration gen = new GenerateAntFileForCodeGeneration();
-
-		File f = gen.getAntFile(gm);
+		IProject proj = GenerateCommon.getProject(gm);
+		File f = gen.getAntFile(proj);
 		boolean createFile = true;
 		if (f.exists())
 		{
@@ -35,16 +37,11 @@ public class GenerateAntFileHandler extends GenerateParentHandler
 
 		if (createFile)
 		{
-
-			String s = gm.eResource().toString();
-			int pos = s.lastIndexOf(File.separator);
-			String modelName = s.substring(pos + 1);
-			pos = modelName.indexOf(".genmodel");
-			modelName = modelName.substring(0, pos);
+			String modelName = GenerateCommon.getModelName(gm);
 
 			try
 			{
-				gen.generateAntFile(gm);
+				gen.generateAntFile(modelName, proj);
 				
 			} catch (IOException e)
 			{
