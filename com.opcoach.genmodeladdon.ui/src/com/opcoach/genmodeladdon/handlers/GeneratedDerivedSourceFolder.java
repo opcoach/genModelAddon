@@ -143,7 +143,7 @@ public class GeneratedDerivedSourceFolder extends GenerateParentHandler
 					pmd.open();
 					try
 					{
-						pmd.run(true, true, new IRunnableWithProgress()
+						pmd.run(true, false, new IRunnableWithProgress()
 							{
 								
 								@Override

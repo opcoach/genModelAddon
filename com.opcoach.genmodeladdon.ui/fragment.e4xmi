@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ASCII"?>
 <fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmlns:ui="http://www.eclipse.org/ui/2010/UIModel/application/ui" xmi:id="_FqR_0PvWEeSRa5pGQfH9tQ">
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_HVAcQPvWEeSRa5pGQfH9tQ" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
-    <elements xsi:type="commands:Command" xmi:id="_MD83oPvWEeSRa5pGQfH9tQ" elementId="com.opcoach.genmodeladdon.generateSourceFolderE4" commandName="Generate Derived Source Folder" description="Generate the structure for developpers"/>
+    <elements xsi:type="commands:Command" xmi:id="_MD83oPvWEeSRa5pGQfH9tQ" elementId="com.opcoach.genmodeladdon.generateSourceFolderE4" commandName="Generate Developper Structure" description="Generate the structure for developpers"/>
     <elements xsi:type="commands:Command" xmi:id="_M8zLMPvWEeSRa5pGQfH9tQ" elementId="com.opcoach.genmodeladdon.ui.generateAntFile" commandName="Generate Ant file for code generation"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_z-JREPvcEeSRa5pGQfH9tQ" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
@@ -10,11 +10,11 @@
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_3eoVQPvcEeSRa5pGQfH9tQ" featurename="menuContributions" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="menu:MenuContribution" xmi:id="_6NdsUPvXEeSRa5pGQfH9tQ" elementId="com.opcoach.genmodeladdon.ui.menucontribution.0" positionInParent="before=open-actions" parentId="org.eclipse.emf.codegen.ecore.genmodel.presentation.GenModelEditorID">
-      <children xsi:type="menu:Menu" xmi:id="_Bl2PIPvYEeSRa5pGQfH9tQ" elementId="com.opcoach.gendevmenu" label="Generate Dev" iconURI="platform:/plugin/com.opcoach.genmodeladdon.ui/icons/opcoach.png">
-        <visibleWhen xsi:type="ui:CoreExpression" xmi:id="_tTdsUPvdEeSRa5pGQfH9tQ" coreExpressionId="com.opcoach.genmodeladdon.ui.genModelSelected"/>
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_R4cT4PvYEeSRa5pGQfH9tQ" elementId="com.opcoach.genmodeladdon.ui.handledmenuitem.0" command="_MD83oPvWEeSRa5pGQfH9tQ"/>
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_TNFLkPvYEeSRa5pGQfH9tQ" elementId="com.opcoach.genmodeladdon.ui.handledmenuitem.1" command="_M8zLMPvWEeSRa5pGQfH9tQ"/>
+      <children xsi:type="menu:MenuSeparator" xmi:id="_e35UQHN2EeWkc5nT9MKUaA" elementId="com.opcoach.genmodeladdon.ui.menuseparator.0"/>
+      <children xsi:type="menu:HandledMenuItem" xmi:id="_R4cT4PvYEeSRa5pGQfH9tQ" elementId="com.opcoach.genmodeladdon.ui.handledmenuitem." label="" iconURI="platform:/plugin/com.opcoach.genmodeladdon.ui/icons/opcoach.png" command="_MD83oPvWEeSRa5pGQfH9tQ">
+        <visibleWhen xsi:type="ui:CoreExpression" xmi:id="_B0R0EHN2EeWkc5nT9MKUaA" coreExpressionId="com.opcoach.genmodeladdon.ui.genModelSelected"/>
       </children>
+      <children xsi:type="menu:MenuSeparator" xmi:id="_gyjqIHN2EeWkc5nT9MKUaA" elementId="com.opcoach.genmodeladdon.ui.menuseparator.1"/>
     </elements>
   </fragments>
 </fragment:ModelFragments>
