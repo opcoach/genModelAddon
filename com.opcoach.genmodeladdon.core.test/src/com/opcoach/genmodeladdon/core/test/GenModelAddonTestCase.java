@@ -189,7 +189,10 @@ public class GenModelAddonTestCase
 				line = fr.readLine();
 			}
 
-		} catch (CoreException | IOException e)
+		} catch (CoreException e)
+		{
+			e.printStackTrace();
+		} catch (IOException e)
 		{
 			e.printStackTrace();
 		} finally

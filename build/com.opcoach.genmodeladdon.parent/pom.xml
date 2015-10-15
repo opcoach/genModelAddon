@@ -67,10 +67,10 @@
 	<modules>
 		<module>../../com.opcoach.genmodeladdon.core</module>
 		<module>../../com.opcoach.genmodeladdon.sample</module>
-		<module>../../com.opcoach.genmodeladdon.core.test</module>
 		<module>../../com.opcoach.genmodeladdon.ui</module>
 		<module>../com.opcoach.genmodeladdon.feature</module>
 		<module>../com.opcoach.genmodeladdon.repository</module>
+		<module>../../com.opcoach.genmodeladdon.core.test</module>
 	</modules>
 
 </project>
