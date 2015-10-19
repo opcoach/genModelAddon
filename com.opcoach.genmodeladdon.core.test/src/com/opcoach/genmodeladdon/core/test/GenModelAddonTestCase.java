@@ -30,14 +30,10 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.importer.ecore.taskdefs.EcoreGeneratorTask;
 import org.junit.BeforeClass;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
-import org.osgi.framework.FrameworkUtil;
 
-import com.opcoach.genmodeladdon.core.EMFPatternExtractor;
-import com.opcoach.genmodeladdon.core.GenerateAntFileForCodeGeneration;
 import com.opcoach.genmodeladdon.core.GenerateDevStructure;
 
 public class GenModelAddonTestCase
