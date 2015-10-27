@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.osgi.framework.Bundle;
 
 @SuppressWarnings("all")
@@ -98,11 +99,22 @@ public class EMFPatternExtractor implements Runnable {
         IPath tgtSourcePath = ((IPath) null);
         final IProject javaTargetProject = ((IProject) this.targetProject);
         final IFolder sourcePath = javaTargetProject.getFolder(EMFPatternExtractor.TARGET_SOURCE_PATH);
+        InputOutput.<String>println(("The sourcePath is : " + sourcePath));
         boolean _exists = sourcePath.exists();
         boolean _not = (!_exists);
         if (_not) {
-          NullProgressMonitor _nullProgressMonitor = new NullProgressMonitor();
-          sourcePath.create(true, true, _nullProgressMonitor);
+          try {
+            NullProgressMonitor _nullProgressMonitor = new NullProgressMonitor();
+            sourcePath.create(true, true, _nullProgressMonitor);
+          } catch (final Throwable _t) {
+            if (_t instanceof Exception) {
+              final Exception e = (Exception)_t;
+              InputOutput.<String>println(("Unable to create the file :  " + sourcePath));
+              e.printStackTrace();
+            } else {
+              throw Exceptions.sneakyThrow(_t);
+            }
+          }
         }
         IPath _fullPath = sourcePath.getFullPath();
         tgtSourcePath = _fullPath;

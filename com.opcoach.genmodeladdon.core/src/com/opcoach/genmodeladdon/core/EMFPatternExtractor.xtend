@@ -61,8 +61,16 @@ class EMFPatternExtractor implements Runnable {
 				var tgtSourcePath = null as IPath
 				val javaTargetProject = targetProject as IProject
 				val sourcePath = javaTargetProject.getFolder(TARGET_SOURCE_PATH)
+				println("The sourcePath is : "+ sourcePath)
 				if (!sourcePath.exists) {
+					try {
 					sourcePath.create(true, true, new NullProgressMonitor())
+					}
+					catch (Exception e)
+					{
+						println("Unable to create the file :  " + sourcePath);
+						e.printStackTrace
+					}
 				}
 				tgtSourcePath = sourcePath.fullPath
 				if (tgtSourcePath != null) {
