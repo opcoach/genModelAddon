@@ -28,18 +28,27 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.osgi.framework.FrameworkUtil;
 
+import com.opcoach.genmodeladdon.Util;
+
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+
 public class DerivedSourceParametersDialog extends Dialog
 {
-	private static final String DEFAULT_SRC_DEV = "src";
 	// Define the properties constants to retrieve values in dialog.
 	private static final String PLUGIN_ID = "com.opcoach.genmodeladdon.ui";
 	private static final QualifiedName PROP_INTERFACE_PATTERN = new QualifiedName(PLUGIN_ID, "interfacePattern");
 	private static final QualifiedName PROP_CLASS_PATTERN = new QualifiedName(PLUGIN_ID, "classPattern");
 	private static final QualifiedName PROP_SRCDIR = new QualifiedName(PLUGIN_ID, "srcDir");
 
-	// Constants for the default name patterns
-	private static final String DEFAULT_INTERFACE_PATTERN = "{0}";
-	private static final String DEFAULT_CLASS_IMPL_PATTERN = "{0}Impl";
+	// Constants for the default name patterns and directories
+	private static final String ADVISED_GEN_INTERFACE_PATTERN = "M{0}";
+	private static final String ADVISED_GEN_CLASS_IMPL_PATTERN = "M{0}Impl";
+	private static final String ADVISED_GEN_SRC_DIR = "src-gen";
+	
+	private static final String DEFAULT_SRC_DEV = "src";
+	private static final String DEFAULT_DEV_INTERFACE_PATTERN = "{0}";
+	private static final String DEFAULT_DEV_CLASS_IMPL_PATTERN = "{0}Impl";
 
 	private Text genInterfacePattern;
 	private Text genClassPattern;
@@ -51,6 +60,16 @@ public class DerivedSourceParametersDialog extends Dialog
 	private String interfacePattern;
 	private String classPattern;
 	private String srcDir;
+	private Button btnEditValues;
+	private Button btnRestoreCurrentValues;
+	private Button btnAdvisedValues;
+	private Shell parent;
+	
+	// Initial values in gen model in case of reverse change
+	private String genClassPatternInitial;
+	private String genInterfacePatternInitial;
+	private String genSrcDirInitial;
+	private boolean editGenModelValues;
 
 	/**
 	 * Create the dialog.
@@ -60,8 +79,14 @@ public class DerivedSourceParametersDialog extends Dialog
 	public DerivedSourceParametersDialog(Shell parentShell)
 	{
 		super(parentShell);
-		setShellStyle(SWT.RESIZE);
+		setShellStyle(SWT.RESIZE | SWT.TITLE);
 	}
+	
+	@Override
+	 protected void configureShell(Shell shell) {
+	      super.configureShell(shell);
+	      shell.setText("Developer Structure Generation Parameters");
+	   }
 
 	/**
 	 * Create contents of the dialog.
@@ -77,47 +102,88 @@ public class DerivedSourceParametersDialog extends Dialog
 		grpParametersSetIn.setLayout(new GridLayout(2, false));
 		grpParametersSetIn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		grpParametersSetIn.setText("Parameters set in genModel (src-gen)");
+			
+		Composite composite = new Composite(grpParametersSetIn, SWT.NONE);
+		composite.setLayout(new GridLayout(3, false));
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+		
+		btnEditValues = new Button(composite, SWT.CHECK);
+		btnEditValues.setText("Edit values");
+	
+		btnAdvisedValues = new Button(composite, SWT.NONE);
+		btnAdvisedValues.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				genSourceDir.setText(ADVISED_GEN_SRC_DIR);
+				genInterfacePattern.setText(ADVISED_GEN_INTERFACE_PATTERN);
+				genClassPattern.setText(ADVISED_GEN_CLASS_IMPL_PATTERN);
+			}
+		});
+		btnAdvisedValues.setText("Set advised values");
+		btnAdvisedValues.setToolTipText("Set relevant values in genModel");
+		
+		btnRestoreCurrentValues = new Button(composite, SWT.NONE);
+		btnRestoreCurrentValues.setText("Restore genModel values");
+		btnRestoreCurrentValues.setToolTipText("Restore the current values set in genModel");
+
+		btnRestoreCurrentValues.addSelectionListener(new SelectionAdapter()
+			{@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				genSourceDir.setText(genSrcDirInitial);
+				genInterfacePattern.setText(genInterfacePatternInitial);
+				genClassPattern.setText(genClassPatternInitial);
+
+			}
+			});
+		
+		btnEditValues.addSelectionListener(new SelectionAdapter()
+		{ @Override
+		public void widgetSelected(SelectionEvent e)
+		{
+			setGenModelParametersEditable();
+		}
+
+		});
 
 		Label lblGenSourceDirectory = new Label(grpParametersSetIn, SWT.NONE);
 		lblGenSourceDirectory.setToolTipText("For generated source directory, convention is to have 'src-gen'");
 		lblGenSourceDirectory.setText("Gen source directory :");
-		lblGenSourceDirectory.setBounds(0, 0, 114, 14);
-
+		
 		genSourceDir = new Text(grpParametersSetIn, SWT.BORDER);
 		genSourceDir.setToolTipText("For generated source directory, convention is to have 'src-gen'");
 		genSourceDir.setEnabled(false);
 		genSourceDir.setEditable(false);
 		genSourceDir.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		genSourceDir.setBounds(0, 0, 259, 19);
 
 		Label lblInterafacePatternName = new Label(grpParametersSetIn, SWT.NONE);
 		lblInterafacePatternName
-				.setToolTipText("This value comes from the genModel file. {0} is the name of the EClass. A good idea here is to prefix default names with M to mean 'Model' or 'G' to mean 'Generated'. \nExample : M{0}  for the EClass 'Car' will generate the 'MCar' interface");
+		.setToolTipText("This value comes from the genModel file. {0} is the name of the EClass. A good idea here is to prefix default names with M to mean 'Model' or 'G' to mean 'Generated'. \nExample : M{0}  for the EClass 'Car' will generate the 'MCar' interface");
 		lblInterafacePatternName.setText("Gen Interface pattern name :");
 
 		genInterfacePattern = new Text(grpParametersSetIn, SWT.BORDER);
 		genInterfacePattern.setEditable(false);
 		genInterfacePattern.setEnabled(false);
 		genInterfacePattern
-				.setToolTipText("This value comes from the genModel file. {0} is the name of the EClass. A good idea here is to prefix default names with M to mean 'Model' or 'G' to mean 'Generated'. \nExample : M{0}  for the EClass 'Car' will generate the 'MCar' interface");
+		.setToolTipText("This value comes from the genModel file. {0} is the name of the EClass. A good idea here is to prefix default names with M to mean 'Model' or 'G' to mean 'Generated'. \nExample : M{0}  for the EClass 'Car' will generate the 'MCar' interface");
 		genInterfacePattern.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		Label lblClassPatternName = new Label(grpParametersSetIn, SWT.NONE);
 		lblClassPatternName
-				.setToolTipText("This value comes from the genModel file. {0} is the name of the EClass. A good idea here is to prefix default names with M to mean 'Model' or 'G' to mean 'Generated'. \nExample : M{0}Impl  for the EClass 'Car' will generate the 'MCarImpl' class");
+		.setToolTipText("This value comes from the genModel file. {0} is the name of the EClass. A good idea here is to prefix default names with M to mean 'Model' or 'G' to mean 'Generated'. \nExample : M{0}Impl  for the EClass 'Car' will generate the 'MCarImpl' class");
 		lblClassPatternName.setText("Gen Class pattern name :");
-		lblClassPatternName.setBounds(0, 0, 138, 14);
 
 		genClassPattern = new Text(grpParametersSetIn, SWT.BORDER);
 		genClassPattern.setEditable(false);
 		genClassPattern.setEnabled(false);
 		genClassPattern
-				.setToolTipText("This value comes from the genModel file. {0} is the name of the EClass. A good idea here is to prefix default names with M to mean 'Model' or 'G' to mean 'Generated'. \nExample : M{0}Impl  for the EClass 'Car' will generate the 'MCarImpl' class");
+		.setToolTipText("This value comes from the genModel file. {0} is the name of the EClass. A good idea here is to prefix default names with M to mean 'Model' or 'G' to mean 'Generated'. \nExample : M{0}Impl  for the EClass 'Car' will generate the 'MCarImpl' class");
 		genClassPattern.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		genClassPattern.setBounds(0, 0, 259, 19);
 
+		setGenModelParametersEditable();
+				
 		Group grpParametersForGeneration = new Group(container, SWT.NONE);
-		grpParametersForGeneration.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		grpParametersForGeneration.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		grpParametersForGeneration.setText("Parameters for dev generation (src)");
 		grpParametersForGeneration.setLayout(new GridLayout(2, false));
 
@@ -152,6 +218,19 @@ public class DerivedSourceParametersDialog extends Dialog
 
 		return container;
 	}
+	
+	private void setGenModelParametersEditable()
+	{
+		editGenModelValues = btnEditValues.getSelection();
+		genSourceDir.setEnabled(editGenModelValues);
+		genSourceDir.setEditable(editGenModelValues);
+		genInterfacePattern.setEditable(editGenModelValues);
+		genInterfacePattern.setEnabled(editGenModelValues);
+		genClassPattern.setEditable(editGenModelValues);
+		genClassPattern.setEnabled(editGenModelValues);
+		btnRestoreCurrentValues.setEnabled(editGenModelValues);
+		btnAdvisedValues.setEnabled(editGenModelValues);
+	}
 
 	public void setGenModel(GenModel gm)
 	{
@@ -166,20 +245,26 @@ public class DerivedSourceParametersDialog extends Dialog
 		return ws.getFile(p);
 	}
 
-	public void updateValues()
+	private void updateValues()
 	{
 
 		// Set the default values depending on values found in genmodel and in
 		// properties.
-		String cp = genModel.getClassNamePattern() == null ? DEFAULT_CLASS_IMPL_PATTERN : genModel
+		String cp = genModel.getClassNamePattern() == null ? DEFAULT_DEV_CLASS_IMPL_PATTERN : genModel
 				.getClassNamePattern();
 		genClassPattern.setText(cp);
-		String ip = genModel.getInterfaceNamePattern() == null ? DEFAULT_INTERFACE_PATTERN : genModel
+		genClassPatternInitial = cp;
+
+		String ip = genModel.getInterfaceNamePattern() == null ? DEFAULT_DEV_INTERFACE_PATTERN : genModel
 				.getInterfaceNamePattern();
 		genInterfacePattern.setText(ip);
+		genInterfacePatternInitial = ip;
+
 		// Get the gen source directory (remove the model project name)
 		String genSrcDirTxt = genModel.getModelDirectory().replace(genModel.getModelProjectDirectory() + "/", "");
 		genSourceDir.setText(genSrcDirTxt);
+		genSrcDirInitial = genSrcDirTxt;
+
 
 		// Try to restore the previous properties if they exist.
 		IFile f = getGenModelFile();
@@ -187,15 +272,15 @@ public class DerivedSourceParametersDialog extends Dialog
 		String ipProp = getProperty(f, PROP_INTERFACE_PATTERN);
 		String srcProp = getProperty(f, PROP_SRCDIR);
 
-		if (cp.equals(DEFAULT_CLASS_IMPL_PATTERN))
+		if (cp.equals(DEFAULT_DEV_CLASS_IMPL_PATTERN))
 			devClassPattern.setText(cp + "Ext");
 		else
-			devClassPattern.setText(cpProp != null ? cpProp : DEFAULT_CLASS_IMPL_PATTERN);
+			devClassPattern.setText(cpProp != null ? cpProp : DEFAULT_DEV_CLASS_IMPL_PATTERN);
 
-		if (ip.equals(DEFAULT_INTERFACE_PATTERN))
+		if (ip.equals(DEFAULT_DEV_INTERFACE_PATTERN))
 			devInterfacePattern.setText(ip + "Ext");
 		else
-			devInterfacePattern.setText(ipProp != null ? ipProp : DEFAULT_INTERFACE_PATTERN);
+			devInterfacePattern.setText(ipProp != null ? ipProp : DEFAULT_DEV_INTERFACE_PATTERN);
 
 		devSourceDir.setText(srcProp != null ? srcProp : DEFAULT_SRC_DEV);
 	}
@@ -219,7 +304,7 @@ public class DerivedSourceParametersDialog extends Dialog
 	@Override
 	protected Point getInitialSize()
 	{
-		return new Point(450, 300);
+		return new Point(450, 400);
 	}
 
 	public String getDevInterfacePattern()
@@ -240,6 +325,14 @@ public class DerivedSourceParametersDialog extends Dialog
 	@Override
 	protected void okPressed()
 	{
+		// Set values in genModel if they were edited
+		if (editGenModelValues)
+		{
+			genModel.setClassNamePattern(genClassPattern.getText());
+			genModel.setInterfaceNamePattern(genInterfacePattern.getText());
+			genModel.setModelDirectory("/" + genModel.getModelPluginID() + "/" + genSourceDir.getText());
+		}
+		
 
 		// Remember of entered values
 		classPattern = devClassPattern.getText();
@@ -279,5 +372,4 @@ public class DerivedSourceParametersDialog extends Dialog
 			logger.log(new Status(IStatus.WARNING, PLUGIN_ID, "Unable to store the property : " + qn, e));
 		}
 	}
-
 }

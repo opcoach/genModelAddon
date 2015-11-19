@@ -4,20 +4,17 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Named;
 
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -27,6 +24,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
+import com.opcoach.genmodeladdon.Util;
 import com.opcoach.genmodeladdon.core.GenerateDevStructure;
 import com.opcoach.genmodeladdon.ui.dialog.ConfirmFileSelectionDialog;
 import com.opcoach.genmodeladdon.ui.dialog.DerivedSourceParametersDialog;
@@ -167,7 +165,7 @@ public class GeneratedDerivedSourceFolder extends GenerateParentHandler
 					// Then should reorganize imports in the project in package explorer view ! 
 					MessageDialog.openInformation(parentShell, "Don't forget to reorganize imports", 
 							"Generation is finished. \n\n"
-							+ "The last manual step is to reorganize imports on src-gen directory ! ");
+							+ "The last manual step is to reorganize imports on " + gm.getModelDirectory() + " directory ! ");
 				}
 			}
 
@@ -189,21 +187,7 @@ public class GeneratedDerivedSourceFolder extends GenerateParentHandler
 			if (result = MessageDialog.openConfirm(parentShell, "Your genModel file must be updated",
 					"Do you confirm the following changes on your gen model : \n\n" + changes))
 			{
-				final Map<Object, Object> opt = new HashMap<Object, Object>();
-				opt.put(Resource.OPTION_SAVE_ONLY_IF_CHANGED, Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER);
-				opt.put(Resource.OPTION_LINE_DELIMITER, Resource.OPTION_LINE_DELIMITER_UNSPECIFIED);
-				try
-				{
-					gm.eResource().save(opt);
-				} catch (IOException e)
-				{
-					MessageDialog.openInformation(parentShell, "genModel could not be saved",
-							"The genmodel could not be saved.\nReason is : " + e.getMessage());
-					Bundle bundle = FrameworkUtil.getBundle(this.getClass());
-					ILog logger = Platform.getLog(bundle);
-					logger.log(new Status(IStatus.WARNING, bundle.getSymbolicName(),
-							"Unable to save the genModel in : " + gm.eResource(), e));
-				}
+				Util.saveGenModel(gm, parentShell);
 			}
 
 		}
@@ -211,5 +195,8 @@ public class GeneratedDerivedSourceFolder extends GenerateParentHandler
 		return result;
 
 	}
+
+
+	
 
 }
