@@ -60,6 +60,7 @@ public class DerivedSourceParametersDialog extends Dialog
 	public DerivedSourceParametersDialog(Shell parentShell)
 	{
 		super(parentShell);
+		setShellStyle(SWT.RESIZE);
 	}
 
 	/**
@@ -146,6 +147,8 @@ public class DerivedSourceParametersDialog extends Dialog
 		devClassPattern.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		updateValues();
+		
+		container.pack();
 
 		return container;
 	}
