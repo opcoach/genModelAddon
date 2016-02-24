@@ -119,7 +119,7 @@ public class DerivedSourceParametersDialog extends Dialog
 				genClassPattern.setText(ADVISED_GEN_CLASS_IMPL_PATTERN);
 			}
 		});
-		btnAdvisedValues.setText("Set advised values");
+		btnAdvisedValues.setText("Set relevant values");
 		btnAdvisedValues.setToolTipText("Set relevant values in genModel");
 		
 		btnRestoreCurrentValues = new Button(composite, SWT.NONE);
