@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ASCII"?>
 <fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmlns:ui="http://www.eclipse.org/ui/2010/UIModel/application/ui" xmi:id="_FqR_0PvWEeSRa5pGQfH9tQ">
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_HVAcQPvWEeSRa5pGQfH9tQ" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
-    <elements xsi:type="commands:Command" xmi:id="_MD83oPvWEeSRa5pGQfH9tQ" elementId="com.opcoach.genmodeladdon.generateSourceFolderE4" commandName="Generate Developper Structure" description="Generate the structure for developpers"/>
+    <elements xsi:type="commands:Command" xmi:id="_MD83oPvWEeSRa5pGQfH9tQ" elementId="com.opcoach.genmodeladdon.generateSourceFolderE4" commandName="Generate Developer Structure" description="Generate the structure for developers"/>
     <elements xsi:type="commands:Command" xmi:id="_M8zLMPvWEeSRa5pGQfH9tQ" elementId="com.opcoach.genmodeladdon.ui.generateAntFile" commandName="Generate Ant file for code generation"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_z-JREPvcEeSRa5pGQfH9tQ" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">

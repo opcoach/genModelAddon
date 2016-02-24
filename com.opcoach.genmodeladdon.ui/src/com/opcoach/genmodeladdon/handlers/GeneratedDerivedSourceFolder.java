@@ -40,9 +40,7 @@ public class GeneratedDerivedSourceFolder extends GenerateParentHandler
 	{
 		parentShell = shell;
 
-		Shell s = new Shell(parentShell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-		s.setText("Enter the parameter for the development structure generation");
-		DerivedSourceParametersDialog dial = new DerivedSourceParametersDialog(s);
+		DerivedSourceParametersDialog dial = new DerivedSourceParametersDialog(shell);
 		dial.setGenModel(gm);
 
 		int status = dial.open();
