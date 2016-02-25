@@ -974,7 +974,7 @@ if (index != -1) { head = typeName.substring(0, index); tail = typeName.substrin
 		// The list is expected to implement org.eclipse.emf.ecore.util.InternalEList and org.eclipse.emf.ecore.EStructuralFeature.Setting
 		// so it's likely that an appropriate subclass of org.eclipse.emf.ecore.util.<%if (genFeature.isMapType()) {%>EcoreEMap<%} else if (genFeature.isFeatureMapType()) {%>BasicFeatureMap<%} else {%>EcoreEList<%}%> should be used.
         <%}%>
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException(); // OP1
 <%@ end %><%//Class/getGenFeature.todo.override.javajetinc%>
       <%}%>
     <%}%>
@@ -1024,7 +1024,7 @@ if (index != -1) { head = typeName.substring(0, index); tail = typeName.substrin
 		// TODO: implement this method to return the '<%=genFeature.getFormattedName()%>' <%=genFeature.getFeatureKind()%>
 		// -> do not perform proxy resolution
 		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException(); //OP2
 <%@ end %><%//Class/basicGetGenFeature.todo.override.javajetinc%>
     <%}%>
 	}
@@ -1106,7 +1106,7 @@ if (index != -1) { head = typeName.substring(0, index); tail = typeName.substrin
 		// -> do not modify other features
 		// -> return msgs, after adding any generated Notification to it (if it is null, a NotificationChain object must be created first)
 		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException(); // OP3
 <%@ end %><%//Class/basicSetGenFeature.todo.override.javajetinc%>
     <%}%>
 	}
@@ -1305,7 +1305,7 @@ if (index != -1) { head = typeName.substring(0, index); tail = typeName.substrin
 <%@ start %>
 		// TODO: implement this method to set the '<%=genFeature.getFormattedName()%>' <%=genFeature.getFeatureKind()%>
 		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException(); //OP4
 <%@ end %><%//Class/setGenFeature.todo.override.javajetinc%>
     <%}%>
 	}
@@ -1368,7 +1368,7 @@ if (index != -1) { head = typeName.substring(0, index); tail = typeName.substrin
 		// -> do not modify other features
 		// -> return msgs, after adding any generated Notification to it (if it is null, a NotificationChain object must be created first)
 		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException(); //OP5
 <%@ end %><%//Class/basicUnsetGenFeature.todo.override.javajetinc%>
     <%}%>
 	}
@@ -1533,7 +1533,7 @@ if (index != -1) { head = typeName.substring(0, index); tail = typeName.substrin
 <%@ start %>
 		// TODO: implement this method to unset the '<%=genFeature.getFormattedName()%>' <%=genFeature.getFeatureKind()%>
 		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException(); // OP6
 <%@ end %><%//Class/unsetGenFeature.todo.override.javajetinc%>
     <%}%>
 	}
@@ -1613,7 +1613,7 @@ if (index != -1) { head = typeName.substring(0, index); tail = typeName.substrin
 <%@ start %>
 		// TODO: implement this method to return whether the '<%=genFeature.getFormattedName()%>' <%=genFeature.getFeatureKind()%> is set
 		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException(); //OP7
 <%@ end %><%//Class/isSetGenFeature.todo.override.javajetinc%>
     <%}%>
 	}
@@ -1698,13 +1698,13 @@ if (index != -1) { head = typeName.substring(0, index); tail = typeName.substrin
 <%}%>
 <%}%>
 <%if (!isImplementation) {%>
-	<%=genOperation.getTypeParameters(genClass)%><%=genOperation.getImportedType(genClass)%> <%=genOperation.getName()%>(<%=genOperation.getParameters(genClass)%>)<%=genOperation.getThrows(genClass)%>;
+	<%=genOperation.getTypeParameters(genClass)%><%=devTransform.replaceDevName(genOperation.getImportedType(genClass))%> <%=genOperation.getName()%>(<%=devTransform.replaceDevName(genOperation.getParameters(genClass))%>)<%=genOperation.getThrows(genClass)%>;
 
 <%} else {%>
   <%if (genModel.useGenerics() && !genOperation.hasBody() && !genOperation.isInvariant() && genOperation.hasInvocationDelegate() && genOperation.isUncheckedCast(genClass)) {%>
 	@SuppressWarnings("unchecked")
   <%}%>
-	public <%=genOperation.getTypeParameters(genClass)%><%=genOperation.getImportedType(genClass)%> <%=genOperation.getName()%>(<%=genOperation.getParameters(isImplementation, genClass)%>)<%=genOperation.getThrows(genClass)%>
+	public <%=genOperation.getTypeParameters(genClass)%><%=devTransform.replaceDevName(genOperation.getImportedType(genClass))%> <%=genOperation.getName()%>(<%=devTransform.replaceDevName(genOperation.getParameters(isImplementation, genClass))%>)<%=genOperation.getThrows(genClass)%>
 	{
   <%if (genOperation.hasBody()) {%>
 		<%=genOperation.getBody(genModel.getIndentation(stringBuffer))%>
@@ -1761,7 +1761,7 @@ if (index != -1) { head = typeName.substring(0, index); tail = typeName.substrin
 <%@ start %>
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException(); 
 <%@ end %><%//Class/implementedGenOperation.todo.override.javajetinc%>
   <%}%>
 	}
@@ -2383,10 +2383,10 @@ if (index != -1) { head = typeName.substring(0, index); tail = typeName.substrin
 				{
   <%/*}*/}%>
   <%if (genOperation.isVoid()) {%>
-				<%=indent%><%=genOperation.getName()%>(<%for (int i = 0; i < size; i++) { GenParameter genParameter = genParameters.get(i);%><%if (!isJDK50 && genParameter.isPrimitiveType()) {%>(<%}%><%if (genParameter.getTypeGenDataType() == null || !genParameter.getTypeGenDataType().isObjectType() || !genParameter.usesOperationTypeParameters() && !genParameter.getRawType().equals(genParameter.getType(genClass))) {%>(<%=genParameter.usesOperationTypeParameters() ? genParameter.getRawImportedType() : genParameter.getObjectType(genClass)%>)<%}%>arguments.get(<%=i%>)<%if (!isJDK50 && genParameter.isPrimitiveType()) {%>).<%=genParameter.getPrimitiveValueFunction()%>()<%}%><%if (i < (size - 1)) {%>, <%}%><%}%>);
+				<%=indent%><%=genOperation.getName()%>(<%for (int i = 0; i < size; i++) { GenParameter genParameter = genParameters.get(i);%><%if (!isJDK50 && genParameter.isPrimitiveType()) {%>(<%}%><%if (genParameter.getTypeGenDataType() == null || !genParameter.getTypeGenDataType().isObjectType() || !genParameter.usesOperationTypeParameters() && !genParameter.getRawType().equals(genParameter.getType(genClass))) {%>(<%=genParameter.usesOperationTypeParameters() ? genParameter.getRawImportedType() : devTransform.replaceDevName(genParameter.getObjectType(genClass))%>)<%}%>arguments.get(<%=i%>)<%if (!isJDK50 && genParameter.isPrimitiveType()) {%>).<%=genParameter.getPrimitiveValueFunction()%>()<%}%><%if (i < (size - 1)) {%>, <%}%><%}%>);
 				<%=indent%>return null;
   <%} else {%>
-				<%=indent%>return <%if (!isJDK50 && genOperation.isPrimitiveType()) {%>new <%=genOperation.getObjectType(genClass)%>(<%}%><%=genOperation.getName()%>(<%for (int i = 0; i < size; i++) { GenParameter genParameter = genParameters.get(i);%><%if (!isJDK50 && genParameter.isPrimitiveType()) {%>(<%}%><%if (genParameter.getTypeGenDataType() == null || !genParameter.getTypeGenDataType().isObjectType() || !genParameter.usesOperationTypeParameters() && !genParameter.getRawType().equals(genParameter.getType(genClass))) {%>(<%=genParameter.usesOperationTypeParameters() ? genParameter.getRawImportedType() : genParameter.getObjectType(genClass)%>)<%}%>arguments.get(<%=i%>)<%if (!isJDK50 && genParameter.isPrimitiveType()) {%>).<%=genParameter.getPrimitiveValueFunction()%>()<%}%><%if (i < (size - 1)) {%>, <%}%><%}%>)<%if (!isJDK50 && genOperation.isPrimitiveType()) {%>)<%}%>;
+				<%=indent%>return <%if (!isJDK50 && genOperation.isPrimitiveType()) {%>new <%=genOperation.getObjectType(genClass)%>(<%}%><%=genOperation.getName()%>(<%for (int i = 0; i < size; i++) { GenParameter genParameter = genParameters.get(i);%><%if (!isJDK50 && genParameter.isPrimitiveType()) {%>(<%}%><%if (genParameter.getTypeGenDataType() == null || !genParameter.getTypeGenDataType().isObjectType() || !genParameter.usesOperationTypeParameters() && !genParameter.getRawType().equals(genParameter.getType(genClass))) {%>(<%=genParameter.usesOperationTypeParameters() ? genParameter.getRawImportedType() : devTransform.replaceDevName(genParameter.getObjectType(genClass))%>)<%}%>arguments.get(<%=i%>)<%if (!isJDK50 && genParameter.isPrimitiveType()) {%>).<%=genParameter.getPrimitiveValueFunction()%>()<%}%><%if (i < (size - 1)) {%>, <%}%><%}%>)<%if (!isJDK50 && genOperation.isPrimitiveType()) {%>)<%}%>;
   <%}%>
   <%if (hasCheckedException) {/*{*/%>
 				}

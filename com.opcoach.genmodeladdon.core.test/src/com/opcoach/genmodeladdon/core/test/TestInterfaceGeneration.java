@@ -198,6 +198,26 @@ public class TestInterfaceGeneration extends GenModelAddonTestCase
 		assertFileContains("src/com/opcoach/project/impl/ProjectImpl.java", copyright);
 		assertFileContains("src/com/opcoach/project/impl/ProjectFactoryImpl.java", copyright);
 	}
+	
+	//-----------------------------------------------------------------------
+	// ------------------- Test gen operations must return the dev types   --
+	//-----------------------------------------------------------------------
+
+	@Test public void theFindTaskMethodMustReturnTask()
+	{
+		assertFileContains("src-gen/com/opcoach/project/MProject.java", "Task findFirstTask");
+		assertFileContains("src-gen/com/opcoach/project/impl/MProjectImpl.java", "public Task findFirstTask");
+		
+
+	}
+
+	@Test public void theFindTaskMethodMustReceiveAPerson()
+	{
+		assertFileContains("src-gen/com/opcoach/project/MProject.java", "findFirstTask(Person p);");
+		assertFileContains("src-gen/com/opcoach/project/impl/MProjectImpl.java", "findFirstTask(Person p)");
+		assertFileContains("src-gen/com/opcoach/project/impl/MProjectImpl.java", "return findFirstTask((Person)arguments.get(0))");
+		
+	}
 
 	
 	
