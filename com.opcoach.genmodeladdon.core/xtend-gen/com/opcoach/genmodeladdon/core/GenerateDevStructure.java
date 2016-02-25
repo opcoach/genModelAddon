@@ -75,6 +75,8 @@ public class GenerateDevStructure {
   
   private GenModel genModel;
   
+  private String copyright = "";
+  
   public Map<String, Object> filesNotGenerated = new HashMap<String, Object>();
   
   private String modelName;
@@ -87,6 +89,13 @@ public class GenerateDevStructure {
    */
   public GenerateDevStructure(final GenModel gm, final String cPattern, final String iPattern, final String srcDir) {
     this.genModel = gm;
+    String _copyrightText = gm.getCopyrightText();
+    boolean _notEquals = (!Objects.equal(_copyrightText, null));
+    if (_notEquals) {
+      CharSequence _computeCopyrightComment = this.computeCopyrightComment();
+      String _string = _computeCopyrightComment.toString();
+      this.copyright = _string;
+    }
     this.classPattern = cPattern;
     this.interfacePattern = iPattern;
     this.srcDevDirectory = srcDir;
@@ -471,6 +480,8 @@ public class GenerateDevStructure {
   
   public CharSequence generateClassContent(final GenClass gc) {
     StringConcatenation _builder = new StringConcatenation();
+    _builder.append(this.copyright, "");
+    _builder.newLineIfNotEmpty();
     _builder.append("package ");
     GenPackage _genPackage = gc.getGenPackage();
     String _computePackageNameForClasses = this.computePackageNameForClasses(_genPackage);
@@ -510,6 +521,8 @@ public class GenerateDevStructure {
   
   public CharSequence generateInterfaceContent(final GenClass gc) {
     StringConcatenation _builder = new StringConcatenation();
+    _builder.append(this.copyright, "");
+    _builder.newLineIfNotEmpty();
     _builder.append("package ");
     GenPackage _genPackage = gc.getGenPackage();
     String _computePackageNameForInterfaces = this.computePackageNameForInterfaces(_genPackage);
@@ -536,6 +549,8 @@ public class GenerateDevStructure {
   
   public CharSequence generateInterfaceFactoryContent(final GenPackage gp) {
     StringConcatenation _builder = new StringConcatenation();
+    _builder.append(this.copyright, "");
+    _builder.newLineIfNotEmpty();
     _builder.append("package ");
     String _computePackageNameForInterfaces = this.computePackageNameForInterfaces(gp);
     _builder.append(_computePackageNameForInterfaces, "");
@@ -608,6 +623,8 @@ public class GenerateDevStructure {
   
   public CharSequence generateInterfacePackageContent(final GenPackage gp) {
     StringConcatenation _builder = new StringConcatenation();
+    _builder.append(this.copyright, "");
+    _builder.newLineIfNotEmpty();
     _builder.append("package ");
     String _computePackageNameForInterfaces = this.computePackageNameForInterfaces(gp);
     _builder.append(_computePackageNameForInterfaces, "");
@@ -655,6 +672,8 @@ public class GenerateDevStructure {
   
   public CharSequence generateClassFactoryContent(final GenPackage gp) {
     StringConcatenation _builder = new StringConcatenation();
+    _builder.append(this.copyright, "");
+    _builder.newLineIfNotEmpty();
     _builder.append("package ");
     String _computePackageNameForClasses = this.computePackageNameForClasses(gp);
     _builder.append(_computePackageNameForClasses, "");
@@ -811,6 +830,36 @@ public class GenerateDevStructure {
     _builder.newLine();
     _builder.append("}");
     _builder.newLine();
+    return _builder;
+  }
+  
+  public CharSequence computeCopyrightComment() {
+    StringConcatenation _builder = new StringConcatenation();
+    {
+      boolean _and = false;
+      String _copyrightText = this.genModel.getCopyrightText();
+      boolean _notEquals = (!Objects.equal(_copyrightText, null));
+      if (!_notEquals) {
+        _and = false;
+      } else {
+        String _copyrightText_1 = this.genModel.getCopyrightText();
+        int _length = _copyrightText_1.length();
+        boolean _greaterThan = (_length > 0);
+        _and = _greaterThan;
+      }
+      if (_and) {
+        _builder.append("/**");
+        _builder.newLine();
+        _builder.append("  ");
+        _builder.append("* ");
+        String _copyrightText_2 = this.genModel.getCopyrightText();
+        _builder.append(_copyrightText_2, "  ");
+        _builder.newLineIfNotEmpty();
+        _builder.append("*/");
+        _builder.newLine();
+      } else {
+      }
+    }
     return _builder;
   }
   

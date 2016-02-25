@@ -1,42 +1,16 @@
 package com.opcoach.genmodeladdon.core.test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.eclipse.ant.core.AntRunner;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.codegen.ecore.genmodel.GenClass;
-import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.codegen.ecore.genmodel.GenPackage;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.plugin.EcorePlugin;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.osgi.framework.Bundle;
-
-import com.opcoach.genmodeladdon.core.GenerateDevStructure;
 
 public class TestInterfaceGeneration extends GenModelAddonTestCase
 {
 
+	private String copyright = "© OPCoach 2016";
+	
 	@Test
 	public void testClassNames()
 	{
@@ -213,6 +187,16 @@ public class TestInterfaceGeneration extends GenModelAddonTestCase
 	{
 		assertFileContains("src/com/opcoach/project/ProjectFactory.java", "public Company createCompany();");
 		assertFileContains("src/com/opcoach/project/impl/ProjectFactoryImpl.java", "new CompanyImpl();");
+	}
+
+	
+	@Test public void filesMustContainCopyright()
+	{
+		assertFileContains("src/com/opcoach/project/Project.java", copyright);
+		assertFileContains("src/com/opcoach/project/ProjectFactory.java", copyright);
+		assertFileContains("src/com/opcoach/project/ProjectPackage.java", copyright);
+		assertFileContains("src/com/opcoach/project/impl/ProjectImpl.java", copyright);
+		assertFileContains("src/com/opcoach/project/impl/ProjectFactoryImpl.java", copyright);
 	}
 
 	

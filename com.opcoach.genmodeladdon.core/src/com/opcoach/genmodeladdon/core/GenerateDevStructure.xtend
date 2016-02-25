@@ -44,6 +44,8 @@ class GenerateDevStructure {
 
 	String projectName
 	GenModel genModel
+	var copyright = ""
+	
 	public Map<String, Object> filesNotGenerated = new HashMap()
 	
 	String modelName
@@ -55,6 +57,8 @@ class GenerateDevStructure {
 	 */
 	new(GenModel gm, String cPattern, String iPattern, String srcDir) {
 		genModel = gm
+		if (gm.copyrightText != null)
+			copyright = computeCopyrightComment.toString
 		classPattern = cPattern
 		interfacePattern = iPattern
 		srcDevDirectory = srcDir
@@ -314,6 +318,7 @@ class GenerateDevStructure {
 	}
 
 	def generateClassContent(GenClass gc) '''
+		«copyright»
 		package «gc.genPackage.computePackageNameForClasses»;
 		
 		import «gc.genPackage.computePackageNameForInterfaces».«gc.computeInterfaceName»;
@@ -326,6 +331,7 @@ class GenerateDevStructure {
 	'''
 
 	def generateInterfaceContent(GenClass gc) '''
+		«copyright»
 		package «gc.genPackage.computePackageNameForInterfaces»;
 		
 		// This interface overrides the generated interface and will be returned by factory
@@ -336,6 +342,7 @@ class GenerateDevStructure {
 	'''
 
 	def generateInterfaceFactoryContent(GenPackage gp) '''
+		«copyright»
 		package «gp.computePackageNameForInterfaces»;
 		
 		import «gp.computePackageNameForClasses».«gp.computeFactoryClassName»;
@@ -356,6 +363,7 @@ class GenerateDevStructure {
 	'''
 
 	def generateInterfacePackageContent(GenPackage gp) '''
+		«copyright»
 		package «gp.computePackageNameForInterfaces»;
 				
 		/** This package interface extends  the generated package interface 
@@ -372,6 +380,7 @@ class GenerateDevStructure {
 	'''
 
 	def generateClassFactoryContent(GenPackage gp) '''
+		«copyright»
 		package «gp.computePackageNameForClasses»;
 		
 		import org.eclipse.emf.ecore.plugin.EcorePlugin;
@@ -412,6 +421,14 @@ class GenerateDevStructure {
 			«gc.computeInterfaceName» result = new «gc.computeClassname»();
 			return result;
 		}
+	'''
+	
+	def computeCopyrightComment() '''
+	«IF genModel.copyrightText != null && genModel.copyrightText.length > 0»
+/**
+  * «genModel.copyrightText»
+*/
+«ELSE»«ENDIF»
 	'''
 
 	/** Compute the class name to be generated */
