@@ -18,9 +18,11 @@ import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -54,6 +56,7 @@ public class ConfirmFileSelectionDialog extends MessageDialog
 		filesNotYetGenerated = filesNotGenerated;
 		relativeDir = pRelativeDir + File.separator;
 		filesToBeGenerated = new ArrayList<String>();
+		setShellStyle(getShellStyle() | SWT.RESIZE); 
 
 	}
 
@@ -61,14 +64,21 @@ public class ConfirmFileSelectionDialog extends MessageDialog
 	protected Control createCustomArea(Composite parent)
 	{
 		Composite root = new Composite(parent, SWT.NONE);
+		root.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		root.setLayout(new GridLayout(2, false));
-
-		tv = CheckboxTableViewer.newCheckList(root, SWT.NONE);
+		
+		ScrolledComposite tableParent = new ScrolledComposite(root, SWT.V_SCROLL | SWT.H_SCROLL);
+		tableParent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		tableParent.setLayout(new FillLayout());
+		tv = CheckboxTableViewer.newCheckList(tableParent, SWT.V_SCROLL| SWT.BORDER);
 		final Table cTable = tv.getTable();
 		cTable.setLinesVisible(true);
-		GridData gd_cTable = new GridData(SWT.FILL, SWT.TOP, true, true);
-		cTable.setLayoutData(gd_cTable);
-
+		
+		tableParent.setContent(tv.getControl());
+		tableParent.setExpandHorizontal(true);
+		tableParent.setExpandVertical(true);
+		tableParent.setAlwaysShowScrollBars(true);
+		
 		TableViewerColumn filenameCol = new TableViewerColumn(tv, SWT.LEAD);
 		filenameCol.getColumn().setWidth(400);
 		filenameCol.getColumn().setText("Filename");
@@ -79,7 +89,7 @@ public class ConfirmFileSelectionDialog extends MessageDialog
 				{
 					String absName = element.toString();
 					int pos = absName.indexOf(relativeDir);
-					return element.toString().substring(pos);
+					return element.toString().substring(pos).replace('\\', '/');
 				}
 
 				@Override
