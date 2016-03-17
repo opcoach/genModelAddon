@@ -219,6 +219,21 @@ public class TestInterfaceGeneration extends GenModelAddonTestCase
 		
 	}
 
+	//-------------------------------------------------------------
+	// ------------------- Test dev classes for generic types    --
+	//-------------------------------------------------------------
+
+	@Test public void theDevInterfaceMustBeGeneric()
+	{
+		assertFileContains("src/com/opcoach/project/Folder.java", "interface Folder<T> extends MFolder<T>");
+	}
+	
+	@Test public void theDevClassMustBeGeneric()
+	{
+		assertFileContains("src/com/opcoach/project/impl/FolderImpl.java", "class FolderImpl<T> extends MFolderImpl<T> implements Folder<T>");
+	}
+	
+	
 	
 	
 }

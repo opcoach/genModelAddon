@@ -37,6 +37,7 @@ import org.eclipse.emf.codegen.ecore.genmodel.GenPackage;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.ETypeParameter;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
@@ -423,16 +424,16 @@ public class GenerateDevStructure {
   }
   
   public Object generateOverriddenClass(final GenClass gc, final String path) {
-    String _computeClassname = this.computeClassname(gc);
-    String _plus = (path + _computeClassname);
+    String _computeClassFilename = this.computeClassFilename(gc);
+    String _plus = (path + _computeClassFilename);
     String _plus_1 = (_plus + ".java");
     CharSequence _generateClassContent = this.generateClassContent(gc);
     return this.generateFile(_plus_1, _generateClassContent);
   }
   
   public Object generateOverriddenInterface(final GenClass gc, final String path) {
-    String _computeInterfaceName = this.computeInterfaceName(gc);
-    String _plus = (path + _computeInterfaceName);
+    String _computeInterfaceFilename = this.computeInterfaceFilename(gc);
+    String _plus = (path + _computeInterfaceFilename);
     String _plus_1 = (_plus + ".java");
     CharSequence _generateInterfaceContent = this.generateInterfaceContent(gc);
     return this.generateFile(_plus_1, _generateInterfaceContent);
@@ -866,7 +867,7 @@ public class GenerateDevStructure {
   /**
    * Compute the class name to be generated
    */
-  public String computeClassname(final GenClass gc) {
+  public String computeClassFilename(final GenClass gc) {
     EClass _ecoreClass = gc.getEcoreClass();
     String _name = _ecoreClass.getName();
     return this.classPattern.replace("{0}", _name);
@@ -875,10 +876,51 @@ public class GenerateDevStructure {
   /**
    * Compute the interface name to be generated
    */
-  public String computeInterfaceName(final GenClass gc) {
+  public String computeInterfaceFilename(final GenClass gc) {
     EClass _ecoreClass = gc.getEcoreClass();
     String _name = _ecoreClass.getName();
     return this.interfacePattern.replace("{0}", _name);
+  }
+  
+  /**
+   * Compute the class name to be generated
+   */
+  public String computeClassname(final GenClass gc) {
+    String _computeClassFilename = this.computeClassFilename(gc);
+    EClass _ecoreClass = gc.getEcoreClass();
+    Object _computeGenericTypes = this.computeGenericTypes(_ecoreClass);
+    return (_computeClassFilename + _computeGenericTypes);
+  }
+  
+  /**
+   * Compute the interface name to be generated
+   */
+  public String computeInterfaceName(final GenClass gc) {
+    String _computeInterfaceFilename = this.computeInterfaceFilename(gc);
+    EClass _ecoreClass = gc.getEcoreClass();
+    Object _computeGenericTypes = this.computeGenericTypes(_ecoreClass);
+    return (_computeInterfaceFilename + _computeGenericTypes);
+  }
+  
+  public Object computeGenericTypes(final EClass c) {
+    EList<ETypeParameter> _eTypeParameters = c.getETypeParameters();
+    boolean _isEmpty = _eTypeParameters.isEmpty();
+    if (_isEmpty) {
+      return "";
+    }
+    StringBuffer sb = new StringBuffer("<");
+    String sep = "";
+    EList<ETypeParameter> _eTypeParameters_1 = c.getETypeParameters();
+    for (final ETypeParameter pt : _eTypeParameters_1) {
+      {
+        String _name = pt.getName();
+        StringBuffer _append = sb.append(_name);
+        _append.append(sep);
+        sep = ",";
+      }
+    }
+    sb.append(">");
+    return sb;
   }
   
   /**
@@ -997,11 +1039,17 @@ public class GenerateDevStructure {
       if (_notEquals) {
         EClass _ecoreClass = c.getEcoreClass();
         String _name = _ecoreClass.getName();
-        _xifexpression = classPattern.replace("{0}", _name);
-      } else {
+        String _replace = classPattern.replace("{0}", _name);
         EClass _ecoreClass_1 = c.getEcoreClass();
-        String _name_1 = _ecoreClass_1.getName();
-        _xifexpression = (_name_1 + "Impl");
+        Object _computeGenericTypes = this.computeGenericTypes(_ecoreClass_1);
+        _xifexpression = (_replace + _computeGenericTypes);
+      } else {
+        EClass _ecoreClass_2 = c.getEcoreClass();
+        String _name_1 = _ecoreClass_2.getName();
+        String _plus = (_name_1 + "Impl");
+        EClass _ecoreClass_3 = c.getEcoreClass();
+        Object _computeGenericTypes_1 = this.computeGenericTypes(_ecoreClass_3);
+        _xifexpression = (_plus + _computeGenericTypes_1);
       }
       _xblockexpression = _xifexpression;
     }
@@ -1022,10 +1070,16 @@ public class GenerateDevStructure {
       if (_notEquals) {
         EClass _ecoreClass = c.getEcoreClass();
         String _name = _ecoreClass.getName();
-        _xifexpression = interfaceNamePattern.replace("{0}", _name);
-      } else {
+        String _replace = interfaceNamePattern.replace("{0}", _name);
         EClass _ecoreClass_1 = c.getEcoreClass();
-        _xifexpression = _ecoreClass_1.getName();
+        Object _computeGenericTypes = this.computeGenericTypes(_ecoreClass_1);
+        _xifexpression = (_replace + _computeGenericTypes);
+      } else {
+        EClass _ecoreClass_2 = c.getEcoreClass();
+        String _name_1 = _ecoreClass_2.getName();
+        EClass _ecoreClass_3 = c.getEcoreClass();
+        Object _computeGenericTypes_1 = this.computeGenericTypes(_ecoreClass_3);
+        _xifexpression = (_name_1 + _computeGenericTypes_1);
       }
       _xblockexpression = _xifexpression;
     }

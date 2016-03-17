@@ -30,6 +30,12 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference project.ecore#//Company/projects"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference project.ecore#//Company/employees"/>
     </genClasses>
+    <genClasses ecoreClass="project.ecore#//Folder">
+      <genTypeParameters ecoreTypeParameter="project.ecore#//Folder/T"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference project.ecore#//Folder/content"/>
+      <genOperations ecoreOperation="project.ecore#//Folder/getFirst"/>
+    </genClasses>
+    <genClasses ecoreClass="project.ecore#//TaskFolder"/>
     <nestedGenPackages prefix="Documentation" basePackage="com.opcoach.project" disposableProviderFactory="true"
         ecorePackage="project.ecore#//documentation">
       <genClasses ecoreClass="project.ecore#//documentation/DocumentationProject"/>

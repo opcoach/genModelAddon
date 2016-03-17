@@ -27,6 +27,21 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="employees" upperBound="-1"
         eType="#//Person" containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Folder">
+    <eTypeParameters name="T"/>
+    <eOperations name="getFirst">
+      <eGenericType eTypeParameter="#//Folder/T"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="content" upperBound="-1"
+        containment="true">
+      <eGenericType eTypeParameter="#//Folder/T"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TaskFolder">
+    <eGenericSuperTypes eClassifier="#//Folder">
+      <eTypeArguments eClassifier="#//Task"/>
+    </eGenericSuperTypes>
+  </eClassifiers>
   <eSubpackages name="documentation" nsURI="http://www.opcoach.com/project/documentation/1.0"
       nsPrefix="doc">
     <eClassifiers xsi:type="ecore:EClass" name="DocumentationProject" eSuperTypes="#//Project"/>

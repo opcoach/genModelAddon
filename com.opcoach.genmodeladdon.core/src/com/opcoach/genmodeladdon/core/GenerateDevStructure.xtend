@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.Status
 import org.eclipse.emf.codegen.ecore.genmodel.GenClass
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel
 import org.eclipse.emf.codegen.ecore.genmodel.GenPackage
+import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.jdt.core.IClasspathEntry
 import org.eclipse.jdt.core.IJavaProject
@@ -283,12 +284,12 @@ class GenerateDevStructure {
 
 	def generateOverriddenClass(GenClass gc, String path) {
 
-		generateFile(path + gc.computeClassname + ".java", gc.generateClassContent)
+		generateFile(path + gc.computeClassFilename + ".java", gc.generateClassContent)
 	}
 
 	def generateOverriddenInterface(GenClass gc, String path) {
 
-		generateFile(path + gc.computeInterfaceName + ".java", gc.generateInterfaceContent)
+		generateFile(path + gc.computeInterfaceFilename + ".java", gc.generateInterfaceContent)
 	}
 
 	// Generate the file only if it does not exists.. If it exists keep the content and ask confirmation later
@@ -432,14 +433,37 @@ class GenerateDevStructure {
 	'''
 
 	/** Compute the class name to be generated */
+	def computeClassFilename(GenClass gc) {
+		classPattern.replace("{0}", gc.ecoreClass.name) 
+	}
+
+	/** Compute the interface name to be generated */
+	def computeInterfaceFilename(GenClass gc) {
+		interfacePattern.replace("{0}", gc.ecoreClass.name) 
+	}
+
+	/** Compute the class name to be generated */
 	def computeClassname(GenClass gc) {
-		classPattern.replace("{0}", gc.ecoreClass.name)
+		gc.computeClassFilename() + gc.ecoreClass.computeGenericTypes
 	}
 
 	/** Compute the interface name to be generated */
 	def computeInterfaceName(GenClass gc) {
-
-		interfacePattern.replace("{0}", gc.ecoreClass.name)
+		gc.computeInterfaceFilename + gc.ecoreClass.computeGenericTypes
+	}
+	
+	
+	def computeGenericTypes(EClass c) {
+		if (c.ETypeParameters.isEmpty) return ""
+		var sb = new StringBuffer("<")
+		var  sep = ""
+		for (pt : c.ETypeParameters)
+		{
+			sb.append(pt.name).append(sep)
+			sep = ","
+		}
+		sb.append(">")
+		return sb
 	}
 
 	/** Compute the factory interface name to be generated */
@@ -482,9 +506,9 @@ class GenerateDevStructure {
 		val classPattern = c.genPackage.genModel.classNamePattern
 
 		if (classPattern != null)
-			classPattern.replace("{0}", c.ecoreClass.name)
+			classPattern.replace("{0}", c.ecoreClass.name) + c.ecoreClass.computeGenericTypes
 		else
-			c.ecoreClass.name + "Impl"
+			c.ecoreClass.name + "Impl" + c.ecoreClass.computeGenericTypes
 	}
 
 	/** Compute the generated interface name depending on interfacePattern. */
@@ -494,9 +518,9 @@ class GenerateDevStructure {
 		val interfaceNamePattern = c.genPackage.genModel.interfaceNamePattern
 
 		if (interfaceNamePattern != null)
-			interfaceNamePattern.replace("{0}", c.ecoreClass.name)
+			interfaceNamePattern.replace("{0}", c.ecoreClass.name) + c.ecoreClass.computeGenericTypes
 		else
-			c.ecoreClass.name
+			c.ecoreClass.name + c.ecoreClass.computeGenericTypes
 	}
 
 	/** Compute the generated factory class name depending on classpattern. */
