@@ -114,7 +114,7 @@ class DevTransform {
     
    
    
-   DevTransform devTransform = new DevTransform(genModel, "{0}", "M{0}", "{0}Impl", "M{0}Impl");
+   DevTransform devTransform = new DevTransform(genModel, devInterfacePattern, genInterfacePattern, devClassPattern, genClassPattern);
    
 %>
 
