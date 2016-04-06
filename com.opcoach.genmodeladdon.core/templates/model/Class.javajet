@@ -11,54 +11,30 @@
  *   IBM - Initial API and implementation
  */
 %>
-<%final GenClass genClass = (GenClass)((Object[])argument)[0]; final GenPackage genPackage = genClass.getGenPackage(); final GenModel genModel=genPackage.getGenModel();%>
-<%final boolean isJDK50 = genModel.getComplianceLevel().getValue() >= GenJDKLevel.JDK50;%>
-<%final boolean isInterface = Boolean.TRUE.equals(((Object[])argument)[1]); final boolean isImplementation = Boolean.TRUE.equals(((Object[])argument)[2]);%>
-<%final boolean isGWT = genModel.getRuntimePlatform() == GenRuntimePlatform.GWT;%>
-<%final String publicStaticFinalFlag = isImplementation ? "public static final " : "";%>
-<%final String singleWildcard = isJDK50 ? "<?>" : "";%>
-<%final String negativeOffsetCorrection = genClass.hasOffsetCorrection() ? " - " + genClass.getOffsetCorrectionField(null) : "";%>
-<%final String positiveOffsetCorrection = genClass.hasOffsetCorrection() ? " + " + genClass.getOffsetCorrectionField(null) : "";%>
-<%final String negativeOperationOffsetCorrection = genClass.hasOffsetCorrection() ? " - EOPERATION_OFFSET_CORRECTION" : "";%>
-<%final String positiveOperationOffsetCorrection = genClass.hasOffsetCorrection() ? " + EOPERATION_OFFSET_CORRECTION" : "";%>
+
 
 <%
-   // Get patterns for class names (for dev it's a parameter, for gen it is in genmodel)
-   final String devClassPattern = "{0}Impl";  // "{0}Impl";
-   final String devInterfacePattern = "{0}"; // // "{0}";
-   final String genClassPattern = genModel.getClassNamePattern(); //  "M{0}Impl"; // "%GEN_CLASS_PATTERN%";
-   final String genInterfacePattern = genModel.getInterfaceNamePattern(); // "M{0}"; // "%GEN_INTERFACE_PATTERN%";
-   
-   final String classExtends = genClass.getClassExtends();
-   final String interfaceExtends = genClass.getInterfaceExtends();
-   
-   final GenClass parentGenClass = genClass.getClassExtendsGenClass();
-   final String parentClass = (parentGenClass == null) ? "" : parentGenClass.getEcoreClass().getName();
-   final String parentInterface = interfaceExtends.replaceFirst(" extends ", "");
-   
-   final String devParentInterfaceName =  !parentInterface.contains("EObject") ? devInterfacePattern.replaceFirst("\\{0\\}",parentClass) : parentInterface;
-   final String devParentClassName =  !parentClass.contains("MinimalEObjectImpl.Container") ? devClassPattern.replaceFirst("\\{0\\}",parentClass) : parentClass;
-   final String genParentInterfaceName =  genInterfacePattern.replaceFirst("\\{0\\}",parentClass);
-   final String genParentClassName = genClassPattern.replaceFirst("\\{0\\}",parentClass);
-   
-  /* System.out.println(" For class '" + genClass.getEcoreClass().getName() + " generated as " + genClass.getClassName());
-   System.out.println(" --> parentClass =" + parentClass);
-   System.out.println(" --> parentInterface =" + parentInterface);
-   System.out.println(" --> devParentInterfaceName =" + devParentInterfaceName);
-   System.out.println(" --> devParentClassName =" + devParentClassName );
-   System.out.println(" --> genParentInterfaceName =" + genParentInterfaceName);
-   System.out.println(" --> genParentClassName =" + genParentClassName);
-   */
-   
-   final class DevTransform {
+class DevTransform {
 
 	// The map of devnames : key = implementation name, value = devName
 	private Map<String, String> devNames;
 	private String devInterfaceNamePattern, genInterfaceNamePattern, devClassNamePattern, genClassNamePattern;
+	//private static DevTransform instance = null;
+	//private static GenModel lastGm = null;
+	
+    /* public static DevTransform getInstance(GenModel gm, String devInterfaceNamePattern, String genInterfaceNamePattern, String devClassNamePattern, String genClassNamePattern)
+	{
+	   if (gm != lastGm)
+	   {
+	       instance = new DevTransform(gm, devInterfaceNamePattern, genInterfaceNamePattern, devClassNamePattern, genClassNamePattern);
+	       lastGm = gm;
+	   }
+	   return instance;
+	} */
 	
 	
-	public DevTransform(GenModel gm, String devInterfaceNamePattern, String genInterfaceNamePattern, String devClassNamePattern,
-			String genClassNamePattern) {
+	public DevTransform(GenModel gm, String devInterfaceNamePattern, String genInterfaceNamePattern, String devClassNamePattern, String genClassNamePattern) 
+	{
 		super();
 		this.devInterfaceNamePattern = devInterfaceNamePattern;
 		this.genInterfaceNamePattern = genInterfaceNamePattern;
@@ -68,6 +44,7 @@
 		
 		for (GenPackage gp : gm.getGenPackages())
 		   computeNames(gp.getEcorePackage());
+		   
 	}
 
 	private void computeNames(EPackage p)
@@ -96,9 +73,7 @@
 	}
 	
     String replaceDevName(String stringToTranslate)
-	{
-		System.out.println("  -- Start checking : " + stringToTranslate);
-	
+	{	
 		// Search for the genName string in stringToTransalte
 		for (String key : devNames.keySet())
 		{		
@@ -108,8 +83,6 @@
 				stringToTranslate = stringToTranslate.replaceAll(key, devNames.get(key));
 		   }
 		}
-		System.out.println("Translated into : " + stringToTranslate);
-		System.out.println("  -- End of check");
 		
 		return stringToTranslate;
 	}
@@ -117,7 +90,31 @@
 	
 
 }
-   final DevTransform devTransform = new DevTransform(genModel, "{0}", "M{0}", "{0}Impl", "M{0}Impl");
+%>
+<%final GenClass genClass = (GenClass)((Object[])argument)[0]; final GenPackage genPackage = genClass.getGenPackage(); final GenModel genModel=genPackage.getGenModel();%>
+<%final boolean isJDK50 = genModel.getComplianceLevel().getValue() >= GenJDKLevel.JDK50;%>
+<%final boolean isInterface = Boolean.TRUE.equals(((Object[])argument)[1]); final boolean isImplementation = Boolean.TRUE.equals(((Object[])argument)[2]);%>
+<%final boolean isGWT = genModel.getRuntimePlatform() == GenRuntimePlatform.GWT;%>
+<%final String publicStaticFinalFlag = isImplementation ? "public static final " : "";%>
+<%final String singleWildcard = isJDK50 ? "<?>" : "";%>
+<%final String negativeOffsetCorrection = genClass.hasOffsetCorrection() ? " - " + genClass.getOffsetCorrectionField(null) : "";%>
+<%final String positiveOffsetCorrection = genClass.hasOffsetCorrection() ? " + " + genClass.getOffsetCorrectionField(null) : "";%>
+<%final String negativeOperationOffsetCorrection = genClass.hasOffsetCorrection() ? " - EOPERATION_OFFSET_CORRECTION" : "";%>
+<%final String positiveOperationOffsetCorrection = genClass.hasOffsetCorrection() ? " + EOPERATION_OFFSET_CORRECTION" : "";%>
+
+<%
+   // Get patterns for class names (for dev it's a parameter, for gen it is in genmodel)
+   final String devClassPattern = "{0}Impl";  // "{0}Impl";
+   final String devInterfacePattern = "{0}"; // // "{0}";
+   final String genClassPattern = genModel.getClassNamePattern(); //  "M{0}Impl"; // "%GEN_CLASS_PATTERN%";
+   final String genInterfacePattern = genModel.getInterfaceNamePattern(); // "M{0}"; // "%GEN_INTERFACE_PATTERN%";
+        
+   System.out.println("\n ---------------------------  Generating " +  genClass.getEcoreClass().getName() + " -----------------");
+   System.out.println(" For class '" + genClass.getEcoreClass().getName() + "' generated as '" + genClass.getClassName() +"'");
+    
+   
+   
+   DevTransform devTransform = new DevTransform(genModel, "{0}", "M{0}", "{0}Impl", "M{0}Impl");
    
 %>
 
@@ -194,9 +191,9 @@ package <%=genPackage.getClassPackageName()%>;
  */
 <%}%>
 <%if (isImplementation) {%>
- public<%if (genClass.isAbstract()) {%> abstract<%}%> class <%=genClass.getClassName()%><%=genClass.getTypeParameters().trim()%><% if (!genClass.getClassExtends().contains("MinimalEObjectImpl.Container")){%> extends <%=devClassPattern.replaceFirst("\\{0\\}",genClass.getClassExtendsGenClass().getEcoreClass().getName())%><%}else{%><%=genClass.getClassExtends()%><%}%><%=genClass.getClassImplements()%>
+ public<%if (genClass.isAbstract()) {%> abstract<%}%> class <%=genClass.getClassName()%><%=genClass.getTypeParameters().trim()%><%=devTransform.replaceDevName(genClass.getClassExtends())%><%=devTransform.replaceDevName(genClass.getClassImplements())%>
 <%} else {%>
-public interface <%=genClass.getInterfaceName()%><%=genClass.getTypeParameters().trim()%><% if (!genClass.getClassExtends().contains("EObject")){%> extends <%=devInterfacePattern.replaceFirst("\\{0\\}",genClass.getClassExtendsGenClass().getEcoreClass().getName())%><%}else{%><%=genClass.getInterfaceExtends()%><%}%>
+public interface <%=genClass.getInterfaceName()%><%=genClass.getTypeParameters().trim()%><%=devTransform.replaceDevName(genClass.getInterfaceExtends())%>
 <%}%>
 {
 <%if (genModel.hasCopyrightField()) {%>

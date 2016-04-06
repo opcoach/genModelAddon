@@ -10,7 +10,7 @@ public class TestInterfaceGeneration extends GenModelAddonTestCase
 {
 
 	private String copyright = "© OPCoach 2016";
-	
+
 	@Test
 	public void testClassNames()
 	{
@@ -32,10 +32,11 @@ public class TestInterfaceGeneration extends GenModelAddonTestCase
 		assertEquals("The gen factory class  name must be MProjectFactoryImpl", "MProjectFactoryImpl",
 				gen.computeGeneratedFactoryClassName(gp));
 	}
-	
-	//----------------------------------------------------------------------------------------------------------
-	// ------------------- Test dev interfaces extends gen interfaces or parent dev interface ------------------
-	//----------------------------------------------------------------------------------------------------------
+
+	// ----------------------------------------------------------------------------------------------------------
+	// ------------------- Test dev interfaces extends gen interfaces or parent
+	// dev interface ------------------
+	// ----------------------------------------------------------------------------------------------------------
 
 	@Test
 	public void interfaceProjectMustExtendsMProject()
@@ -64,133 +65,142 @@ public class TestInterfaceGeneration extends GenModelAddonTestCase
 	@Test
 	public void interfaceMDocumentationProjectMustExtendsProject()
 	{
-		assertFileContains("src-gen/com/opcoach/project/documentation/MDocumentationProject.java", "interface MDocumentationProject extends Project");
+		assertFileContains("src-gen/com/opcoach/project/documentation/MDocumentationProject.java",
+				"interface MDocumentationProject extends Project");
 	}
 
 	@Test
 	public void interfaceDocumentationProjectMustExtendsMDocumentationProject()
 	{
-		assertFileContains("src/com/opcoach/project/documentation/DocumentationProject.java", "interface DocumentationProject extends MDocumentationProject");
+		assertFileContains("src/com/opcoach/project/documentation/DocumentationProject.java",
+				"interface DocumentationProject extends MDocumentationProject");
 	}
-	
-	//----------------------------------------------------------------------------------------------------------
-	// ------------------- Test dev implementations extends gen implementations or parent dev implementations --
-	//----------------------------------------------------------------------------------------------------------
+
+	// ----------------------------------------------------------------------------------------------------------
+	// ------------------- Test dev implementations extends gen implementations
+	// or parent dev implementations --
+	// ----------------------------------------------------------------------------------------------------------
 	@Test
 	public void implCompanyMustExtendMCompanyImplAndImplementsCompany()
 	{
 
-		assertFileContains("src/com/opcoach/project/impl/CompanyImpl.java", "class CompanyImpl extends MCompanyImpl implements Company");
+		assertFileContains("src/com/opcoach/project/impl/CompanyImpl.java",
+				"class CompanyImpl extends MCompanyImpl implements Company");
 	}
-	
+
 	@Test
 	public void implTaskMustExtendMTaskImplAndImplementsTask()
 	{
 
-		assertFileContains("src/com/opcoach/project/impl/TaskImpl.java", "class TaskImpl extends MTaskImpl implements Task");
+		assertFileContains("src/com/opcoach/project/impl/TaskImpl.java",
+				"class TaskImpl extends MTaskImpl implements Task");
 	}
-	
+
 	@Test
 	public void implPersonMustExtendMPersonImplAndImplementsPerson()
 	{
 
-		assertFileContains("src/com/opcoach/project/impl/PersonImpl.java", "class PersonImpl extends MPersonImpl implements Person");
+		assertFileContains("src/com/opcoach/project/impl/PersonImpl.java",
+				"class PersonImpl extends MPersonImpl implements Person");
 	}
-	
+
 	@Test
 	public void implProjectMustExtendMProjectImpAndImplementsProject()
 	{
 
-		assertFileContains("src/com/opcoach/project/impl/ProjectImpl.java", "class ProjectImpl extends MProjectImpl implements Project");
+		assertFileContains("src/com/opcoach/project/impl/ProjectImpl.java",
+				"class ProjectImpl extends MProjectImpl implements Project");
 	}
-	
+
 	@Test
 	public void implDocProjectMustExtendMDocProjectImpAndImplementsDocProject()
 	{
-		assertFileContains("src/com/opcoach/project/documentation/impl/DocumentationProjectImpl.java", "class DocumentationProjectImpl extends MDocumentationProjectImpl implements DocumentationProject");
+		assertFileContains("src/com/opcoach/project/documentation/impl/DocumentationProjectImpl.java",
+				"class DocumentationProjectImpl extends MDocumentationProjectImpl implements DocumentationProject");
 	}
-	
+
 	@Test
 	public void implDocTaskMustExtendMDocTaskImpAndImplementsDocTask()
 	{
-		assertFileContains("src/com/opcoach/project/documentation/impl/DocumentationTaskImpl.java", "class DocumentationTaskImpl extends MDocumentationTaskImpl implements DocumentationTask");
+		assertFileContains("src/com/opcoach/project/documentation/impl/DocumentationTaskImpl.java",
+				"class DocumentationTaskImpl extends MDocumentationTaskImpl implements DocumentationTask");
 	}
-	
-	
-	
-	//----------------------------------------------------------------------------------------------------------
-	// ------------------- Test gen implementations extends gen implementations or parent dev implementations --
-	//----------------------------------------------------------------------------------------------------------
+
+	// ----------------------------------------------------------------------------------------------------------
+	// ------------------- Test gen implementations extends gen implementations
+	// or parent dev implementations --
+	// ----------------------------------------------------------------------------------------------------------
 	@Test
 	public void implMDocProjectImplMustExtendProjectImplAndImplementsMDocProject()
 	{
 
-		assertFileContains("src-gen/com/opcoach/project/documentation/impl/MDocumentationProjectImpl.java", "class MDocumentationProjectImpl extends ProjectImpl implements MDocumentationProject");
+		assertFileContains("src-gen/com/opcoach/project/documentation/impl/MDocumentationProjectImpl.java",
+				"class MDocumentationProjectImpl extends ProjectImpl implements DocumentationProject");
 	}
-	
 
-	
-	
-	
-	
-	
-	//-----------------------------------------------------------------
-	// ------------------- Test composition getters  ------------------
-	//-----------------------------------------------------------------
+	// -----------------------------------------------------------------
+	// ------------------- Test composition getters ------------------
+	// -----------------------------------------------------------------
 
-	@Test public void getTaskOnProjectMustReturnListOfTask()
+	@Test
+	public void getTaskOnProjectMustReturnListOfTask()
 	{
 		assertFileContains("src-gen/com/opcoach/project/MProject.java", "EList<Task> getTasks();");
 	}
 
-	
-	@Test public void getProjectOnCompanyMustReturnListOfProjects()
+	@Test
+	public void getProjectOnCompanyMustReturnListOfProjects()
 	{
 		assertFileContains("src-gen/com/opcoach/project/MCompany.java", "EList<Project> getProjects();");
 	}
 
-	@Test public void getEmployeesOnCompanyMustReturnListOfPerson()
+	@Test
+	public void getEmployeesOnCompanyMustReturnListOfPerson()
 	{
 		assertFileContains("src-gen/com/opcoach/project/MCompany.java", "EList<Person> getEmployees();");
 	}
 
-	
-	
-	//-----------------------------------------------------------------
-	// ------------------- Test factory API          ------------------
-	//-----------------------------------------------------------------
+	// -----------------------------------------------------------------
+	// ------------------- Test factory API ------------------
+	// -----------------------------------------------------------------
 
-	@Test public void theProjectFactoryMustExtendsMProjectFactory()
+	@Test
+	public void theProjectFactoryMustExtendsMProjectFactory()
 	{
-		assertFileContains("src/com/opcoach/project/ProjectFactory.java", "public interface ProjectFactory extends MProjectFactory");
+		assertFileContains("src/com/opcoach/project/ProjectFactory.java",
+				"public interface ProjectFactory extends MProjectFactory");
 	}
 
-	@Test public void theProjectFactoryMustCreatePerson()
+	@Test
+	public void theProjectFactoryMustCreatePerson()
 	{
 		assertFileContains("src/com/opcoach/project/ProjectFactory.java", "public Person createPerson();");
 		assertFileContains("src/com/opcoach/project/impl/ProjectFactoryImpl.java", "new PersonImpl();");
 	}
 
-	@Test public void theProjectFactoryMustCreateProject()
+	@Test
+	public void theProjectFactoryMustCreateProject()
 	{
 		assertFileContains("src/com/opcoach/project/ProjectFactory.java", "public Project createProject()");
 		assertFileContains("src/com/opcoach/project/impl/ProjectFactoryImpl.java", "new ProjectImpl();");
 	}
 
-	@Test public void theProjectFactoryMustCreateTask()
+	@Test
+	public void theProjectFactoryMustCreateTask()
 	{
 		assertFileContains("src/com/opcoach/project/ProjectFactory.java", "public Task createTask();");
 		assertFileContains("src/com/opcoach/project/impl/ProjectFactoryImpl.java", "new TaskImpl();");
 	}
 
-	@Test public void theProjectFactoryMustCreateCompany()
+	@Test
+	public void theProjectFactoryMustCreateCompany()
 	{
 		assertFileContains("src/com/opcoach/project/ProjectFactory.java", "public Company createCompany();");
 		assertFileContains("src/com/opcoach/project/impl/ProjectFactoryImpl.java", "new CompanyImpl();");
 	}
 
-	
-	@Test public void filesMustContainCopyright()
+	@Test
+	public void filesMustContainCopyright()
 	{
 		assertFileContains("src/com/opcoach/project/Project.java", copyright);
 		assertFileContains("src/com/opcoach/project/ProjectFactory.java", copyright);
@@ -198,42 +208,87 @@ public class TestInterfaceGeneration extends GenModelAddonTestCase
 		assertFileContains("src/com/opcoach/project/impl/ProjectImpl.java", copyright);
 		assertFileContains("src/com/opcoach/project/impl/ProjectFactoryImpl.java", copyright);
 	}
-	
-	//-----------------------------------------------------------------------
-	// ------------------- Test gen operations must return the dev types   --
-	//-----------------------------------------------------------------------
 
-	@Test public void theFindTaskMethodMustReturnTask()
+	// -----------------------------------------------------------------------
+	// ------------------- Test gen operations must return the dev types --
+	// -----------------------------------------------------------------------
+
+	@Test
+	public void theFindTaskMethodMustReturnTask()
 	{
 		assertFileContains("src-gen/com/opcoach/project/MProject.java", "Task findFirstTask");
 		assertFileContains("src-gen/com/opcoach/project/impl/MProjectImpl.java", "public Task findFirstTask");
-		
 
 	}
 
-	@Test public void theFindTaskMethodMustReceiveAPerson()
+	@Test
+	public void theFindTaskMethodMustReceiveAPerson()
 	{
 		assertFileContains("src-gen/com/opcoach/project/MProject.java", "findFirstTask(Person p);");
 		assertFileContains("src-gen/com/opcoach/project/impl/MProjectImpl.java", "findFirstTask(Person p)");
-		assertFileContains("src-gen/com/opcoach/project/impl/MProjectImpl.java", "return findFirstTask((Person)arguments.get(0))");
-		
+		assertFileContains("src-gen/com/opcoach/project/impl/MProjectImpl.java",
+				"return findFirstTask((Person)arguments.get(0))");
+
 	}
 
-	//-------------------------------------------------------------
-	// ------------------- Test dev classes for generic types    --
-	//-------------------------------------------------------------
+	// -------------------------------------------------------------
+	// ------------------- Test gen classes for generic types --
+	// -------------------------------------------------------------
+	@Test
+	public void theGenFolderInterfaceMustBeGeneric()
+	{
+		assertFileContains("src-gen/com/opcoach/project/MFolder.java", "interface MFolder<T> extends EObject");
+	}
 
-	@Test public void theDevInterfaceMustBeGeneric()
+	@Test
+	public void theGenFolderClassMustBeGeneric()
+	{
+		assertFileContains("src-gen/com/opcoach/project/impl/MFolderImpl.java",
+				"class MFolderImpl<T> extends MinimalEObjectImpl.Container implements Folder<T>");
+	}
+
+	@Test
+	public void theGenTaskFolderInterfaceMustExtendsFolderOfTask()
+	{
+		assertFileContains("src-gen/com/opcoach/project/MTaskFolder.java",
+				"public interface MTaskFolder extends Folder<Task>");
+	}
+
+	@Test
+	public void theGenTaskFolderClassMustBeGeneric()
+	{
+		assertFileContains("src-gen/com/opcoach/project/impl/MTaskFolderImpl.java",
+				"class MTaskFolderImpl extends FolderImpl<Task> implements TaskFolder");
+	}
+
+	// -------------------------------------------------------------
+	// ------------------- Test dev classes for generic types --
+	// -------------------------------------------------------------
+
+	@Test
+	public void theDevFolderInterfaceMustBeGeneric()
 	{
 		assertFileContains("src/com/opcoach/project/Folder.java", "interface Folder<T> extends MFolder<T>");
 	}
-	
-	@Test public void theDevClassMustBeGeneric()
+
+	@Test
+	public void theDevFolderClassMustBeGeneric()
 	{
-		assertFileContains("src/com/opcoach/project/impl/FolderImpl.java", "class FolderImpl<T> extends MFolderImpl<T> implements Folder<T>");
+		assertFileContains("src/com/opcoach/project/impl/FolderImpl.java",
+				"class FolderImpl<T> extends MFolderImpl<T> implements Folder<T>");
 	}
-	
-	
-	
-	
+
+	@Test
+	public void theDevTaskFolderInterfaceMustBeGeneric()
+	{
+		assertFileContains("src/com/opcoach/project/TaskFolder.java", "interface TaskFolder extends MTaskFolder");
+	}
+
+	@Test
+	public void theDevTaskFolderClassMustBeGeneric()
+	{
+		assertFileContains("src/com/opcoach/project/impl/TaskFolderImpl.java",
+				"class TaskFolderImpl extends MTaskFolderImpl implements TaskFolder");
+	}
+
 }
