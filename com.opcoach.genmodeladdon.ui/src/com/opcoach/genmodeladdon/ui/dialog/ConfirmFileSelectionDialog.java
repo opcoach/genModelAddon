@@ -16,6 +16,7 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -56,7 +57,7 @@ public class ConfirmFileSelectionDialog extends MessageDialog
 		filesNotYetGenerated = filesNotGenerated;
 		relativeDir = pRelativeDir + File.separator;
 		filesToBeGenerated = new ArrayList<String>();
-		setShellStyle(getShellStyle() | SWT.RESIZE); 
+		setShellStyle(getShellStyle() | SWT.RESIZE);
 
 	}
 
@@ -66,59 +67,64 @@ public class ConfirmFileSelectionDialog extends MessageDialog
 		Composite root = new Composite(parent, SWT.NONE);
 		root.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		root.setLayout(new GridLayout(2, false));
-		
+
 		ScrolledComposite tableParent = new ScrolledComposite(root, SWT.V_SCROLL | SWT.H_SCROLL);
 		tableParent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		tableParent.setLayout(new FillLayout());
-		tv = CheckboxTableViewer.newCheckList(tableParent, SWT.V_SCROLL| SWT.BORDER);
+		tv = CheckboxTableViewer.newCheckList(tableParent, SWT.BORDER);
 		final Table cTable = tv.getTable();
 		cTable.setLinesVisible(true);
-		
+
 		tableParent.setContent(tv.getControl());
 		tableParent.setExpandHorizontal(true);
 		tableParent.setExpandVertical(true);
-		tableParent.setAlwaysShowScrollBars(true);
-		
+		tableParent.setAlwaysShowScrollBars(false);
+
+		// sort elements
+		tv.setSorter(new ViewerSorter());
+
 		TableViewerColumn filenameCol = new TableViewerColumn(tv, SWT.LEAD);
 		filenameCol.getColumn().setWidth(400);
 		filenameCol.getColumn().setText("Filename");
 		filenameCol.setLabelProvider(new ColumnLabelProvider()
+		{
+			@Override
+			public String getText(Object element)
 			{
-				@Override
-				public String getText(Object element)
-				{
-					String absName = element.toString();
-					int pos = absName.indexOf(relativeDir);
-					return element.toString().substring(pos).replace('\\', '/');
-				}
+				String absName = element.toString();
+				int pos = absName.indexOf(relativeDir);
+				return element.toString().substring(pos).replace('\\', '/');
+			}
 
-				@Override
-				public String getToolTipText(Object element)
-				{
-					return "This content will be generated: \n-----------------------------------\n"
-							+ filesNotYetGenerated.get(element);
-				}
-			});
+			@Override
+			public String getToolTipText(Object element)
+			{
+				return "This content will be generated: \n-----------------------------------\n"
+						+ filesNotYetGenerated.get(element);
+			}
+		});
 		ColumnViewerToolTipSupport.enableFor(tv, ToolTip.NO_RECREATE);
 
 		tv.setContentProvider(ArrayContentProvider.getInstance());
 		tv.setInput(filesNotYetGenerated.keySet());
 
-		tv.addCheckStateListener(new ICheckStateListener()
-			{
+		filenameCol.getColumn().pack();
 
-				@Override
-				public void checkStateChanged(CheckStateChangedEvent event)
+		tv.addCheckStateListener(new ICheckStateListener()
+		{
+
+			@Override
+			public void checkStateChanged(CheckStateChangedEvent event)
+			{
+				if (event.getChecked())
 				{
-					if (event.getChecked())
-					{
-						filesToBeGenerated.add((String) event.getElement());
-					} else
-					{
-						filesToBeGenerated.remove(event.getElement());
-					}
+					filesToBeGenerated.add((String) event.getElement());
+				} else
+				{
+					filesToBeGenerated.remove(event.getElement());
 				}
-			});
+			}
+		});
 
 		Composite selectComposite = new Composite(root, SWT.NONE);
 		selectComposite.setLayout(new GridLayout(1, false));
@@ -127,28 +133,28 @@ public class ConfirmFileSelectionDialog extends MessageDialog
 		selectAll.setImage(getLocalImage(IMG_CHECKBOX_SELECTED));
 		selectAll.setToolTipText("Select all");
 		selectAll.addSelectionListener(new SelectionAdapter()
+		{
+			@Override
+			public void widgetSelected(SelectionEvent e)
 			{
-				@Override
-				public void widgetSelected(SelectionEvent e)
-				{
-					tv.setAllChecked(true);
-					filesToBeGenerated.addAll(filesNotYetGenerated.keySet());
-				}
-			});
+				tv.setAllChecked(true);
+				filesToBeGenerated.addAll(filesNotYetGenerated.keySet());
+			}
+		});
 
 		Button deselectAll = new Button(selectComposite, SWT.PUSH);
 		deselectAll.setImage(getLocalImage(IMG_CHECKBOX_UNSELECTED));
 		deselectAll.setToolTipText("Unselect all");
 		deselectAll.addSelectionListener(new SelectionAdapter()
+		{
+			@Override
+			public void widgetSelected(SelectionEvent e)
 			{
-				@Override
-				public void widgetSelected(SelectionEvent e)
-				{
-					tv.setAllChecked(false);
-					filesToBeGenerated.clear();
+				tv.setAllChecked(false);
+				filesToBeGenerated.clear();
 
-				}
-			});
+			}
+		});
 
 		return root;
 	}
