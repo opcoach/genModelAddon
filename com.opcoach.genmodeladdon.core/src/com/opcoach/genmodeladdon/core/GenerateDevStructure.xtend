@@ -463,16 +463,13 @@ class GenerateDevStructure {
 		gc.computeInterfaceFilename + gc.ecoreClass.computeGenericTypes
 	}
 	
-	
-	
-	
 	def computeGenericTypes(EClass c) {
 		if (c.ETypeParameters.isEmpty) return ""
 		var sb = new StringBuffer("<")
 		var  sep = ""
 		for (pt : c.ETypeParameters)
 		{
-			sb.append(pt.name).append(sep)
+			sb.append(sep).append(pt.name)
 			sep = ","
 		}
 		sb.append(">")

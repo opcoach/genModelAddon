@@ -36,6 +36,21 @@ public class TestGenerics extends GenModelAddonTestCase
 				"class MTaskFolderImpl extends FolderImpl<Task> implements TaskFolder");
 	}
 
+	@Test
+	public void theGenStoreInterfaceMustBeGeneric()
+	{
+		assertFileContains("src-gen/com/opcoach/project/MStore.java",
+				"public interface MStore<T, U> extends EObject");
+	}
+	
+	@Test
+	public void theGenStoreClassMustBeGeneric()
+	{
+		assertFileContains("src-gen/com/opcoach/project/impl/MStoreImpl.java",
+				"public class MStoreImpl<T, U> extends MinimalEObjectImpl.Container implements Store<T, U>");
+	}
+
+
 	// -------------------------------------------------------------
 	// ------------------- Test dev classes for generic types --
 	// -------------------------------------------------------------
@@ -81,5 +96,19 @@ public class TestGenerics extends GenModelAddonTestCase
 		assertFileContains("src/com/opcoach/project/impl/ProjectFactoryImpl.java",
 				"Folder<T> result = new FolderImpl<T>()");
 	}
+	
+	@Test
+	public void theDevStoreInterfaceMustBeGeneric()
+	{
+		assertFileContains("src/com/opcoach/project/Store.java", "public interface Store<T,U> extends MStore<T,U>");
+	}
+
+	@Test
+	public void theDevStoreClassMustBeGeneric()
+	{
+		assertFileContains("src/com/opcoach/project/impl/StoreImpl.java",
+				"public class StoreImpl<T,U> extends MStoreImpl<T,U> implements Store<T,U>");
+	}
+
 
 }

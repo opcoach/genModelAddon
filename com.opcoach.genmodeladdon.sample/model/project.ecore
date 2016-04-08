@@ -14,6 +14,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="tasks" upperBound="-1"
         eType="#//Task" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="chief" eType="#//Person"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mainTask" eType="#//Task"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Task">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -40,6 +42,16 @@
   <eClassifiers xsi:type="ecore:EClass" name="TaskFolder">
     <eGenericSuperTypes eClassifier="#//Folder">
       <eTypeArguments eClassifier="#//Task"/>
+    </eGenericSuperTypes>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Store">
+    <eTypeParameters name="T"/>
+    <eTypeParameters name="U"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TaskStore">
+    <eGenericSuperTypes eClassifier="#//Store">
+      <eTypeArguments eClassifier="#//Task"/>
+      <eTypeArguments eClassifier="#//Person"/>
     </eGenericSuperTypes>
   </eClassifiers>
   <eSubpackages name="documentation" nsURI="http://www.opcoach.com/project/documentation/1.0"

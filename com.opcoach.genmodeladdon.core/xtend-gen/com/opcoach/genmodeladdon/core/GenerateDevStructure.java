@@ -940,9 +940,9 @@ public class GenerateDevStructure {
     EList<ETypeParameter> _eTypeParameters_1 = c.getETypeParameters();
     for (final ETypeParameter pt : _eTypeParameters_1) {
       {
+        StringBuffer _append = sb.append(sep);
         String _name = pt.getName();
-        StringBuffer _append = sb.append(_name);
-        _append.append(sep);
+        _append.append(_name);
         sep = ",";
       }
     }
