@@ -143,10 +143,26 @@ public class TestInterfaceGeneration extends GenModelAddonTestCase
 	// -----------------------------------------------------------------
 
 	@Test
-	public void getTaskOnProjectMustReturnListOfTask()
+	public void getTaskOnGenProjectInterfaceMustReturnListOfTask()
 	{
 		assertFileContains("src-gen/com/opcoach/project/MProject.java", "EList<Task> getTasks();");
 	}
+
+	@Test
+	public void getMainTaskOnGenProjectInterfaceMustReturnTask()
+	{
+		assertFileContains("src-gen/com/opcoach/project/MProject.java", "Task getMainTask();");
+		assertFileContains("src-gen/com/opcoach/project/MProject.java", "void setMainTask(Task value);");
+	}
+
+	@Test
+	public void getMainTaskOnGenProjectClassMustReturnTask()
+	{
+		assertFileContains("src-gen/com/opcoach/project/impl/MProjectImpl.java", "protected Task mainTask;");
+		assertFileContains("src-gen/com/opcoach/project/impl/MProjectImpl.java", "public Task getMainTask()");
+		assertFileContains("src-gen/com/opcoach/project/impl/MProjectImpl.java", "public void setMainTask(Task newMainTask)");
+	}
+
 
 	@Test
 	public void getProjectOnCompanyMustReturnListOfProjects()
