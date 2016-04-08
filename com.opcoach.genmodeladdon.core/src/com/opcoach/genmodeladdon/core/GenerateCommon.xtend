@@ -38,7 +38,7 @@ class GenerateCommon {
 	{
 		val uri = gm.eResource.URI
 		val s = uri.toString;
-		var pos = s.lastIndexOf(File.separator);
+		var pos = s.lastIndexOf("/");
 		var modelName = s.substring(pos + 1);
 		pos = modelName.indexOf(".genmodel");
 		modelName = modelName.substring(0, pos);

@@ -63,7 +63,7 @@ public class GenerateCommon {
     Resource _eResource = gm.eResource();
     final URI uri = _eResource.getURI();
     final String s = uri.toString();
-    int pos = s.lastIndexOf(File.separator);
+    int pos = s.lastIndexOf("/");
     String modelName = s.substring((pos + 1));
     int _indexOf = modelName.indexOf(".genmodel");
     pos = _indexOf;
