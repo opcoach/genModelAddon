@@ -170,7 +170,11 @@ public class GenerateDevStructure {
       Iterable<GenClass> _filter = IterableExtensions.<GenClass>filter(_genClasses, _function);
       for (final GenClass c : _filter) {
         {
-          this.generateOverriddenClass(c, srcAbsolutePath);
+          boolean _isInterface = c.isInterface();
+          boolean _not_2 = (!_isInterface);
+          if (_not_2) {
+            this.generateOverriddenClass(c, srcAbsolutePath);
+          }
           this.generateOverriddenInterface(c, interfaceAbsolutePath);
         }
       }
@@ -610,7 +614,15 @@ public class GenerateDevStructure {
         }
       };
       Iterable<GenClass> _filter = IterableExtensions.<GenClass>filter(_genClasses, _function);
-      for(final GenClass gc : _filter) {
+      final Function1<GenClass, Boolean> _function_1 = new Function1<GenClass, Boolean>() {
+        @Override
+        public Boolean apply(final GenClass it) {
+          boolean _isAbstract = it.isAbstract();
+          return Boolean.valueOf((!_isAbstract));
+        }
+      };
+      Iterable<GenClass> _filter_1 = IterableExtensions.<GenClass>filter(_filter, _function_1);
+      for(final GenClass gc : _filter_1) {
         _builder.append("\t");
         CharSequence _generateFactoryDef = this.generateFactoryDef(gc);
         _builder.append(_generateFactoryDef, "\t");
@@ -718,7 +730,15 @@ public class GenerateDevStructure {
         }
       };
       Iterable<GenClass> _filter = IterableExtensions.<GenClass>filter(_genClasses, _function);
-      for(final GenClass gc : _filter) {
+      final Function1<GenClass, Boolean> _function_1 = new Function1<GenClass, Boolean>() {
+        @Override
+        public Boolean apply(final GenClass it) {
+          boolean _isAbstract = it.isAbstract();
+          return Boolean.valueOf((!_isAbstract));
+        }
+      };
+      Iterable<GenClass> _filter_1 = IterableExtensions.<GenClass>filter(_filter, _function_1);
+      for(final GenClass gc : _filter_1) {
         _builder.append("import ");
         String _computePackageNameForInterfaces = this.computePackageNameForInterfaces(gp);
         _builder.append(_computePackageNameForInterfaces, "");
@@ -809,15 +829,23 @@ public class GenerateDevStructure {
     _builder.newLine();
     {
       EList<GenClass> _genClasses_1 = gp.getGenClasses();
-      final Function1<GenClass, Boolean> _function_1 = new Function1<GenClass, Boolean>() {
+      final Function1<GenClass, Boolean> _function_2 = new Function1<GenClass, Boolean>() {
         @Override
         public Boolean apply(final GenClass it) {
           boolean _isDynamic = it.isDynamic();
           return Boolean.valueOf((!_isDynamic));
         }
       };
-      Iterable<GenClass> _filter_1 = IterableExtensions.<GenClass>filter(_genClasses_1, _function_1);
-      for(final GenClass gc_1 : _filter_1) {
+      Iterable<GenClass> _filter_2 = IterableExtensions.<GenClass>filter(_genClasses_1, _function_2);
+      final Function1<GenClass, Boolean> _function_3 = new Function1<GenClass, Boolean>() {
+        @Override
+        public Boolean apply(final GenClass it) {
+          boolean _isAbstract = it.isAbstract();
+          return Boolean.valueOf((!_isAbstract));
+        }
+      };
+      Iterable<GenClass> _filter_3 = IterableExtensions.<GenClass>filter(_filter_2, _function_3);
+      for(final GenClass gc_1 : _filter_3) {
         _builder.append("\t");
         CharSequence _generateCreateMethod = this.generateCreateMethod(gc_1);
         _builder.append(_generateCreateMethod, "\t");

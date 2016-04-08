@@ -54,6 +54,10 @@
       <eTypeArguments eClassifier="#//Person"/>
     </eGenericSuperTypes>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ClassAsInterface" abstract="true" interface="true">
+    <eOperations name="operationListener"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
   <eSubpackages name="documentation" nsURI="http://www.opcoach.com/project/documentation/1.0"
       nsPrefix="doc">
     <eClassifiers xsi:type="ecore:EClass" name="DocumentationProject" eSuperTypes="#//Project"/>

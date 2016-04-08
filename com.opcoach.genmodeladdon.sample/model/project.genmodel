@@ -42,6 +42,10 @@
       <genTypeParameters ecoreTypeParameter="project.ecore#//Store/U"/>
     </genClasses>
     <genClasses ecoreClass="project.ecore#//TaskStore"/>
+    <genClasses image="false" ecoreClass="project.ecore#//ClassAsInterface">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute project.ecore#//ClassAsInterface/name"/>
+      <genOperations ecoreOperation="project.ecore#//ClassAsInterface/operationListener"/>
+    </genClasses>
     <nestedGenPackages prefix="Documentation" basePackage="com.opcoach.project" disposableProviderFactory="true"
         ecorePackage="project.ecore#//documentation">
       <genClasses ecoreClass="project.ecore#//documentation/DocumentationProject"/>

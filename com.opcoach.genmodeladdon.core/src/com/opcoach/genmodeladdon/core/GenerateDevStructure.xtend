@@ -108,7 +108,8 @@ class GenerateDevStructure {
 		println("Generate interfaces in : " + interfaceAbsolutePath)
 
 		for (c : gp.genClasses.filter[!isDynamic]) {
-			generateOverriddenClass(c, srcAbsolutePath)
+			if (!c.isInterface)
+				generateOverriddenClass(c, srcAbsolutePath) // Can still generate abstract classes
 			generateOverriddenInterface(c, interfaceAbsolutePath)
 		}
 
@@ -357,7 +358,7 @@ class GenerateDevStructure {
 			*/
 			«gp.computeFactoryInterfaceName» eINSTANCE = «gp.computeFactoryClassName».init();
 						
-			«FOR gc : gp.genClasses.filter[!isDynamic]»
+			«FOR gc : gp.genClasses.filter[!isDynamic].filter[!isAbstract]»
 				«gc.generateFactoryDef»
 			«ENDFOR»
 		}
@@ -397,7 +398,7 @@ class GenerateDevStructure {
 		
 		import org.eclipse.emf.ecore.plugin.EcorePlugin;
 		
-		«FOR gc : gp.genClasses.filter[!isDynamic]»
+		«FOR gc : gp.genClasses.filter[!isDynamic].filter[!isAbstract]»
 			import «gp.computePackageNameForInterfaces».«gc.computeInterfaceFilename»;
 		«ENDFOR»
 		import «gp.computePackageNameForInterfaces».«gp.computeFactoryInterfaceName»;
@@ -421,7 +422,7 @@ class GenerateDevStructure {
 				return new «gp.computeFactoryClassName»(); 
 				 }
 			
-			«FOR gc : gp.genClasses.filter[!isDynamic]»
+			«FOR gc : gp.genClasses.filter[!isDynamic].filter[!isAbstract]»
 				«gc.generateCreateMethod»
 			«ENDFOR»
 		}

@@ -246,5 +246,15 @@ public class TestInterfaceGeneration extends GenModelAddonTestCase
 				"return findFirstTask((Person)arguments.get(0))");
 
 	}
+	
+	// -----------------------------------------------------------------------
+	// ------------------- EClass defined as interface  --
+	// -----------------------------------------------------------------------
+	@Test
+	public void anEclassAsInterfaceMustNotGenerateImplementation()
+	{
+		assertFileExists("src/com/opcoach/project/ClassAsInterface.java");
+		assertFileNotExists("src/com/opcoach/project/impl/ClassAsInterfaceImpl.java");
+	}
 
 }

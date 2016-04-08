@@ -13,7 +13,6 @@ import java.util.Map;
 
 import org.eclipse.ant.core.AntRunner;
 import org.eclipse.core.filesystem.EFS;
-import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -210,6 +209,59 @@ public class GenModelAddonTestCase
 			fail("The file '" + path + "' should contain the string '" + content + "' but it was not found.");
 
 	}
+	
+	/**
+	 * This method checks a file exists
+	 * 
+	 * @param path
+	 *            the path expressed relative to project :
+	 *            "src/impl/ProjectImpl.java" for instance
+	 * 
+	 * @return
+	 */
+	void assertFileExists(String path)
+	{
+		try
+		{
+			// Gets native File using EFS
+			File javaFile = getFileFromIFile(sampleProject.getFile(new Path(path)));
+			if ( javaFile.exists())
+				return;
+
+		} catch (CoreException e)
+		{
+			e.printStackTrace();
+		} 
+		   fail("The file '" + path + "' does not exists but it should exists.");
+
+	}
+	
+	/**
+	 * This method checks a file does not exists
+	 * 
+	 * @param path
+	 *            the path expressed relative to project :
+	 *            "src/impl/ProjectImpl.java" for instance
+	 * 
+	 * @return
+	 */
+	void assertFileNotExists(String path)
+	{
+		try
+		{
+			// Gets native File using EFS
+			File javaFile = getFileFromIFile(sampleProject.getFile(new Path(path)));
+			if ( !javaFile.exists())
+				return;
+
+		} catch (CoreException e)
+		{
+			e.printStackTrace();
+		} 
+		   fail("The file '" + path + "' exists but it should not exists !");
+
+	}
+
 
 	private File getFileFromIFile(IFile file) throws CoreException
 	{
