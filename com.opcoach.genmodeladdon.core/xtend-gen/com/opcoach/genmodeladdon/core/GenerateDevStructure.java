@@ -495,8 +495,8 @@ public class GenerateDevStructure {
     String _computePackageNameForInterfaces = this.computePackageNameForInterfaces(_genPackage_1);
     _builder.append(_computePackageNameForInterfaces, "");
     _builder.append(".");
-    String _computeInterfaceName = this.computeInterfaceName(gc);
-    _builder.append(_computeInterfaceName, "");
+    String _computeInterfaceFilename = this.computeInterfaceFilename(gc);
+    _builder.append(_computeInterfaceFilename, "");
     _builder.append(";");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
@@ -509,8 +509,8 @@ public class GenerateDevStructure {
     String _computeGeneratedClassName = this.computeGeneratedClassName(gc);
     _builder.append(_computeGeneratedClassName, "");
     _builder.append(" implements ");
-    String _computeInterfaceName_1 = this.computeInterfaceName(gc);
-    _builder.append(_computeInterfaceName_1, "");
+    String _computeInterfaceName = this.computeInterfaceName(gc);
+    _builder.append(_computeInterfaceName, "");
     _builder.newLineIfNotEmpty();
     _builder.append("{");
     _builder.newLine();
@@ -661,7 +661,10 @@ public class GenerateDevStructure {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("public ");
     String _computeInterfaceName = this.computeInterfaceName(gc);
-    _builder.append(_computeInterfaceName, "");
+    String _extractGenericTypes = this.extractGenericTypes(_computeInterfaceName);
+    _builder.append(_extractGenericTypes, "");
+    String _computeInterfaceName_1 = this.computeInterfaceName(gc);
+    _builder.append(_computeInterfaceName_1, "");
     _builder.append(" create");
     EClass _ecoreClass = gc.getEcoreClass();
     String _name = _ecoreClass.getName();
@@ -669,6 +672,27 @@ public class GenerateDevStructure {
     _builder.append("();");
     _builder.newLineIfNotEmpty();
     return _builder;
+  }
+  
+  /**
+   * This method extracts the generic types found at the end of a class name, like Folder<T> or Folder<T,U>
+   * it returns <T> or <T,U> if the interfaceName is Folder<T> or Folder<T,U>
+   * it returns an empty string if there is no generics
+   */
+  public String extractGenericTypes(final String s) {
+    String _xblockexpression = null;
+    {
+      final int pos = s.indexOf("<");
+      String _xifexpression = null;
+      if ((pos > 0)) {
+        String _substring = s.substring(pos);
+        _xifexpression = (_substring + " ");
+      } else {
+        _xifexpression = "";
+      }
+      _xblockexpression = _xifexpression;
+    }
+    return _xblockexpression;
   }
   
   public CharSequence generateClassFactoryContent(final GenPackage gp) {
@@ -699,8 +723,8 @@ public class GenerateDevStructure {
         String _computePackageNameForInterfaces = this.computePackageNameForInterfaces(gp);
         _builder.append(_computePackageNameForInterfaces, "");
         _builder.append(".");
-        String _computeInterfaceName = this.computeInterfaceName(gc);
-        _builder.append(_computeInterfaceName, "");
+        String _computeInterfaceFilename = this.computeInterfaceFilename(gc);
+        _builder.append(_computeInterfaceFilename, "");
         _builder.append(";");
         _builder.newLineIfNotEmpty();
       }
@@ -809,7 +833,10 @@ public class GenerateDevStructure {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("public ");
     String _computeInterfaceName = this.computeInterfaceName(gc);
-    _builder.append(_computeInterfaceName, "");
+    String _extractGenericTypes = this.extractGenericTypes(_computeInterfaceName);
+    _builder.append(_extractGenericTypes, "");
+    String _computeInterfaceName_1 = this.computeInterfaceName(gc);
+    _builder.append(_computeInterfaceName_1, "");
     _builder.append(" create");
     EClass _ecoreClass = gc.getEcoreClass();
     String _name = _ecoreClass.getName();
@@ -819,8 +846,8 @@ public class GenerateDevStructure {
     _builder.append("{");
     _builder.newLine();
     _builder.append("\t");
-    String _computeInterfaceName_1 = this.computeInterfaceName(gc);
-    _builder.append(_computeInterfaceName_1, "\t");
+    String _computeInterfaceName_2 = this.computeInterfaceName(gc);
+    _builder.append(_computeInterfaceName_2, "\t");
     _builder.append(" result = new ");
     String _computeClassname = this.computeClassname(gc);
     _builder.append(_computeClassname, "\t");

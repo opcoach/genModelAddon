@@ -322,7 +322,7 @@ class GenerateDevStructure {
 		«copyright»
 		package «gc.genPackage.computePackageNameForClasses»;
 		
-		import «gc.genPackage.computePackageNameForInterfaces».«gc.computeInterfaceName»;
+		import «gc.genPackage.computePackageNameForInterfaces».«gc.computeInterfaceFilename»;
 		
 		// This class overrides the generated class and will be instantiated by factory
 		public class «gc.computeClassname» extends «gc.computeGeneratedClassName()» implements «gc.computeInterfaceName»
@@ -377,8 +377,19 @@ class GenerateDevStructure {
 	'''
 
 	def generateFactoryDef(GenClass gc) '''
-		public «gc.computeInterfaceName» create«gc.ecoreClass.name»();
+		public «gc.computeInterfaceName.extractGenericTypes»«gc.computeInterfaceName» create«gc.ecoreClass.name»();
 	'''
+	
+	/** This method extracts the generic types found at the end of a class name, like Folder<T> or Folder<T,U>
+	 * it returns <T> or <T,U> if the interfaceName is Folder<T> or Folder<T,U>
+	 * it returns an empty string if there is no generics
+	 */
+	def extractGenericTypes(String s) {
+		val pos = s.indexOf('<');
+		if (pos > 0)
+		  s.substring(pos) + " " 
+		  else ""
+	}
 
 	def generateClassFactoryContent(GenPackage gp) '''
 		«copyright»
@@ -387,7 +398,7 @@ class GenerateDevStructure {
 		import org.eclipse.emf.ecore.plugin.EcorePlugin;
 		
 		«FOR gc : gp.genClasses.filter[!isDynamic]»
-			import «gp.computePackageNameForInterfaces».«gc.computeInterfaceName»;
+			import «gp.computePackageNameForInterfaces».«gc.computeInterfaceFilename»;
 		«ENDFOR»
 		import «gp.computePackageNameForInterfaces».«gp.computeFactoryInterfaceName»;
 		
@@ -417,7 +428,7 @@ class GenerateDevStructure {
 	'''
 
 	def generateCreateMethod(GenClass gc) '''
-		public «gc.computeInterfaceName» create«gc.ecoreClass.name»()
+		public «gc.computeInterfaceName.extractGenericTypes»«gc.computeInterfaceName» create«gc.ecoreClass.name»()
 		{
 			«gc.computeInterfaceName» result = new «gc.computeClassname»();
 			return result;
@@ -451,6 +462,8 @@ class GenerateDevStructure {
 	def computeInterfaceName(GenClass gc) {
 		gc.computeInterfaceFilename + gc.ecoreClass.computeGenericTypes
 	}
+	
+	
 	
 	
 	def computeGenericTypes(EClass c) {

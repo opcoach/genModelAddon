@@ -13,6 +13,7 @@ import java.util.Map;
 
 import org.eclipse.ant.core.AntRunner;
 import org.eclipse.core.filesystem.EFS;
+import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -122,14 +123,16 @@ public class GenModelAddonTestCase
 		// Create a sample empty project in workspace root
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		IProject proj = root.getProject(SAMPLE_PROJECT);
+		
 		NullProgressMonitor npm = new NullProgressMonitor();
 		try
 		{
+			if (!proj.exists())
 			proj.create(npm);
 
 		} catch (CoreException e1)
 		{
-			e1.printStackTrace();
+			// e1.printStackTrace();
 		}
 
 		// Then get the ant file to run to copy the template project
