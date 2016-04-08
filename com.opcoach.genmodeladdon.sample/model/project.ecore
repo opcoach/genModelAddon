@@ -7,6 +7,9 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Project">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="checkName checkChief"/>
+    </eAnnotations>
     <eOperations name="findFirstTask" eType="#//Task">
       <eParameters name="p" eType="#//Person"/>
     </eOperations>
