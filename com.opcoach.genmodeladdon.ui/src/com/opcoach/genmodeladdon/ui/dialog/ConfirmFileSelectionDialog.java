@@ -16,6 +16,7 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
@@ -48,10 +49,7 @@ public class ConfirmFileSelectionDialog extends MessageDialog
 
 	public ConfirmFileSelectionDialog(Shell parentShell, Map<String, Object> filesNotGenerated, String pRelativeDir)
 	{
-		super(
-				parentShell,
-				"Overriding existing file(s)",
-				null,
+		super(parentShell, "Overriding existing file(s)", null,
 				"Some files already exist.\nSelect the files you want to override.\nA tooltip will display the content of the file if it is kept for generation",
 				MessageDialog.CONFIRM, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
 		filesNotYetGenerated = filesNotGenerated;
@@ -81,28 +79,47 @@ public class ConfirmFileSelectionDialog extends MessageDialog
 		tableParent.setAlwaysShowScrollBars(false);
 
 		// sort elements
-		tv.setSorter(new ViewerSorter());
+		tv.setSorter(new ViewerSorter()
+			{
+				@Override
+				public int compare(Viewer viewer, Object e1, Object e2)
+				{
+					String f1 = getText(e1);
+					String f2 = getText(e2);
+					int pos1 = f1.lastIndexOf('/');
+					int pos2 = f2.lastIndexOf('/');
+					int pathComp = String.CASE_INSENSITIVE_ORDER.compare(f1.substring(0, pos1), f2.substring(0, pos2));
+					return (pathComp != 0) ? pathComp : String.CASE_INSENSITIVE_ORDER.compare(f1.substring(pos1 + 1, f1.length()), f2.substring(pos2 + 1, f2.length()));
+				}
+
+				private String getText(Object element)
+				{
+					String absName = element.toString();
+					int pos = absName.indexOf(relativeDir);
+					return absName.substring(pos).replace('\\', '/');
+				}
+			});
 
 		TableViewerColumn filenameCol = new TableViewerColumn(tv, SWT.LEAD);
 		filenameCol.getColumn().setWidth(400);
 		filenameCol.getColumn().setText("Filename");
 		filenameCol.setLabelProvider(new ColumnLabelProvider()
-		{
-			@Override
-			public String getText(Object element)
 			{
-				String absName = element.toString();
-				int pos = absName.indexOf(relativeDir);
-				return element.toString().substring(pos).replace('\\', '/');
-			}
+				@Override
+				public String getText(Object element)
+				{
+					String absName = element.toString();
+					int pos = absName.indexOf(relativeDir);
+					return element.toString().substring(pos).replace('\\', '/');
+				}
 
-			@Override
-			public String getToolTipText(Object element)
-			{
-				return "This content will be generated: \n-----------------------------------\n"
-						+ filesNotYetGenerated.get(element);
-			}
-		});
+				@Override
+				public String getToolTipText(Object element)
+				{
+					return "This content will be generated: \n-----------------------------------\n"
+							+ filesNotYetGenerated.get(element);
+				}
+			});
 		ColumnViewerToolTipSupport.enableFor(tv, ToolTip.NO_RECREATE);
 
 		tv.setContentProvider(ArrayContentProvider.getInstance());
@@ -111,20 +128,20 @@ public class ConfirmFileSelectionDialog extends MessageDialog
 		filenameCol.getColumn().pack();
 
 		tv.addCheckStateListener(new ICheckStateListener()
-		{
-
-			@Override
-			public void checkStateChanged(CheckStateChangedEvent event)
 			{
-				if (event.getChecked())
+
+				@Override
+				public void checkStateChanged(CheckStateChangedEvent event)
 				{
-					filesToBeGenerated.add((String) event.getElement());
-				} else
-				{
-					filesToBeGenerated.remove(event.getElement());
+					if (event.getChecked())
+					{
+						filesToBeGenerated.add((String) event.getElement());
+					} else
+					{
+						filesToBeGenerated.remove(event.getElement());
+					}
 				}
-			}
-		});
+			});
 
 		Composite selectComposite = new Composite(root, SWT.NONE);
 		selectComposite.setLayout(new GridLayout(1, false));
@@ -133,28 +150,28 @@ public class ConfirmFileSelectionDialog extends MessageDialog
 		selectAll.setImage(getLocalImage(IMG_CHECKBOX_SELECTED));
 		selectAll.setToolTipText("Select all");
 		selectAll.addSelectionListener(new SelectionAdapter()
-		{
-			@Override
-			public void widgetSelected(SelectionEvent e)
 			{
-				tv.setAllChecked(true);
-				filesToBeGenerated.addAll(filesNotYetGenerated.keySet());
-			}
-		});
+				@Override
+				public void widgetSelected(SelectionEvent e)
+				{
+					tv.setAllChecked(true);
+					filesToBeGenerated.addAll(filesNotYetGenerated.keySet());
+				}
+			});
 
 		Button deselectAll = new Button(selectComposite, SWT.PUSH);
 		deselectAll.setImage(getLocalImage(IMG_CHECKBOX_UNSELECTED));
 		deselectAll.setToolTipText("Unselect all");
 		deselectAll.addSelectionListener(new SelectionAdapter()
-		{
-			@Override
-			public void widgetSelected(SelectionEvent e)
 			{
-				tv.setAllChecked(false);
-				filesToBeGenerated.clear();
+				@Override
+				public void widgetSelected(SelectionEvent e)
+				{
+					tv.setAllChecked(false);
+					filesToBeGenerated.clear();
 
-			}
-		});
+				}
+			});
 
 		return root;
 	}
