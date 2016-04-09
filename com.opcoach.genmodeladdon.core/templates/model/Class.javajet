@@ -11,8 +11,6 @@
  *   IBM - Initial API and implementation
  */
 %>
-
-
 <%
 class DevTransform {
 
@@ -86,9 +84,6 @@ class DevTransform {
 		
 		return stringToTranslate;
 	}
-	
-	
-
 }
 %>
 <%final GenClass genClass = (GenClass)((Object[])argument)[0]; final GenPackage genPackage = genClass.getGenPackage(); final GenModel genModel=genPackage.getGenModel();%>
@@ -101,7 +96,6 @@ class DevTransform {
 <%final String positiveOffsetCorrection = genClass.hasOffsetCorrection() ? " + " + genClass.getOffsetCorrectionField(null) : "";%>
 <%final String negativeOperationOffsetCorrection = genClass.hasOffsetCorrection() ? " - EOPERATION_OFFSET_CORRECTION" : "";%>
 <%final String positiveOperationOffsetCorrection = genClass.hasOffsetCorrection() ? " + EOPERATION_OFFSET_CORRECTION" : "";%>
-
 <%
    // Get patterns for class names (for dev it's a parameter, for gen it is in genmodel)
    final String devClassPattern = "{0}Impl";  // "{0}Impl";
@@ -111,13 +105,9 @@ class DevTransform {
         
    //System.out.println("\n ---------------------------  Generating " +  genClass.getEcoreClass().getName() + " -----------------");
    //System.out.println(" For class '" + genClass.getEcoreClass().getName() + "' generated as '" + genClass.getClassName() +"'");
-    
-   
-   
-   DevTransform devTransform = new DevTransform(genModel, devInterfacePattern, genInterfacePattern, devClassPattern, genClassPattern);
-   
-%>
 
+   DevTransform devTransform = new DevTransform(genModel, devInterfacePattern, genInterfacePattern, devClassPattern, genClassPattern);
+%>
 <%@ include file="../Header.javajetinc"%>
 <%if (isInterface) {%>
 package <%=genPackage.getInterfacePackageName()%>;
