@@ -57,12 +57,12 @@ class DevTransform {
 			   break;
 				String devIntName = java.text.MessageFormat.format(devInterfaceNamePattern, c.getName());
 				String genIntName = java.text.MessageFormat.format(genInterfaceNamePattern, c.getName());
-				System.out.println("Put : " + genIntName + "," + devIntName);
+				// System.out.println("Put : " + genIntName + "," + devIntName);
 				devNames.put(genIntName, devIntName);
 				
 				String genClassName = java.text.MessageFormat.format(genClassNamePattern, c.getName());
 				String devClassName = java.text.MessageFormat.format(devClassNamePattern, c.getName());
-				System.out.println("Put : " + genClassName + "," + devClassName);
+				// System.out.println("Put : " + genClassName + "," + devClassName);
 				devNames.put(genClassName, devClassName);
 				
 				
@@ -79,7 +79,7 @@ class DevTransform {
 		{		
 			if (stringToTranslate.contains(key))
 			{
-				System.out.println("String : " + stringToTranslate + " contains " + key + " will replace with " + devNames.get(key) );
+				// System.out.println("String : " + stringToTranslate + " contains " + key + " will replace with " + devNames.get(key) );
 				stringToTranslate = stringToTranslate.replaceAll(key, devNames.get(key));
 		   }
 		}
@@ -109,8 +109,8 @@ class DevTransform {
    final String genClassPattern = genModel.getClassNamePattern(); //  "M{0}Impl"; // "%GEN_CLASS_PATTERN%";
    final String genInterfacePattern = genModel.getInterfaceNamePattern(); // "M{0}"; // "%GEN_INTERFACE_PATTERN%";
         
-   System.out.println("\n ---------------------------  Generating " +  genClass.getEcoreClass().getName() + " -----------------");
-   System.out.println(" For class '" + genClass.getEcoreClass().getName() + "' generated as '" + genClass.getClassName() +"'");
+   //System.out.println("\n ---------------------------  Generating " +  genClass.getEcoreClass().getName() + " -----------------");
+   //System.out.println(" For class '" + genClass.getEcoreClass().getName() + "' generated as '" + genClass.getClassName() +"'");
     
    
    
