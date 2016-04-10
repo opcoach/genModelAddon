@@ -1,4 +1,4 @@
-<%@ jet package="org.eclipse.emf.codegen.ecore.templates.model" imports="java.util.* org.eclipse.emf.codegen.ecore.genmodel.* org.eclipse.emf.ecore.* org.eclipse.emf.codegen.util.CodeGenUtil" class="Class"%>
+<%@ jet package="org.eclipse.emf.codegen.ecore.templates.model" imports="java.util.* java.io.* org.eclipse.emf.codegen.ecore.genmodel.* org.eclipse.emf.ecore.* org.eclipse.emf.codegen.util.CodeGenUtil" class="Class"%>
 <%
 /**
  * Copyright (c) 2002-2011 IBM Corporation and others.
@@ -16,20 +16,7 @@ class DevTransform {
 
 	// The map of devnames : key = implementation name, value = devName
 	private Map<String, String> devNames;
-	private String devInterfaceNamePattern, genInterfaceNamePattern, devClassNamePattern, genClassNamePattern;
-	//private static DevTransform instance = null;
-	//private static GenModel lastGm = null;
-	
-    /* public static DevTransform getInstance(GenModel gm, String devInterfaceNamePattern, String genInterfaceNamePattern, String devClassNamePattern, String genClassNamePattern)
-	{
-	   if (gm != lastGm)
-	   {
-	       instance = new DevTransform(gm, devInterfaceNamePattern, genInterfaceNamePattern, devClassNamePattern, genClassNamePattern);
-	       lastGm = gm;
-	   }
-	   return instance;
-	} */
-	
+	private String devInterfaceNamePattern, genInterfaceNamePattern, devClassNamePattern, genClassNamePattern;	
 	
 	public DevTransform(GenModel gm, String devInterfaceNamePattern, String genInterfaceNamePattern, String devClassNamePattern, String genClassNamePattern) 
 	{
@@ -62,8 +49,6 @@ class DevTransform {
 				String devClassName = java.text.MessageFormat.format(devClassNamePattern, c.getName());
 				// System.out.println("Put : " + genClassName + "," + devClassName);
 				devNames.put(genClassName, devClassName);
-				
-				
 			}
 		}
 		for (EPackage childPackage : p.getESubpackages())
@@ -77,7 +62,7 @@ class DevTransform {
 		{		
 			if (stringToTranslate.contains(key))
 			{
-				// System.out.println("String : " + stringToTranslate + " contains " + key + " will replace with " + devNames.get(key) );
+			    // System.out.println("String : " + stringToTranslate + " contains " + key + " will replace with " + devNames.get(key) );
 				stringToTranslate = stringToTranslate.replaceAll(key, devNames.get(key));
 		   }
 		}
@@ -115,7 +100,8 @@ package <%=genPackage.getInterfacePackageName()%>;
 package <%=genPackage.getClassPackageName()%>;
 <%}%>
 
-<%genModel.markImportLocation(stringBuffer, genPackage);%>
+<% final int insertPointForChangedImport = stringBuffer.length();
+  genModel.markImportLocation(stringBuffer, genPackage);%>
 <%if (isImplementation) { genClass.addClassPsuedoImports(); }%>
 
 <%if (isInterface) {%>
@@ -2574,4 +2560,26 @@ if (index != -1) { head = typeName.substring(0, index); tail = typeName.substrin
 <%@ include file="Class/insert.javajetinc" fail="silent" %>
 } //<%=isInterface ? " " + genClass.getInterfaceName() : genClass.getClassName()%>
 <%// TODO fix the space above%>
-<%genModel.emitSortedImports();%>
+<% // Update imports before insertion
+   String oldImports = genModel.getImportManager().computeSortedImports();
+   String  thisLine = null;
+   Collection<String> listImport = new ArrayList<String>();
+    try{
+   BufferedReader br = new BufferedReader(new StringReader(oldImports));
+   while ((thisLine = br.readLine()) != null) {
+              String newImport = devTransform.replaceDevName(thisLine);
+              if ("\n".equals(newImport) || (!listImport.contains(newImport)))
+                  listImport.add(newImport);
+              // Must keep the previous package (both are used)
+              if (thisLine.endsWith("Package;") && (!listImport.contains(thisLine)))
+                  listImport.add(thisLine);
+            
+    }       
+      }catch(Exception e){
+         e.printStackTrace();
+      }
+   StringBuffer bufImport = new StringBuffer();
+   for (String s: listImport)
+      bufImport.append(s).append("\n");
+   String newImports = bufImport.toString();
+   stringBuffer.insert(insertPointForChangedImport, newImports.toString());%>

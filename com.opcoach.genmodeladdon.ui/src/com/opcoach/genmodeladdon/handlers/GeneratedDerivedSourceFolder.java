@@ -160,10 +160,6 @@ public class GeneratedDerivedSourceFolder extends GenerateParentHandler
 						e.printStackTrace();
 					}
 					
-					// Then should reorganize imports in the project in package explorer view ! 
-					MessageDialog.openInformation(parentShell, "Don't forget to reorganize imports", 
-							"Generation is finished. \n\n"
-							+ "The last manual step is to reorganize imports on " + gm.getModelDirectory() + " directory ! ");
 				}
 			}
 
