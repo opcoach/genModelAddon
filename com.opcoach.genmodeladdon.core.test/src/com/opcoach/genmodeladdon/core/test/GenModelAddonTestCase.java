@@ -39,13 +39,23 @@ import com.opcoach.genmodeladdon.core.GenerateDevStructure;
 public class GenModelAddonTestCase
 {
 
+	protected static final String FANOISE_ANT_FILE = "generateEMFCode_fanoise.xml";
+	protected static final String PROJECT_ANT_FILE = "generateEMFCode_project.xml";
+	public static final String PROJECT_GENMODEL = "/com.opcoach.genmodeladdon.sample/model/project.genmodel";
+	public static final String FANNOISE_GENMODEL = "/com.opcoach.genmodeladdon.sample/model_fannoise/fannoise.genmodel";
+
 	private static final String SAMPLE_PROJECT = "com.opcoach.genmodeladdon.sample";
 
-	protected static GenModel gm;
+	protected static Map<String,GenModel> gmMap = new HashMap<String,GenModel>();
+	protected static Map<String,GenerateDevStructure> genMap = new HashMap<String,GenerateDevStructure>();
 
-	protected static GenerateDevStructure gen;
+	// protected static GenerateDevStructure gen;
+	
+	protected static IWorkspaceRoot root;
 
 	protected static IProject sampleProject;
+	
+	protected static boolean initDone = false;  // Use to create the project only once
 
 	static
 	{
@@ -64,15 +74,30 @@ public class GenModelAddonTestCase
 	@BeforeClass
 	public static void init() throws IOException
 	{
+		if (initDone)
+			return; 
+		
+		
 		// Copy the sample project in the runtime workspace
-		IWorkspaceRoot root = initWorkspace();
+	    root = initWorkspace();
+	    
+	    initGenModel(PROJECT_GENMODEL, PROJECT_ANT_FILE);
+	    initGenModel(FANNOISE_GENMODEL, FANOISE_ANT_FILE);
+
+	    initDone = true;
+	}
+	
+	public static void initGenModel(String genModelName, String antFilename) throws IOException
+	{
 
 		// Read the genModel
-		readSampleGenModel(root);
+		GenModel gm = readSampleGenModel(root, genModelName);
+		gmMap.put(genModelName, gm);
 
 		// Create the generator.
-		gen = new GenerateDevStructure(gm, "{0}Impl", "{0}", "src");
-
+		GenerateDevStructure gen = new GenerateDevStructure(gm, "{0}Impl", "{0}", "src");
+		genMap.put(genModelName, gen);
+		
 		// Remember of sample project
 		sampleProject = root.getProject(SAMPLE_PROJECT);
 
@@ -84,21 +109,33 @@ public class GenModelAddonTestCase
 		gen.generateDevStructure(true);
 
 		// Generate the ant file to generate emf code
-		File antFile = gen.generateAntFile();
+		File antFile = gen.generateAntFile(antFilename);
 
 		// Once dev structure is generated and ant file too, can call it !
 		gen.generateGenModelCode(antFile, new NullProgressMonitor());
 
 	}
+	
+	
+	protected GenModel getGenModel(String name)
+	{
+		return gmMap.get(name);
+	}
+	
+	protected GenerateDevStructure getGenDevStructure(String name)
+	{
+		return genMap.get(name);
+	}
+	
 
 	/**
 	 * Read the sample gen model located in com.opcoach.genmodeladdon.sample
 	 * project
 	 */
-	private static void readSampleGenModel(IWorkspaceRoot root)
+	private static GenModel readSampleGenModel(IWorkspaceRoot root, String pathToGenModel)
 	{
 		// Read the sample gen model in temporary workspace
-		String path = root.getLocation().toOSString() + "/com.opcoach.genmodeladdon.sample/model/project.genmodel";
+		String path = root.getLocation().toOSString() + pathToGenModel;
 		System.out.println("path : " + path);
 
 		ResourceSet rset = new ResourceSetImpl();
@@ -106,9 +143,8 @@ public class GenModelAddonTestCase
 
 		// Get the resource
 		Resource resource = rset.getResource(URI.createURI("file:" + path), true);
-		gm = (GenModel) resource.getContents().get(0);
-		System.out.println("gm is  " + gm);
-
+		return (GenModel) resource.getContents().get(0);
+		
 	}
 
 	/** This method initialize the test workspace with a sample project */

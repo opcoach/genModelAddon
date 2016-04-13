@@ -12,13 +12,13 @@ public class TestAntGeneration extends GenModelAddonTestCase
 	@Test
 	public void antGeneratedFileMustContainGenModel()
 	{
-		assertFileContains("generateEMFCode.xml", "emf.Ecore2Java genModel=\"model/project.genmodel\"");
+		assertFileContains(PROJECT_ANT_FILE, "emf.Ecore2Java genModel=\"model/project.genmodel\"");
 	}
 
 	@Test
 	public void antGeneratedFileMustContainEcoreModel()
 	{
-		assertFileContains("generateEMFCode.xml", "model=\"model/project.ecore\"");
+		assertFileContains(PROJECT_ANT_FILE, "model=\"model/project.ecore\"");
 	}
 
 	

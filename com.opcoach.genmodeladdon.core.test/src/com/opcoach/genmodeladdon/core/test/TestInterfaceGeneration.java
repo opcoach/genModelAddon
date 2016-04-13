@@ -3,8 +3,11 @@ package com.opcoach.genmodeladdon.core.test;
 import static org.junit.Assert.assertEquals;
 
 import org.eclipse.emf.codegen.ecore.genmodel.GenClass;
+import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.codegen.ecore.genmodel.GenPackage;
 import org.junit.Test;
+
+import com.opcoach.genmodeladdon.core.GenerateDevStructure;
 
 public class TestInterfaceGeneration extends GenModelAddonTestCase
 {
@@ -14,6 +17,9 @@ public class TestInterfaceGeneration extends GenModelAddonTestCase
 	@Test
 	public void testClassNames()
 	{
+		GenModel gm = getGenModel(PROJECT_GENMODEL);
+		GenerateDevStructure gen = getGenDevStructure(PROJECT_GENMODEL);
+		
 		GenClass gc = findGenClass(gm, "Project");
 		// Check interface and class names
 		assertEquals("The dev interface name must be Project", "Project", gen.computeInterfaceName(gc));
