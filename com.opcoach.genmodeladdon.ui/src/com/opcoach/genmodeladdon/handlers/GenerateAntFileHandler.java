@@ -38,10 +38,11 @@ public class GenerateAntFileHandler extends GenerateParentHandler
 		if (createFile)
 		{
 			String modelName = GenerateCommon.getModelName(gm);
+			String modelPath = GenerateCommon.getModelPath(gm);
 
 			try
 			{
-				gen.generateAntFile(modelName, proj);
+				gen.generateAntFile(modelPath, modelName, proj);
 				
 			} catch (IOException e)
 			{

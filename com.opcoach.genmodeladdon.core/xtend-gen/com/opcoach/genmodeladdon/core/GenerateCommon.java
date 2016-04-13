@@ -76,7 +76,7 @@ public class GenerateCommon {
   /**
    * Find the model directory in its project
    */
-  public static String getModelDirectory(final GenModel gm) {
+  public static String getModelPath(final GenModel gm) {
     Resource _eResource = gm.eResource();
     final URI uri = _eResource.getURI();
     final String s = uri.toString();

@@ -67,7 +67,7 @@ class GenerateDevStructure {
 		project = GenerateCommon.getProject(gm)
 		projectName = project.name
 		modelName = GenerateCommon.getModelName(gm)
-		modelDir = GenerateCommon.getModelDirectory(gm)
+		modelDir = GenerateCommon.getModelPath(gm)
 
 		// Reset the files not generated... (they are kept to ask if they must override existing files)
 		filesNotGenerated.clear

@@ -46,7 +46,7 @@ class GenerateCommon {
 	}
 	
 		/** Find the model directory in its project */
-	def static getModelDirectory(GenModel gm)
+	def static getModelPath(GenModel gm)
 	{
 		val uri = gm.eResource.URI
 		val s = uri.toString;

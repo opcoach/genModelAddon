@@ -108,8 +108,8 @@ public class GenerateDevStructure {
     this.projectName = _name;
     String _modelName = GenerateCommon.getModelName(gm);
     this.modelName = _modelName;
-    String _modelDirectory = GenerateCommon.getModelDirectory(gm);
-    this.modelDir = _modelDirectory;
+    String _modelPath = GenerateCommon.getModelPath(gm);
+    this.modelDir = _modelPath;
     this.filesNotGenerated.clear();
   }
   
