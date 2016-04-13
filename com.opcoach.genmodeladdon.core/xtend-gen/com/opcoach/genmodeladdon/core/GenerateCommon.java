@@ -8,6 +8,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 
 /**
  * A class to provide some generation common methods
@@ -70,5 +71,24 @@ public class GenerateCommon {
     String _substring = modelName.substring(0, pos);
     modelName = _substring;
     return modelName;
+  }
+  
+  /**
+   * Find the model directory in its project
+   */
+  public static String getModelDirectory(final GenModel gm) {
+    Resource _eResource = gm.eResource();
+    final URI uri = _eResource.getURI();
+    final String s = uri.toString();
+    InputOutput.<String>println(("Model uri is : " + s));
+    IProject _project = GenerateCommon.getProject(gm);
+    final String projectName = _project.getName();
+    int _lastIndexOf = s.lastIndexOf(projectName);
+    int _length = projectName.length();
+    int _plus = (_lastIndexOf + _length);
+    final int pathPos = (_plus + 1);
+    final int lastSlashPos = s.lastIndexOf("/");
+    final String modelDir = s.substring(pathPos, lastSlashPos);
+    return modelDir;
   }
 }

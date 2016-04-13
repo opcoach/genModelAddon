@@ -82,6 +82,8 @@ public class GenerateDevStructure {
   
   private String modelName;
   
+  private String modelDir;
+  
   /**
    * Build the generator with 4 parameters
    * @param cpattern : the class name pattern used for generation ({0}Impl for instance)
@@ -106,6 +108,8 @@ public class GenerateDevStructure {
     this.projectName = _name;
     String _modelName = GenerateCommon.getModelName(gm);
     this.modelName = _modelName;
+    String _modelDirectory = GenerateCommon.getModelDirectory(gm);
+    this.modelDir = _modelDirectory;
     this.filesNotGenerated.clear();
   }
   
@@ -160,12 +164,9 @@ public class GenerateDevStructure {
       InputOutput.<String>println(("Generate classes in    : " + srcAbsolutePath));
       InputOutput.<String>println(("Generate interfaces in : " + interfaceAbsolutePath));
       EList<GenClass> _genClasses = gp.getGenClasses();
-      final Function1<GenClass, Boolean> _function = new Function1<GenClass, Boolean>() {
-        @Override
-        public Boolean apply(final GenClass it) {
-          boolean _isDynamic = it.isDynamic();
-          return Boolean.valueOf((!_isDynamic));
-        }
+      final Function1<GenClass, Boolean> _function = (GenClass it) -> {
+        boolean _isDynamic = it.isDynamic();
+        return Boolean.valueOf((!_isDynamic));
       };
       Iterable<GenClass> _filter = IterableExtensions.<GenClass>filter(_genClasses, _function);
       for (final GenClass c : _filter) {
@@ -329,11 +330,18 @@ public class GenerateDevStructure {
    * Generate the ant file and return it (or null.
    */
   public File generateAntFile() {
-    InputOutput.<String>println("-------> GENERATE THE ANT FILE -----");
+    return this.generateAntFile(GenerateAntFileForCodeGeneration.ANT_FILENAME);
+  }
+  
+  /**
+   * Generate the ant file and return it (or null.
+   */
+  public File generateAntFile(final String antFilename) {
+    InputOutput.<String>println(("-------> GENERATE THE ANT FILE : " + antFilename));
     this.refreshWorkspace();
     final GenerateAntFileForCodeGeneration gen = new GenerateAntFileForCodeGeneration();
     try {
-      final File antFile = gen.generateAntFile(this.modelName, this.project);
+      final File antFile = gen.generateAntFile(this.modelDir, this.modelName, this.project, antFilename);
       this.project.refreshLocal(1, null);
       return antFile;
     } catch (final Throwable _t) {
@@ -606,20 +614,14 @@ public class GenerateDevStructure {
     _builder.newLine();
     {
       EList<GenClass> _genClasses = gp.getGenClasses();
-      final Function1<GenClass, Boolean> _function = new Function1<GenClass, Boolean>() {
-        @Override
-        public Boolean apply(final GenClass it) {
-          boolean _isDynamic = it.isDynamic();
-          return Boolean.valueOf((!_isDynamic));
-        }
+      final Function1<GenClass, Boolean> _function = (GenClass it) -> {
+        boolean _isDynamic = it.isDynamic();
+        return Boolean.valueOf((!_isDynamic));
       };
       Iterable<GenClass> _filter = IterableExtensions.<GenClass>filter(_genClasses, _function);
-      final Function1<GenClass, Boolean> _function_1 = new Function1<GenClass, Boolean>() {
-        @Override
-        public Boolean apply(final GenClass it) {
-          boolean _isAbstract = it.isAbstract();
-          return Boolean.valueOf((!_isAbstract));
-        }
+      final Function1<GenClass, Boolean> _function_1 = (GenClass it) -> {
+        boolean _isAbstract = it.isAbstract();
+        return Boolean.valueOf((!_isAbstract));
       };
       Iterable<GenClass> _filter_1 = IterableExtensions.<GenClass>filter(_filter, _function_1);
       for(final GenClass gc : _filter_1) {
@@ -722,20 +724,14 @@ public class GenerateDevStructure {
     _builder.newLine();
     {
       EList<GenClass> _genClasses = gp.getGenClasses();
-      final Function1<GenClass, Boolean> _function = new Function1<GenClass, Boolean>() {
-        @Override
-        public Boolean apply(final GenClass it) {
-          boolean _isDynamic = it.isDynamic();
-          return Boolean.valueOf((!_isDynamic));
-        }
+      final Function1<GenClass, Boolean> _function = (GenClass it) -> {
+        boolean _isDynamic = it.isDynamic();
+        return Boolean.valueOf((!_isDynamic));
       };
       Iterable<GenClass> _filter = IterableExtensions.<GenClass>filter(_genClasses, _function);
-      final Function1<GenClass, Boolean> _function_1 = new Function1<GenClass, Boolean>() {
-        @Override
-        public Boolean apply(final GenClass it) {
-          boolean _isAbstract = it.isAbstract();
-          return Boolean.valueOf((!_isAbstract));
-        }
+      final Function1<GenClass, Boolean> _function_1 = (GenClass it) -> {
+        boolean _isAbstract = it.isAbstract();
+        return Boolean.valueOf((!_isAbstract));
       };
       Iterable<GenClass> _filter_1 = IterableExtensions.<GenClass>filter(_filter, _function_1);
       for(final GenClass gc : _filter_1) {
@@ -829,20 +825,14 @@ public class GenerateDevStructure {
     _builder.newLine();
     {
       EList<GenClass> _genClasses_1 = gp.getGenClasses();
-      final Function1<GenClass, Boolean> _function_2 = new Function1<GenClass, Boolean>() {
-        @Override
-        public Boolean apply(final GenClass it) {
-          boolean _isDynamic = it.isDynamic();
-          return Boolean.valueOf((!_isDynamic));
-        }
+      final Function1<GenClass, Boolean> _function_2 = (GenClass it) -> {
+        boolean _isDynamic = it.isDynamic();
+        return Boolean.valueOf((!_isDynamic));
       };
       Iterable<GenClass> _filter_2 = IterableExtensions.<GenClass>filter(_genClasses_1, _function_2);
-      final Function1<GenClass, Boolean> _function_3 = new Function1<GenClass, Boolean>() {
-        @Override
-        public Boolean apply(final GenClass it) {
-          boolean _isAbstract = it.isAbstract();
-          return Boolean.valueOf((!_isAbstract));
-        }
+      final Function1<GenClass, Boolean> _function_3 = (GenClass it) -> {
+        boolean _isAbstract = it.isAbstract();
+        return Boolean.valueOf((!_isAbstract));
       };
       Iterable<GenClass> _filter_3 = IterableExtensions.<GenClass>filter(_filter_2, _function_3);
       for(final GenClass gc_1 : _filter_3) {

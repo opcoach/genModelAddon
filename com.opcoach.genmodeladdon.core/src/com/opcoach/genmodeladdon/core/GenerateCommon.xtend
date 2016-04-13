@@ -44,4 +44,22 @@ class GenerateCommon {
 		modelName = modelName.substring(0, pos);
 		return modelName
 	}
+	
+		/** Find the model directory in its project */
+	def static getModelDirectory(GenModel gm)
+	{
+		val uri = gm.eResource.URI
+		val s = uri.toString;
+		
+		println("Model uri is : " + s)
+		
+		val projectName = gm.getProject.name
+		val pathPos = s.lastIndexOf(projectName) + projectName.length + 1
+		val lastSlashPos = s.lastIndexOf("/");
+		val modelDir = s.substring(pathPos, lastSlashPos)
+		
+		// Path is between projectName and model Name ! 
+		
+		return modelDir
+	}
 }

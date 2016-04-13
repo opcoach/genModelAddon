@@ -50,6 +50,7 @@ class GenerateDevStructure {
 	public Map<String, Object> filesNotGenerated = new HashMap()
 	
 	String modelName
+	String modelDir
 
 	/** Build the generator with 4 parameters
 	 * @param cpattern : the class name pattern used for generation ({0}Impl for instance)
@@ -66,6 +67,7 @@ class GenerateDevStructure {
 		project = GenerateCommon.getProject(gm)
 		projectName = project.name
 		modelName = GenerateCommon.getModelName(gm)
+		modelDir = GenerateCommon.getModelDirectory(gm)
 
 		// Reset the files not generated... (they are kept to ask if they must override existing files)
 		filesNotGenerated.clear
@@ -220,11 +222,16 @@ class GenerateDevStructure {
 
 	/** Generate the ant file and return it (or null.  */
 	def generateAntFile() {
-		println("-------> GENERATE THE ANT FILE -----");
+		generateAntFile(GenerateAntFileForCodeGeneration.ANT_FILENAME)
+	}
+	
+	/** Generate the ant file and return it (or null.  */
+	def generateAntFile(String antFilename) {
+		println("-------> GENERATE THE ANT FILE : " + antFilename);
 		refreshWorkspace
 		val gen = new GenerateAntFileForCodeGeneration();
 		try {
-			val antFile = gen.generateAntFile(modelName, project);
+			val antFile = gen.generateAntFile(modelDir, modelName, project, antFilename);
 			project.refreshLocal(1, null)
 			return antFile
 
@@ -233,10 +240,10 @@ class GenerateDevStructure {
 		} catch (CoreException e) {
 			e.printStackTrace;
 		}
-
 		println("-------> END GENERATE THE ANT FILE -----");
 		return null;
 	}
+	
 
 	/** generate the source code using the ant generated task 
 	 * @param f : the ant file to be called */

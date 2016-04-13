@@ -13,7 +13,7 @@ import org.eclipse.xtend2.lib.StringConcatenation;
 public class GenerateAntFileForCodeGeneration {
   public final static String ANT_FILENAME = "generateEMFCode.xml";
   
-  public CharSequence generateAntFileContent(final String modelName) {
+  private CharSequence generateAntFileContent(final String modelDir, final String modelName) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
     _builder.newLine();
@@ -30,12 +30,16 @@ public class GenerateAntFileForCodeGeneration {
     _builder.append("<target name=\"generateCode\" description=\"description\">");
     _builder.newLine();
     _builder.append("\t\t");
-    _builder.append("<emf.Ecore2Java genModel=\"model/");
+    _builder.append("<emf.Ecore2Java genModel=\"");
+    _builder.append(modelDir, "\t\t");
+    _builder.append("/");
     _builder.append(modelName, "\t\t");
     _builder.append(".genmodel\" ");
     _builder.newLineIfNotEmpty();
     _builder.append("\t\t\t");
-    _builder.append("model=\"model/");
+    _builder.append("model=\"");
+    _builder.append(modelDir, "\t\t\t");
+    _builder.append("/");
     _builder.append(modelName, "\t\t\t");
     _builder.append(".ecore\" ");
     _builder.newLineIfNotEmpty();
@@ -60,23 +64,31 @@ public class GenerateAntFileForCodeGeneration {
   }
   
   public File getAntFile(final IProject proj) {
+    return this.getAntFile(proj, GenerateAntFileForCodeGeneration.ANT_FILENAME);
+  }
+  
+  public File getAntFile(final IProject proj, final String antFileName) {
     final IPath location = proj.getLocation();
     String _oSString = location.toOSString();
     String _plus = (_oSString + File.separator);
-    final String srcAbsolutePath = (_plus + GenerateAntFileForCodeGeneration.ANT_FILENAME);
+    final String srcAbsolutePath = (_plus + antFileName);
     final File f = new File(srcAbsolutePath);
     return f;
   }
   
-  public File generateAntFile(final String modelName, final IProject proj) throws IOException, CoreException {
-    final File f = this.getAntFile(proj);
+  public File generateAntFile(final String modelDir, final String modelName, final IProject proj) throws IOException, CoreException {
+    return this.generateAntFile(modelDir, modelName, proj, GenerateAntFileForCodeGeneration.ANT_FILENAME);
+  }
+  
+  public File generateAntFile(final String modelDir, final String modelName, final IProject proj, final String antFileName) throws IOException, CoreException {
+    final File f = this.getAntFile(proj, antFileName);
     boolean _exists = f.exists();
     boolean _not = (!_exists);
     if (_not) {
       f.createNewFile();
     }
     final FileWriter fw = new FileWriter(f);
-    CharSequence _generateAntFileContent = this.generateAntFileContent(modelName);
+    CharSequence _generateAntFileContent = this.generateAntFileContent(modelDir, modelName);
     String _string = _generateAntFileContent.toString();
     fw.write(_string);
     fw.flush();
