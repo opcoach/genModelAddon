@@ -16,7 +16,7 @@ public class TestGenModelCascade extends GenModelAddonTestCase
 	public void theFannoiseProjectMustManageWorkflow()
 	{
 		assertFileContains("src-gen/fannoise/MFanNoiseProject.java", "import ananax.Workflow");
-		assertFileContains("src-gen/fannoise/MFanNoiseProject.java", "MWorkflow getWorkflow()");
+		assertFileContains("src-gen/fannoise/MFanNoiseProject.java", "Workflow getWorkflow()");
 
 	}
 
