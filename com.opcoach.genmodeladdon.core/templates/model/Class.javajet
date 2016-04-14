@@ -30,6 +30,8 @@ class DevTransform {
 		for (GenPackage gp : gm.getGenPackages())
 		   computeNames(gp.getEcorePackage());
 		   
+		for (GenPackage gp : gm.getUsedGenPackages())
+		   computeNames(gp.getEcorePackage());
 	}
 
 	private void computeNames(EPackage p)
