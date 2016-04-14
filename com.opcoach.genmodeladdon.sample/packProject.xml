@@ -14,7 +14,7 @@
 
 
 	<target name="zipProject">
-		<zip basedir="${zipDir}" destfile="${resultFile}" excludes="packProject.xml,sampleProject.zip" />
+		<zip destfile="${resultFile}" basedir="${zipDir}" excludes="packProject.xml,sampleProject.zip,target/**,src-gen,bin/**,pom.xml,representations.aird,.settings/**,.settings" />
 		<eclipse.refreshLocal resource="com.opcoach.genmodeladdon.sample"/>
 		
 	</target>
