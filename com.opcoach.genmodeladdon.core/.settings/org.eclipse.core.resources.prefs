@@ -1,0 +1,7 @@
+eclipse.preferences.version=1
+encoding//src/com/opcoach/genmodeladdon/core=UTF-8
+encoding//src/com/opcoach/genmodeladdon/core/EMFPatternExtractor.xtend=UTF-8
+encoding//src/com/opcoach/genmodeladdon/core/GenerateAntFileForCodeGeneration.xtend=UTF-8
+encoding//src/com/opcoach/genmodeladdon/core/GenerateCommon.xtend=UTF-8
+encoding//src/com/opcoach/genmodeladdon/core/GenerateDevStructure.xtend=UTF-8
+encoding//src/com/opcoach/genmodeladdon/core/GenerateFactoryOverrideExtension.xtend=UTF-8
