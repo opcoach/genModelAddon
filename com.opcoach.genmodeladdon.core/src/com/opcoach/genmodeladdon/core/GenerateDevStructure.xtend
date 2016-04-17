@@ -327,65 +327,65 @@ class GenerateDevStructure {
 	}
 
 	def generateClassContent(GenClass gc) '''
-		Â«copyrightÂ»
-		package Â«gc.genPackage.computePackageNameForClassesÂ»;
+		«copyright»
+		package «gc.genPackage.computePackageNameForClasses»;
 		
-		import Â«gc.genPackage.computePackageNameForInterfacesÂ».Â«gc.computeInterfaceFilenameÂ»;
+		import «gc.genPackage.computePackageNameForInterfaces».«gc.computeInterfaceFilename»;
 		
 		// This class overrides the generated class and will be instantiated by factory
-		public class Â«gc.computeClassnameÂ» extends Â«gc.computeGeneratedClassName()Â» implements Â«gc.computeInterfaceNameÂ»
+		public class «gc.computeClassname» extends «gc.computeGeneratedClassName()» implements «gc.computeInterfaceName»
 		{
 		
 		}
 	'''
 
 	def generateInterfaceContent(GenClass gc) '''
-		Â«copyrightÂ»
-		package Â«gc.genPackage.computePackageNameForInterfacesÂ»;
+		«copyright»
+		package «gc.genPackage.computePackageNameForInterfaces»;
 		
 		// This interface overrides the generated interface and will be returned by factory
-		public interface Â«gc.computeInterfaceNameÂ» extends Â«gc.computeGeneratedInterfaceName()Â»
+		public interface «gc.computeInterfaceName» extends «gc.computeGeneratedInterfaceName()»
 		{
 		
 		}
 	'''
 
 	def generateInterfaceFactoryContent(GenPackage gp) '''
-		Â«copyrightÂ»
-		package Â«gp.computePackageNameForInterfacesÂ»;
+		«copyright»
+		package «gp.computePackageNameForInterfaces»;
 		
-		import Â«gp.computePackageNameForClassesÂ».Â«gp.computeFactoryClassNameÂ»;
+		import «gp.computePackageNameForClasses».«gp.computeFactoryClassName»;
 		
 		/** This factory  overrides the generated factory and returns the new generated interfaces */
-		public interface Â«gp.computeFactoryInterfaceNameÂ» extends Â«gp.computeGeneratedFactoryInterfaceNameÂ» 
+		public interface «gp.computeFactoryInterfaceName» extends «gp.computeGeneratedFactoryInterfaceName» 
 		{
 			
 			/** Specialize the eINSTANCE initialization with the new interface type 
 			  * (overridden in the override_factory extension)
 			*/
-			Â«gp.computeFactoryInterfaceNameÂ» eINSTANCE = Â«gp.computeFactoryClassNameÂ».init();
+			«gp.computeFactoryInterfaceName» eINSTANCE = «gp.computeFactoryClassName».init();
 						
-			Â«FOR gc : gp.genClasses.filter[!isDynamic].filter[!isAbstract]Â»
-				Â«gc.generateFactoryDefÂ»
-			Â«ENDFORÂ»
+			«FOR gc : gp.genClasses.filter[!isDynamic].filter[!isAbstract]»
+				«gc.generateFactoryDef»
+			«ENDFOR»
 		}
 	'''
 
 	def generateInterfacePackageContent(GenPackage gp) '''
-		Â«copyrightÂ»
-		package Â«gp.computePackageNameForInterfacesÂ»;
+		«copyright»
+		package «gp.computePackageNameForInterfaces»;
 				
 		/** This package interface extends  the generated package interface 
 		    It is necessary because its name is used in the EMF generated code) 
 		*/
-		public interface Â«gp.computePackageInterfaceNameÂ» extends Â«gp.computeGeneratedPackageInterfaceNameÂ» 
+		public interface «gp.computePackageInterfaceName» extends «gp.computeGeneratedPackageInterfaceName» 
 		{
 			
 		}
 	'''
 
 	def generateFactoryDef(GenClass gc) '''
-		public Â«gc.computeInterfaceName.extractGenericTypesÂ»Â«gc.computeInterfaceNameÂ» createÂ«gc.ecoreClass.nameÂ»();
+		public «gc.computeInterfaceName.extractGenericTypes»«gc.computeInterfaceName» create«gc.ecoreClass.name»();
 	'''
 	
 	/** This method extracts the generic types found at the end of a class name, like Folder<T> or Folder<T,U>
@@ -400,55 +400,55 @@ class GenerateDevStructure {
 	}
 
 	def generateClassFactoryContent(GenPackage gp) '''
-		Â«copyrightÂ»
-		package Â«gp.computePackageNameForClassesÂ»;
+		«copyright»
+		package «gp.computePackageNameForClasses»;
 		
 		import org.eclipse.emf.ecore.plugin.EcorePlugin;
 		
-		Â«FOR gc : gp.genClasses.filter[!isDynamic].filter[!isAbstract]Â»
-			import Â«gp.computePackageNameForInterfacesÂ».Â«gc.computeInterfaceFilenameÂ»;
-		Â«ENDFORÂ»
-		import Â«gp.computePackageNameForInterfacesÂ».Â«gp.computeFactoryInterfaceNameÂ»;
+		«FOR gc : gp.genClasses.filter[!isDynamic].filter[!isAbstract]»
+			import «gp.computePackageNameForInterfaces».«gc.computeInterfaceFilename»;
+		«ENDFOR»
+		import «gp.computePackageNameForInterfaces».«gp.computeFactoryInterfaceName»;
 		
 		
 		// This factory  overrides the generated factory and returns the new generated interfaces
-		public class Â«gp.computeFactoryClassNameÂ» extends Â«gp.computeGeneratedFactoryClassNameÂ» implements Â«gp.
-			computeFactoryInterfaceNameÂ»
+		public class «gp.computeFactoryClassName» extends «gp.computeGeneratedFactoryClassName» implements «gp.
+			computeFactoryInterfaceName»
 		{
 			
-			public static Â«gp.computeFactoryInterfaceNameÂ» init() {
+			public static «gp.computeFactoryInterfaceName» init() {
 				
 				try {
-					Object fact = Â«gp.computeGeneratedFactoryClassNameÂ».init();
-					if ((fact != null) && (fact instanceof Â«gp.computeFactoryInterfaceNameÂ»))
-							return (Â«gp.computeFactoryInterfaceNameÂ») fact;
+					Object fact = «gp.computeGeneratedFactoryClassName».init();
+					if ((fact != null) && (fact instanceof «gp.computeFactoryInterfaceName»))
+							return («gp.computeFactoryInterfaceName») fact;
 					}
 				catch (Exception exception) {
 					EcorePlugin.INSTANCE.log(exception);
 				}
-				return new Â«gp.computeFactoryClassNameÂ»(); 
+				return new «gp.computeFactoryClassName»(); 
 				 }
 			
-			Â«FOR gc : gp.genClasses.filter[!isDynamic].filter[!isAbstract]Â»
-				Â«gc.generateCreateMethodÂ»
-			Â«ENDFORÂ»
+			«FOR gc : gp.genClasses.filter[!isDynamic].filter[!isAbstract]»
+				«gc.generateCreateMethod»
+			«ENDFOR»
 		}
 	'''
 
 	def generateCreateMethod(GenClass gc) '''
-		public Â«gc.computeInterfaceName.extractGenericTypesÂ»Â«gc.computeInterfaceNameÂ» createÂ«gc.ecoreClass.nameÂ»()
+		public «gc.computeInterfaceName.extractGenericTypes»«gc.computeInterfaceName» create«gc.ecoreClass.name»()
 		{
-			Â«gc.computeInterfaceNameÂ» result = new Â«gc.computeClassnameÂ»();
+			«gc.computeInterfaceName» result = new «gc.computeClassname»();
 			return result;
 		}
 	'''
 	
 	def computeCopyrightComment() '''
-	Â«IF genModel.copyrightText != null && genModel.copyrightText.length > 0Â»
+	«IF genModel.copyrightText != null && genModel.copyrightText.length > 0»
 /**
-  * Â«genModel.copyrightTextÂ»
+  * «genModel.copyrightText»
 */
-Â«ELSEÂ»Â«ENDIFÂ»
+«ELSE»«ENDIF»
 	'''
 
 	/** Compute the class name to be generated */

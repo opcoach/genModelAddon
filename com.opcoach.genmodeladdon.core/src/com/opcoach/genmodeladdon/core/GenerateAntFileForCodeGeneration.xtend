@@ -19,8 +19,8 @@ class GenerateAntFileForCodeGeneration {
 <project name="project" default="generateCode">
 	<description> Build the javacode from ecore model   </description>
 	<target name="generateCode" description="description">
-		<emf.Ecore2Java genModel="Â«modelDirÂ»/Â«modelNameÂ».genmodel" 
-			model="Â«modelDirÂ»/Â«modelNameÂ».ecore" 
+		<emf.Ecore2Java genModel="«modelDir»/«modelName».genmodel" 
+			model="«modelDir»/«modelName».ecore" 
 			generatemodelproject="true" 
 			generateeditorproject="false" 
 			generateeditproject="false" 
