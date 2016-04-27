@@ -65,12 +65,12 @@
 	
 	<!-- the modules that should be built together -->
 	<modules>
-		<module>../../com.opcoach.genmodeladdon.core</module>
-		<module>../../com.opcoach.genmodeladdon.sample</module>
-		<module>../../com.opcoach.genmodeladdon.ui</module>
-		<module>../com.opcoach.genmodeladdon.feature</module>
-		<module>../com.opcoach.genmodeladdon.repository</module>
-		<module>../../com.opcoach.genmodeladdon.core.test</module>
+		<module>com.opcoach.genmodeladdon.core</module>
+		<module>com.opcoach.genmodeladdon.sample</module>
+		<module>com.opcoach.genmodeladdon.ui</module>
+		<module>com.opcoach.genmodeladdon.core.test</module>
+		<module>build/com.opcoach.genmodeladdon.feature</module>
+		<module>build/com.opcoach.genmodeladdon.repository</module>
 	</modules>
 
 </project>

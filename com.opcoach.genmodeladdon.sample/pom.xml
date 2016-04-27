@@ -8,7 +8,7 @@
 		<groupId>com.opcoach.genmodeladdon</groupId>
 		<artifactId>com.opcoach.genmodeladdon.parent</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
-		<relativePath>../build/com.opcoach.genmodeladdon.parent/pom.xml</relativePath>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<groupId>com.opcoach.genmodeladdon</groupId>
