@@ -114,28 +114,45 @@
     </targlet>
   </setupTask>
   <setupTask
+      xsi:type="projects:ProjectsImportTask">
+    <sourceLocator
+        rootFolder="${git.clone.location}"
+        locateNestedProjects="true"/>
+  </setupTask>
+  <setupTask
       xsi:type="setup.workingsets:WorkingSetTask">
     <workingSet
-        name="${scope.project.name}">
+        name="genmodeladdon">
       <predicate
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:RepositoryPredicate"
-            project="com.opcoach.genmodeladdon-feature"/>
+            project="com.opcoach.genmodeladdon.core"/>
+        <operand
+            xsi:type="predicates:NaturePredicate"
+            nature="org.eclipse.pde.PluginNature"/>
       </predicate>
     </workingSet>
     <workingSet
-        name="deliver"
-        id="genmodeladdon.deliver"/>
+        name="build"
+        id="genmodeladdon.build">
+      <predicate
+          xsi:type="predicates:AndPredicate">
+        <operand
+            xsi:type="predicates:RepositoryPredicate"
+            project="com.opcoach.genmodeladdon.core"/>
+        <operand
+            xsi:type="predicates:OrPredicate">
+          <operand
+              xsi:type="predicates:NaturePredicate"
+              nature="org.eclipse.pde.FeatureNature"/>
+          <operand
+              xsi:type="predicates:NaturePredicate"
+              nature="org.eclipse.pde.UpdateSiteNature"/>
+        </operand>
+      </predicate>
+    </workingSet>
     <description>The dynamic working sets for ${scope.project.label}</description>
-  </setupTask>
-  <setupTask
-      xsi:type="projects:ProjectsImportTask"
-      id="importgenmodeladdon">
-    <sourceLocator
-        rootFolder="${git.clone.location}"
-        locateNestedProjects="true"/>
-    <description>Import the projects in workspace</description>
   </setupTask>
   <stream name="master"
       label="Master"/>
