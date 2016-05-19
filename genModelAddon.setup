@@ -43,13 +43,15 @@
   <setupTask
       xsi:type="setup.p2:P2Task">
     <requirement
+        name="org.eclipse.m2e.feature.feature.group"/>
+  </setupTask>
+  <setupTask
+      xsi:type="setup.p2:P2Task">
+    <requirement
         name="org.eclipse.xtext.sdk.feature.group"
         versionRange="[2.9.2.v201603040440,2.9.2.v201603040440]"/>
     <requirement
         name="org.eclipse.emf.sdk.feature.group"/>
-    <requirement
-        name="org.eclipse.m2e.feature.feature.group"
-        versionRange="[1.6.2.20150902-0002,1.6.2.20150902-0002]"/>
     <repository
         url="http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/"/>
     <description>Install the tools needed in the IDE to work with the source code for ${scope.project.label}</description>
