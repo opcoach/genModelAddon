@@ -38,6 +38,14 @@ public class TestGenerateCommon extends GenModelAddonTestCase
 		assertEquals("Project name must be " + PROJECT_SAMPLE_NAME, s, PROJECT_SAMPLE_NAME);
 	}
 
+	@Test
+	public void testGetProjectNameFromWindowsPathURI()
+	{
+		URI u = URI.createURI("C:/Users/olivier/Documents/OPCoach/workspaces/junit-genmodeladdon/com.opcoach.genmodeladdon.sample/model/project.genmodel");
+		String s = GenerateCommon.getProjectNameFromURI(u);
+		assertEquals("Project name must be " + PROJECT_SAMPLE_NAME, s, PROJECT_SAMPLE_NAME);
+	}
+
 
 	@Test
 	public void testGetProjectNameFromProjectGenModel()
