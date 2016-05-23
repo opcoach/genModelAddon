@@ -135,14 +135,13 @@ public class GenModelAddonTestCase
 	private static GenModel readSampleGenModel(IWorkspaceRoot root, String pathToGenModel)
 	{
 		// Read the sample gen model in temporary workspace
-		String path = root.getLocation().toOSString() + pathToGenModel;
-		System.out.println("path : " + path);
+		String path = root.getLocation().toString() + pathToGenModel;
 
 		ResourceSet rset = new ResourceSetImpl();
 		// rset.getURIConverter().getURIMap().putAll(EcorePlugin.computePlatformURIMap(true));
 
 		// Get the resource
-		Resource resource = rset.getResource(URI.createURI("file:" + path), true);
+		Resource resource = rset.getResource(URI.createURI("file:/" + path), true);
 		return (GenModel) resource.getContents().get(0);
 		
 	}
