@@ -18,7 +18,7 @@ public class TestGenerateCommon extends GenModelAddonTestCase
 	{
 		URI u = URI.createURI("/Users/olivier/Documents/OPCoach/workspaces/junit-genmodeladdon/com.opcoach.genmodeladdon.sample/model/project.genmodel");
 		String s = GenerateCommon.getProjectNameFromURI(u);
-		assertEquals("Project name must be " + PROJECT_SAMPLE_NAME, s, PROJECT_SAMPLE_NAME);
+		assertEquals("Project name must be " + PROJECT_SAMPLE_NAME, PROJECT_SAMPLE_NAME, s);
 	}
 
 	@Test
@@ -26,7 +26,7 @@ public class TestGenerateCommon extends GenModelAddonTestCase
 	{
 		URI u = URI.createURI("file:/Users/olivier/Documents/OPCoach/workspaces/junit-genmodeladdon/com.opcoach.genmodeladdon.sample/model/project.genmodel");
 		String s = GenerateCommon.getProjectNameFromURI(u);
-		assertEquals("Project name must be " + PROJECT_SAMPLE_NAME, s, PROJECT_SAMPLE_NAME);
+		assertEquals("Project name must be " + PROJECT_SAMPLE_NAME, PROJECT_SAMPLE_NAME, s);
 	}
 	
 	
@@ -35,7 +35,7 @@ public class TestGenerateCommon extends GenModelAddonTestCase
 	{
 		URI u = URI.createURI("file:/C:/Users/olivier/Documents/OPCoach/workspaces/junit-genmodeladdon/com.opcoach.genmodeladdon.sample/model/project.genmodel");
 		String s = GenerateCommon.getProjectNameFromURI(u);
-		assertEquals("Project name must be " + PROJECT_SAMPLE_NAME, s, PROJECT_SAMPLE_NAME);
+		assertEquals("Project name must be " + PROJECT_SAMPLE_NAME, PROJECT_SAMPLE_NAME, s);
 	}
 
 	@Test
@@ -43,7 +43,7 @@ public class TestGenerateCommon extends GenModelAddonTestCase
 	{
 		URI u = URI.createURI("C:/Users/olivier/Documents/OPCoach/workspaces/junit-genmodeladdon/com.opcoach.genmodeladdon.sample/model/project.genmodel");
 		String s = GenerateCommon.getProjectNameFromURI(u);
-		assertEquals("Project name must be " + PROJECT_SAMPLE_NAME, s, PROJECT_SAMPLE_NAME);
+		assertEquals("Project name must be " + PROJECT_SAMPLE_NAME, PROJECT_SAMPLE_NAME, s);
 	}
 
 
@@ -52,7 +52,7 @@ public class TestGenerateCommon extends GenModelAddonTestCase
 	{
 		GenModel gm = getGenModel(PROJECT_GENMODEL);
 		String s = GenerateCommon.getProjectName(gm);
-		assertEquals("Project name must be " + PROJECT_SAMPLE_NAME, s, PROJECT_SAMPLE_NAME);
+		assertEquals("Project name must be " + PROJECT_SAMPLE_NAME, PROJECT_SAMPLE_NAME, s);
 	}
 	
 	@Test
@@ -60,7 +60,7 @@ public class TestGenerateCommon extends GenModelAddonTestCase
 	{
 		GenModel gm = getGenModel(FANNOISE_GENMODEL);
 		String s = GenerateCommon.getProjectName(gm);
-		assertEquals("Project name must be " + PROJECT_SAMPLE_NAME, s, PROJECT_SAMPLE_NAME);
+		assertEquals("Project name must be " + PROJECT_SAMPLE_NAME, PROJECT_SAMPLE_NAME, s);
 	}
 	
 
