@@ -13,10 +13,14 @@ public class TestGenerateCommon extends GenModelAddonTestCase
 {
 	private static final String PROJECT_SAMPLE_NAME = "com.opcoach.genmodeladdon.sample";
 
-	@Test
-	public void testGetProjectNameFromLinuxURI()
+	private String getWsHome()
 	{
-		URI u = URI.createURI("/Users/olivier/Documents/OPCoach/workspaces/junit-genmodeladdon/com.opcoach.genmodeladdon.sample/model/project.genmodel");
+		return root.getLocation().toString();
+	}
+	@Test
+	public void testGetProjectNameFromSimpleURI()
+	{
+		URI u = URI.createURI(getWsHome() + "/com.opcoach.genmodeladdon.sample/model/project.genmodel");
 		String s = GenerateCommon.getProjectNameFromURI(u);
 		assertEquals("Project name must be " + PROJECT_SAMPLE_NAME, PROJECT_SAMPLE_NAME, s);
 	}
@@ -24,7 +28,7 @@ public class TestGenerateCommon extends GenModelAddonTestCase
 	@Test
 	public void testGetProjectNameFromFileURI()
 	{
-		URI u = URI.createURI("file:/Users/olivier/Documents/OPCoach/workspaces/junit-genmodeladdon/com.opcoach.genmodeladdon.sample/model/project.genmodel");
+		URI u = URI.createURI("file:" + getWsHome() + "/com.opcoach.genmodeladdon.sample/model/project.genmodel");
 		String s = GenerateCommon.getProjectNameFromURI(u);
 		assertEquals("Project name must be " + PROJECT_SAMPLE_NAME, PROJECT_SAMPLE_NAME, s);
 	}
@@ -33,15 +37,7 @@ public class TestGenerateCommon extends GenModelAddonTestCase
 	@Test
 	public void testGetProjectNameFromWindowsFileURI()
 	{
-		URI u = URI.createURI("file:/C:/Users/olivier/Documents/OPCoach/workspaces/junit-genmodeladdon/com.opcoach.genmodeladdon.sample/model/project.genmodel");
-		String s = GenerateCommon.getProjectNameFromURI(u);
-		assertEquals("Project name must be " + PROJECT_SAMPLE_NAME, PROJECT_SAMPLE_NAME, s);
-	}
-
-	@Test
-	public void testGetProjectNameFromWindowsPathURI()
-	{
-		URI u = URI.createURI("C:/Users/olivier/Documents/OPCoach/workspaces/junit-genmodeladdon/com.opcoach.genmodeladdon.sample/model/project.genmodel");
+		URI u = URI.createURI("file:/" + getWsHome() + "/com.opcoach.genmodeladdon.sample/model/project.genmodel");
 		String s = GenerateCommon.getProjectNameFromURI(u);
 		assertEquals("Project name must be " + PROJECT_SAMPLE_NAME, PROJECT_SAMPLE_NAME, s);
 	}
