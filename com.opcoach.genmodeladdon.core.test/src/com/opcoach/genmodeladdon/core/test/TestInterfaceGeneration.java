@@ -12,7 +12,7 @@ import com.opcoach.genmodeladdon.core.GenerateDevStructure;
 public class TestInterfaceGeneration extends GenModelAddonTestCase
 {
 
-	private String copyright = "© OPCoach 2016";
+	private String copyright = "OPCoach 2016";
 
 	@Test
 	public void testClassNames()
