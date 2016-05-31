@@ -94,47 +94,46 @@ public class EMFPatternExtractor implements Runnable {
   }
   
   public IFolder createSourceDirectoryStructure() {
-    try {
-      if ((this.targetProject instanceof IProject)) {
-        IPath tgtSourcePath = ((IPath) null);
-        final IProject javaTargetProject = ((IProject) this.targetProject);
-        final IFolder sourcePath = javaTargetProject.getFolder(EMFPatternExtractor.TARGET_SOURCE_PATH);
-        InputOutput.<String>println(("The sourcePath is : " + sourcePath));
-        boolean _exists = sourcePath.exists();
-        boolean _not = (!_exists);
-        if (_not) {
-          try {
-            NullProgressMonitor _nullProgressMonitor = new NullProgressMonitor();
-            sourcePath.create(true, true, _nullProgressMonitor);
-          } catch (final Throwable _t) {
-            if (_t instanceof Exception) {
-              final Exception e = (Exception)_t;
-              InputOutput.<String>println(("Unable to create the file :  " + sourcePath));
-              e.printStackTrace();
-            } else {
-              throw Exceptions.sneakyThrow(_t);
-            }
-          }
-        }
-        IPath _fullPath = sourcePath.getFullPath();
-        tgtSourcePath = _fullPath;
-        boolean _notEquals = (!Objects.equal(tgtSourcePath, null));
-        if (_notEquals) {
-          final Path p = new Path(((EMFPatternExtractor.TARGET_SOURCE_PATH + "/") + EMFPatternExtractor.TARGET_MODEL_PATH));
-          final IFolder modelFolder = this.targetProject.getFolder(p);
-          boolean _exists_1 = modelFolder.exists();
-          boolean _not_1 = (!_exists_1);
-          if (_not_1) {
-            NullProgressMonitor _nullProgressMonitor_1 = new NullProgressMonitor();
-            modelFolder.create(true, true, _nullProgressMonitor_1);
-          }
-          return modelFolder;
-        }
-        return null;
+    if ((this.targetProject instanceof IProject)) {
+      IPath tgtSourcePath = ((IPath) null);
+      final IProject javaTargetProject = ((IProject) this.targetProject);
+      final IFolder sourcePath = javaTargetProject.getFolder(EMFPatternExtractor.TARGET_SOURCE_PATH);
+      this.createFolderIfNotExists(sourcePath);
+      IPath _fullPath = sourcePath.getFullPath();
+      tgtSourcePath = _fullPath;
+      boolean _notEquals = (!Objects.equal(tgtSourcePath, null));
+      if (_notEquals) {
+        final Path p = new Path(((EMFPatternExtractor.TARGET_SOURCE_PATH + "/") + EMFPatternExtractor.TARGET_MODEL_PATH));
+        final IFolder modelFolder = this.targetProject.getFolder(p);
+        this.createFolderIfNotExists(modelFolder);
+        return modelFolder;
       }
       return null;
-    } catch (Throwable _e) {
-      throw Exceptions.sneakyThrow(_e);
     }
+    return null;
+  }
+  
+  public String createFolderIfNotExists(final IFolder f) {
+    String _xifexpression = null;
+    boolean _exists = f.exists();
+    boolean _not = (!_exists);
+    if (_not) {
+      InputOutput.<String>println(("Create folder : " + f));
+      try {
+        NullProgressMonitor _nullProgressMonitor = new NullProgressMonitor();
+        f.create(true, true, _nullProgressMonitor);
+      } catch (final Throwable _t) {
+        if (_t instanceof Exception) {
+          final Exception e = (Exception)_t;
+          InputOutput.<String>println(("Unable to create the folder :  " + f));
+          e.printStackTrace();
+        } else {
+          throw Exceptions.sneakyThrow(_t);
+        }
+      }
+    } else {
+      _xifexpression = InputOutput.<String>println(("Checked this folder (it exists) : " + f));
+    }
+    return _xifexpression;
   }
 }

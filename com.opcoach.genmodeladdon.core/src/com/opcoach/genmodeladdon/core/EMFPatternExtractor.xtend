@@ -10,6 +10,7 @@ import org.eclipse.core.runtime.IPath
 import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.core.runtime.Path
 import org.eclipse.core.runtime.Platform
+import org.eclipse.core.resources.IFolder
 
 class EMFPatternExtractor implements Runnable {
 	static final String EMF_CODEGEN_PLUGIN_SN = "com.opcoach.genmodeladdon.core"
@@ -18,9 +19,9 @@ class EMFPatternExtractor implements Runnable {
 	static final String TARGET_MODEL_PATH = "model"
 	static final String TARGET_CLASS_TEMPLATE_FILE = "Class.javajet"
 
-  static final String DEV_CLASS_PATTERN = "%DEV_CLASS_PATTERN%";
-  static final String DEV_INTERFACE_PATTERN = "%DEV_INTERFACE_PATTERN%";
- 
+	static final String DEV_CLASS_PATTERN = "%DEV_CLASS_PATTERN%";
+	static final String DEV_INTERFACE_PATTERN = "%DEV_INTERFACE_PATTERN%";
+
 	final IProject targetProject
 
 	final String devClassPattern
@@ -48,42 +49,51 @@ class EMFPatternExtractor implements Runnable {
 		}
 
 		var content = IOUtils.toString(new FileInputStream(file.location.toFile), ResourcesPlugin.getEncoding());
-		
+
 		content = content.replaceFirst(DEV_CLASS_PATTERN, devClassPattern);
 		content = content.replaceFirst(DEV_INTERFACE_PATTERN, devInterfacePattern);
-		
-			IOUtils.write(content, new FileOutputStream(file.location.toFile), ResourcesPlugin.getEncoding());
+
+		IOUtils.write(content, new FileOutputStream(file.location.toFile), ResourcesPlugin.getEncoding());
+
+	}
+
+	def createSourceDirectoryStructure() {
+		if (targetProject instanceof IProject) {
+			var tgtSourcePath = null as IPath
+			val javaTargetProject = targetProject as IProject
+			val sourcePath = javaTargetProject.getFolder(TARGET_SOURCE_PATH)
+			createFolderIfNotExists(sourcePath)
+			
+			tgtSourcePath = sourcePath.fullPath
+			if (tgtSourcePath != null) {
+				val p = new Path(TARGET_SOURCE_PATH + "/" + TARGET_MODEL_PATH);
+				val modelFolder = targetProject.getFolder(p)
+				createFolderIfNotExists(modelFolder)
+				return modelFolder
+			}
+			return null
 
 		}
+	}
 
-		def createSourceDirectoryStructure() {
-			if (targetProject instanceof IProject) {
-				var tgtSourcePath = null as IPath
-				val javaTargetProject = targetProject as IProject
-				val sourcePath = javaTargetProject.getFolder(TARGET_SOURCE_PATH)
-				println("The sourcePath is : "+ sourcePath)
-				if (!sourcePath.exists) {
-					try {
-					sourcePath.create(true, true, new NullProgressMonitor())
-					}
-					catch (Exception e)
-					{
-						println("Unable to create the file :  " + sourcePath);
-						e.printStackTrace
-					}
-				}
-				tgtSourcePath = sourcePath.fullPath
-				if (tgtSourcePath != null) {
-					val p = new Path(TARGET_SOURCE_PATH + "/" + TARGET_MODEL_PATH);
-					val modelFolder = targetProject.getFolder(p)
-					if (!modelFolder.exists) {
-						modelFolder.create(true, true, new NullProgressMonitor())
-					}
-					return modelFolder
-				}
-				return null
-
+	def createFolderIfNotExists(IFolder f) {
+		
+		if (!f.exists) {
+			 println("Create folder : " + f)
+			
+			try {
+				f.create(true, true, new NullProgressMonitor())
+			} catch (Exception e) {
+				println("Unable to create the folder :  " + f);
+				e.printStackTrace
 			}
+		}
+		else
+		{
+			 println("Checked this folder (it exists) : " + f)
+			
 		}
 
 	}
+
+}
