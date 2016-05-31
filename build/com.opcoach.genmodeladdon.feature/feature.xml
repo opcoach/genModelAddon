@@ -2,7 +2,7 @@
 <feature
       id="com.opcoach.genmodeladdon.feature"
       label="Emf override generated code feature"
-      version="1.6.0.qualifier"
+      version="1.6.1.qualifier"
       provider-name="OPCOACH">
 
    <description url="http://www.example.com/description">
