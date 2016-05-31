@@ -31,6 +31,13 @@ public class GenerateCommon {
     String _string = _locationURI.toString();
     final URI rootUri = URI.createURI(_string);
     final String lastSegOfRootUri = rootUri.lastSegment();
+    final String genModelUriStr = genModelUri.toString();
+    boolean _startsWith = genModelUriStr.startsWith("platform:/resource/");
+    if (_startsWith) {
+      final String s = genModelUriStr.replace("platform:/resource/", "");
+      final int lastSlash = s.indexOf("/");
+      return s.substring(0, lastSlash);
+    }
     final List<String> segments = genModelUri.segmentsList();
     final int lastIndex = segments.lastIndexOf(lastSegOfRootUri);
     return segments.get((lastIndex + 1));

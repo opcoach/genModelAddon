@@ -52,6 +52,18 @@ public class TestGenerateCommon extends GenModelAddonTestCase
 		String s = GenerateCommon.getProjectName(gm);
 		assertEquals("Project name must be " + PROJECT_SAMPLE_NAME, PROJECT_SAMPLE_NAME, s);
 	}
+	
+	@Test
+	public void testGetProjectNameFromPlatformResourceURI()
+	{
+		GenModel gm = getGenModel(FANNOISE_GENMODEL);
+		String s = GenerateCommon.getProjectNameFromURI(URI.createPlatformResourceURI("/projectName/model/project.genmodel", true));
+		assertEquals("Project name must be projectName", "projectName", s);
+	}
+	
+	
+	
+	
 	@Test
 	public void testCreateSourceDirectory()
 	{

@@ -18,7 +18,16 @@ class GenerateCommon {
 		// Project name is always the segment after the last segment of workspace root. 
 		val rootUri = URI.createURI(ResourcesPlugin.workspace.root.locationURI.toString)
 		val lastSegOfRootUri = rootUri.lastSegment
+		val genModelUriStr = genModelUri.toString
 		
+		if (genModelUriStr.startsWith("platform:/resource/"))
+		{
+			// For this URI, project name is just after resource/
+			val s = genModelUriStr.replace("platform:/resource/", "")
+			val lastSlash = s.indexOf("/");
+			return s.substring(0, lastSlash);
+			
+		}
 		// Search for this segment in the genModelUri
 		val segments = genModelUri.segmentsList
 		val lastIndex = segments.lastIndexOf(lastSegOfRootUri)
