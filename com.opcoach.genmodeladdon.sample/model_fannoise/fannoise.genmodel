@@ -7,7 +7,7 @@
     usedGenPackages="ananax.genmodel#//ananax" interfaceNamePattern="M{0}" classNamePattern="M{0}Impl"
     operationReflection="true" importOrganizing="true">
   <foreignModel>fannoise.ecore</foreignModel>
-  <genPackages prefix="Fannoise" disposableProviderFactory="true" ecorePackage="fannoise.ecore#/">
+  <genPackages prefix="FanNoise" disposableProviderFactory="true" ecorePackage="fannoise.ecore#/">
     <genClasses ecoreClass="fannoise.ecore#//FanNoiseProject">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference fannoise.ecore#//FanNoiseProject/workflow"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference fannoise.ecore#//FanNoiseProject/thermodynamicConditions"/>

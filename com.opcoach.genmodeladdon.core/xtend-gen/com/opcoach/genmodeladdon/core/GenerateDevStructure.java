@@ -48,7 +48,6 @@ import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
-import org.eclipse.xtext.xbase.lib.StringExtensions;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
@@ -215,19 +214,10 @@ public class GenerateDevStructure {
         final IJavaProject jvp = ((IJavaProject) nat);
         IClasspathEntry[] _resolvedClasspath = jvp.getResolvedClasspath(true);
         for (final IClasspathEntry cpe : _resolvedClasspath) {
-          boolean _and = false;
-          if (!(!found)) {
-            _and = false;
-          } else {
-            IPath _path = cpe.getPath();
-            String _string = _path.toString();
-            boolean _equals = expectedSrcDir.equals(_string);
-            _and = _equals;
-          }
-          if (_and) {
+          if (((!found) && expectedSrcDir.equals(cpe.getPath().toString()))) {
             int _entryKind = cpe.getEntryKind();
-            boolean _equals_1 = (_entryKind == IClasspathEntry.CPE_SOURCE);
-            found = _equals_1;
+            boolean _equals = (_entryKind == IClasspathEntry.CPE_SOURCE);
+            found = _equals;
           }
         }
         if ((!found)) {
@@ -266,16 +256,7 @@ public class GenerateDevStructure {
     boolean _not_1 = (!_equals);
     if (_not_1) {
       gm.setTemplateDirectory(expectedTemplateDir);
-      boolean _and = false;
-      boolean _notEquals = (!Objects.equal(currentTemplateDir, null));
-      if (!_notEquals) {
-        _and = false;
-      } else {
-        int _length = currentTemplateDir.length();
-        boolean _greaterThan = (_length > 0);
-        _and = _greaterThan;
-      }
-      if (_and) {
+      if (((!Objects.equal(currentTemplateDir, null)) && (currentTemplateDir.length() > 0))) {
         changes.append("\nThe  template directory must be changed :  \n");
         changes.append(("\n   Previous value was : " + currentTemplateDir));
         changes.append(("\n   New value is       : " + expectedTemplateDir));
@@ -292,15 +273,7 @@ public class GenerateDevStructure {
       this.refreshWorkspace();
       changes.append("\nThe Class.javajet has been installed");
     }
-    boolean _and_1 = false;
-    int _length_1 = changes.length();
-    boolean _greaterThan_1 = (_length_1 > 0);
-    if (!_greaterThan_1) {
-      _and_1 = false;
-    } else {
-      _and_1 = forceSave;
-    }
-    if (_and_1) {
+    if (((changes.length() > 0) && forceSave)) {
       final Map<Object, Object> opt = new HashMap<Object, Object>();
       opt.put(Resource.OPTION_SAVE_ONLY_IF_CHANGED, Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER);
       opt.put(Resource.OPTION_LINE_DELIMITER, Resource.OPTION_LINE_DELIMITER_UNSPECIFIED);
@@ -882,24 +855,13 @@ public class GenerateDevStructure {
   public CharSequence computeCopyrightComment() {
     StringConcatenation _builder = new StringConcatenation();
     {
-      boolean _and = false;
-      String _copyrightText = this.genModel.getCopyrightText();
-      boolean _notEquals = (!Objects.equal(_copyrightText, null));
-      if (!_notEquals) {
-        _and = false;
-      } else {
-        String _copyrightText_1 = this.genModel.getCopyrightText();
-        int _length = _copyrightText_1.length();
-        boolean _greaterThan = (_length > 0);
-        _and = _greaterThan;
-      }
-      if (_and) {
+      if (((!Objects.equal(this.genModel.getCopyrightText(), null)) && (this.genModel.getCopyrightText().length() > 0))) {
         _builder.append("/**");
         _builder.newLine();
         _builder.append("  ");
         _builder.append("* ");
-        String _copyrightText_2 = this.genModel.getCopyrightText();
-        _builder.append(_copyrightText_2, "  ");
+        String _copyrightText = this.genModel.getCopyrightText();
+        _builder.append(_copyrightText, "  ");
         _builder.newLineIfNotEmpty();
         _builder.append("*/");
         _builder.newLine();
@@ -1044,22 +1006,11 @@ public class GenerateDevStructure {
       }
       final String basePackage = _xifexpression;
       String _xifexpression_1 = null;
-      boolean _or = false;
-      String _interfacePackageSuffix = gp.getInterfacePackageSuffix();
-      boolean _equals_1 = Objects.equal(_interfacePackageSuffix, null);
-      if (_equals_1) {
-        _or = true;
-      } else {
-        String _interfacePackageSuffix_1 = gp.getInterfacePackageSuffix();
-        int _length = _interfacePackageSuffix_1.length();
-        boolean _equals_2 = (_length == 0);
-        _or = _equals_2;
-      }
-      if (_or) {
+      if ((Objects.equal(gp.getInterfacePackageSuffix(), null) || (gp.getInterfacePackageSuffix().length() == 0))) {
         _xifexpression_1 = "";
       } else {
-        String _interfacePackageSuffix_2 = gp.getInterfacePackageSuffix();
-        _xifexpression_1 = ("." + _interfacePackageSuffix_2);
+        String _interfacePackageSuffix = gp.getInterfacePackageSuffix();
+        _xifexpression_1 = ("." + _interfacePackageSuffix);
       }
       final String intSuffix = _xifexpression_1;
       String _packageName = gp.getPackageName();
@@ -1142,14 +1093,12 @@ public class GenerateDevStructure {
       String _xifexpression = null;
       boolean _notEquals = (!Objects.equal(classPattern, null));
       if (_notEquals) {
-        String _packageName = gp.getPackageName();
-        String _firstUpper = StringExtensions.toFirstUpper(_packageName);
-        String _plus = (_firstUpper + "Factory");
+        String _prefix = gp.getPrefix();
+        String _plus = (_prefix + "Factory");
         _xifexpression = classPattern.replace("{0}", _plus);
       } else {
-        String _packageName_1 = gp.getPackageName();
-        String _firstUpper_1 = StringExtensions.toFirstUpper(_packageName_1);
-        _xifexpression = (_firstUpper_1 + "FactoryImpl");
+        String _prefix_1 = gp.getPrefix();
+        _xifexpression = (_prefix_1 + "FactoryImpl");
       }
       _xblockexpression = _xifexpression;
     }
@@ -1167,14 +1116,12 @@ public class GenerateDevStructure {
       String _xifexpression = null;
       boolean _notEquals = (!Objects.equal(interfacePattern, null));
       if (_notEquals) {
-        String _packageName = gp.getPackageName();
-        String _firstUpper = StringExtensions.toFirstUpper(_packageName);
-        String _plus = (_firstUpper + "Factory");
+        String _prefix = gp.getPrefix();
+        String _plus = (_prefix + "Factory");
         _xifexpression = interfacePattern.replace("{0}", _plus);
       } else {
-        String _packageName_1 = gp.getPackageName();
-        String _firstUpper_1 = StringExtensions.toFirstUpper(_packageName_1);
-        _xifexpression = (_firstUpper_1 + "Factory");
+        String _prefix_1 = gp.getPrefix();
+        _xifexpression = (_prefix_1 + "Factory");
       }
       _xblockexpression = _xifexpression;
     }
@@ -1192,14 +1139,12 @@ public class GenerateDevStructure {
       String _xifexpression = null;
       boolean _notEquals = (!Objects.equal(interfacePattern, null));
       if (_notEquals) {
-        String _packageName = gp.getPackageName();
-        String _firstUpper = StringExtensions.toFirstUpper(_packageName);
-        String _plus = (_firstUpper + "Package");
+        String _prefix = gp.getPrefix();
+        String _plus = (_prefix + "Package");
         _xifexpression = interfacePattern.replace("{0}", _plus);
       } else {
-        String _packageName_1 = gp.getPackageName();
-        String _firstUpper_1 = StringExtensions.toFirstUpper(_packageName_1);
-        _xifexpression = (_firstUpper_1 + "Package");
+        String _prefix_1 = gp.getPrefix();
+        _xifexpression = (_prefix_1 + "Package");
       }
       _xblockexpression = _xifexpression;
     }

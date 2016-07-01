@@ -548,9 +548,9 @@ class GenerateDevStructure {
 		val classPattern = gp.genModel.classNamePattern
 
 		if (classPattern != null)
-			classPattern.replace("{0}", gp.packageName.toFirstUpper + "Factory")
+			classPattern.replace("{0}", gp.prefix + "Factory")
 		else
-			gp.packageName.toFirstUpper + "FactoryImpl"
+			gp.prefix + "FactoryImpl"
 	}
 
 	/** Compute the generated factory interface name depending on interface. */
@@ -560,9 +560,9 @@ class GenerateDevStructure {
 		val interfacePattern = gp.genModel.interfaceNamePattern
 
 		if (interfacePattern != null)
-			interfacePattern.replace("{0}", gp.packageName.toFirstUpper + "Factory")
+			interfacePattern.replace("{0}", gp.prefix + "Factory")
 		else
-			gp.packageName.toFirstUpper + "Factory"
+			gp.prefix + "Factory"
 	}
 
 	/** Compute the generated package interface name depending on interface. */
@@ -572,9 +572,9 @@ class GenerateDevStructure {
 		val interfacePattern = gp.genModel.interfaceNamePattern
 
 		if (interfacePattern != null)
-			interfacePattern.replace("{0}", gp.packageName.toFirstUpper + "Package")
+			interfacePattern.replace("{0}", gp.prefix + "Package")
 		else
-			gp.packageName.toFirstUpper + "Package"
+			gp.prefix + "Package"
 	}
 
 }

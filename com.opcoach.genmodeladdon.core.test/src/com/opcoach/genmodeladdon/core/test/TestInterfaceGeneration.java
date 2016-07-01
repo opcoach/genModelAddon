@@ -14,30 +14,7 @@ public class TestInterfaceGeneration extends GenModelAddonTestCase
 
 	private String copyright = "OPCoach 2016";
 
-	@Test
-	public void testClassNames()
-	{
-		GenModel gm = getGenModel(PROJECT_GENMODEL);
-		GenerateDevStructure gen = getGenDevStructure(PROJECT_GENMODEL);
-		
-		GenClass gc = findGenClass(gm, "Project");
-		// Check interface and class names
-		assertEquals("The dev interface name must be Project", "Project", gen.computeInterfaceName(gc));
-		assertEquals("The dev class  name must be ProjectImpl", "ProjectImpl", gen.computeClassname(gc));
-		assertEquals("The gen interface  name must be MProject", "MProject", gen.computeGeneratedInterfaceName(gc));
-		assertEquals("The gen class  name must be MProjectImpl", "MProjectImpl", gen.computeGeneratedClassName(gc));
-
-		// Check for packages names
-		GenPackage gp = findGenPackage(gm, "project");
-		assertEquals("The dev factory interface  name must be ProjectFactory", "ProjectFactory",
-				gen.computeFactoryInterfaceName(gp));
-		assertEquals("The dev factory class  name must be ProjectFactoryImpl", "ProjectFactoryImpl",
-				gen.computeFactoryClassName(gp));
-		assertEquals("The gen factory interface  name must be MProjectFactory", "MProjectFactory",
-				gen.computeGeneratedFactoryInterfaceName(gp));
-		assertEquals("The gen factory class  name must be MProjectFactoryImpl", "MProjectFactoryImpl",
-				gen.computeGeneratedFactoryClassName(gp));
-	}
+	
 
 	// ----------------------------------------------------------------------------------------------------------
 	// ------------------- Test dev interfaces extends gen interfaces or parent
