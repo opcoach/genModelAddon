@@ -239,5 +239,18 @@ public class TestInterfaceGeneration extends GenModelAddonTestCase
 		assertFileExists("src/com/opcoach/project/ClassAsInterface.java");
 		assertFileNotExists("src/com/opcoach/project/impl/ClassAsInterfaceImpl.java");
 	}
+	
+	
+	// -----------------------------------------------------------------------
+	// ------------------- Enum type must be cast in the eSet method -
+	// -----------------------------------------------------------------------
+	@Test
+	public void enumTypeMustBeCastInESetMethod()
+	{
+		assertFileContains("src-gen/com/opcoach/project/impl/MPersonImpl.java", "setType((TypePerson)newValue);");
+		assertFileContains("src-gen/com/opcoach/project/impl/MProjectImpl.java", "setType((TypeProject)newValue);");
+	}
+	
+
 
 }
