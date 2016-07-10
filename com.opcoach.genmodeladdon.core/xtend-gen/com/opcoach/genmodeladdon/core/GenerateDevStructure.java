@@ -982,8 +982,7 @@ public class GenerateDevStructure {
       }
       final String packSuffix = _xifexpression_1;
       String _packageName = gp.getPackageName();
-      String _lowerCase = _packageName.toLowerCase();
-      String _plus = (basePackage + _lowerCase);
+      String _plus = (basePackage + _packageName);
       _xblockexpression = (_plus + packSuffix);
     }
     return _xblockexpression;
@@ -1014,8 +1013,7 @@ public class GenerateDevStructure {
       }
       final String intSuffix = _xifexpression_1;
       String _packageName = gp.getPackageName();
-      String _lowerCase = _packageName.toLowerCase();
-      String _plus = (basePackage + _lowerCase);
+      String _plus = (basePackage + _packageName);
       _xblockexpression = (_plus + intSuffix);
     }
     return _xblockexpression;

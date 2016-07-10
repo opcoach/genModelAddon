@@ -503,7 +503,7 @@ class GenerateDevStructure {
 	def computePackageNameForClasses(GenPackage gp) {
 		val basePackage = if(gp.basePackage == null) "" else gp.basePackage + "."
 		val packSuffix = if(gp.classPackageSuffix == null) "" else "." + gp.classPackageSuffix
-		basePackage + gp.packageName.toLowerCase + packSuffix
+		basePackage + gp.packageName + packSuffix
 	}
 
 	/** Compute the package name for interfaces */
@@ -514,7 +514,7 @@ class GenerateDevStructure {
 			else
 				"." + gp.interfacePackageSuffix
 
-		basePackage + gp.packageName.toLowerCase + intSuffix
+		basePackage + gp.packageName + intSuffix
 	}
 
 	/** Compute the generated class name depending on classpattern. */
