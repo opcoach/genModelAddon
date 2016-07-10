@@ -3,7 +3,6 @@ package com.opcoach.genmodeladdon.ui.dialog;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -16,6 +15,8 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -28,11 +29,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.osgi.framework.FrameworkUtil;
 
-import com.opcoach.genmodeladdon.Util;
-
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-
 public class DerivedSourceParametersDialog extends Dialog
 {
 	// Define the properties constants to retrieve values in dialog.
@@ -44,6 +40,8 @@ public class DerivedSourceParametersDialog extends Dialog
 	// Constants for the default name patterns and directories
 	private static final String ADVISED_GEN_INTERFACE_PATTERN = "M{0}";
 	private static final String ADVISED_GEN_CLASS_IMPL_PATTERN = "M{0}Impl";
+	private static final String ADVISED_DEV_INTERFACE_PATTERN = "{0}";
+	private static final String ADVISED_DEV_CLASS_IMPL_PATTERN = "{0}Impl";
 	private static final String ADVISED_GEN_SRC_DIR = "src-gen";
 	
 	private static final String DEFAULT_SRC_DEV = "src";
@@ -63,13 +61,17 @@ public class DerivedSourceParametersDialog extends Dialog
 	private Button btnEditValues;
 	private Button btnRestoreCurrentValues;
 	private Button btnAdvisedValues;
-	private Shell parent;
 	
 	// Initial values in gen model in case of reverse change
 	private String genClassPatternInitial;
 	private String genInterfacePatternInitial;
 	private String genSrcDirInitial;
 	private boolean editGenModelValues;
+	
+	// Remember of preivous values in case of restore
+	private String previousDevInterfacePattern;
+	private String previousDevClassPattern;
+
 
 	/**
 	 * Create the dialog.
@@ -112,11 +114,16 @@ public class DerivedSourceParametersDialog extends Dialog
 	
 		btnAdvisedValues = new Button(composite, SWT.NONE);
 		btnAdvisedValues.addSelectionListener(new SelectionAdapter() {
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				genSourceDir.setText(ADVISED_GEN_SRC_DIR);
 				genInterfacePattern.setText(ADVISED_GEN_INTERFACE_PATTERN);
 				genClassPattern.setText(ADVISED_GEN_CLASS_IMPL_PATTERN);
+				previousDevInterfacePattern = devInterfacePattern.getText();
+				previousDevClassPattern = devClassPattern.getText();
+				devInterfacePattern.setText(ADVISED_DEV_INTERFACE_PATTERN);
+				devClassPattern.setText(ADVISED_DEV_CLASS_IMPL_PATTERN);
 			}
 		});
 		btnAdvisedValues.setText("Set relevant values");
@@ -133,6 +140,9 @@ public class DerivedSourceParametersDialog extends Dialog
 				genSourceDir.setText(genSrcDirInitial);
 				genInterfacePattern.setText(genInterfacePatternInitial);
 				genClassPattern.setText(genClassPatternInitial);
+				devInterfacePattern.setText(previousDevInterfacePattern);
+				devClassPattern.setText(previousDevClassPattern);
+
 
 			}
 			});
@@ -276,12 +286,14 @@ public class DerivedSourceParametersDialog extends Dialog
 			devClassPattern.setText(cp + "Ext");
 		else
 			devClassPattern.setText(cpProp != null ? cpProp : DEFAULT_DEV_CLASS_IMPL_PATTERN);
+		previousDevClassPattern = devClassPattern.getText();
 
 		if (ip.equals(DEFAULT_DEV_INTERFACE_PATTERN))
 			devInterfacePattern.setText(ip + "Ext");
 		else
 			devInterfacePattern.setText(ipProp != null ? ipProp : DEFAULT_DEV_INTERFACE_PATTERN);
-
+		previousDevInterfacePattern = devInterfacePattern.getText();
+		
 		devSourceDir.setText(srcProp != null ? srcProp : DEFAULT_SRC_DEV);
 	}
 
