@@ -5,6 +5,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="taille" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="poids" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//TypePerson"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Project">
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
@@ -19,6 +20,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="chief" eType="#//Person"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="mainTask" eType="#//Task"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//TypeProject"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Task">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -60,6 +62,15 @@
   <eClassifiers xsi:type="ecore:EClass" name="ClassAsInterface" abstract="true" interface="true">
     <eOperations name="operationListener"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="TypePerson">
+    <eLiterals name="Chief" literal="Chief"/>
+    <eLiterals name="Developer" value="1" literal="Developer"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="TypeProject">
+    <eLiterals name="Documentation" literal="Documentation"/>
+    <eLiterals name="Code" value="1" literal="Code"/>
+    <eLiterals name="Test" value="2" literal="Test"/>
   </eClassifiers>
   <eSubpackages name="documentation" nsURI="http://www.opcoach.com/project/documentation/1.0"
       nsPrefix="doc">
