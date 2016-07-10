@@ -79,16 +79,27 @@ public class GenerateCommon {
   public static String getModelPath(final GenModel gm) {
     Resource _eResource = gm.eResource();
     final URI uri = _eResource.getURI();
-    final String s = uri.toString();
-    InputOutput.<String>println(("Model uri is : " + s));
     IProject _project = GenerateCommon.getProject(gm);
     final String projectName = _project.getName();
-    int _lastIndexOf = s.lastIndexOf(projectName);
+    String _string = uri.toString();
+    return GenerateCommon.getModelPathFromStringURI(projectName, _string);
+  }
+  
+  /**
+   * Find the model directory in its project
+   */
+  public static String getModelPathFromStringURI(final String projectName, final String uri) {
+    InputOutput.<String>println(("Model uri is : " + uri));
+    int _lastIndexOf = uri.lastIndexOf(projectName);
     int _length = projectName.length();
     int _plus = (_lastIndexOf + _length);
     final int pathPos = (_plus + 1);
-    final int lastSlashPos = s.lastIndexOf("/");
-    final String modelDir = s.substring(pathPos, lastSlashPos);
+    final int lastSlashPos = uri.lastIndexOf("/");
+    String modelDir = ".";
+    if ((pathPos < lastSlashPos)) {
+      String _substring = uri.substring(pathPos, lastSlashPos);
+      modelDir = _substring;
+    }
     return modelDir;
   }
 }

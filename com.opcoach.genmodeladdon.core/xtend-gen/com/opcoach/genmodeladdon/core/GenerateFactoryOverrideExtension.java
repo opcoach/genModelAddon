@@ -108,19 +108,8 @@ public class GenerateFactoryOverrideExtension {
               final String classAtt = _attribute.getValue();
               IPluginAttribute _attribute_1 = ipe.getAttribute("uri");
               final String uriAtt = _attribute_1.getValue();
-              boolean _and = false;
-              IPluginAttribute _attribute_2 = ipe.getAttribute("class");
-              String _value = _attribute_2.getValue();
-              boolean _equals_1 = factoryClassname.equals(_value);
-              if (!_equals_1) {
-                _and = false;
-              } else {
-                IPluginAttribute _attribute_3 = ipe.getAttribute("uri");
-                String _value_1 = _attribute_3.getValue();
-                boolean _equals_2 = modelUri.equals(_value_1);
-                _and = _equals_2;
-              }
-              if (_and) {
+              if ((factoryClassname.equals(ipe.getAttribute("class").getValue()) && 
+                modelUri.equals(ipe.getAttribute("uri").getValue()))) {
                 return;
               }
             }
