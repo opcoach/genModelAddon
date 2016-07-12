@@ -13,7 +13,7 @@
 
 	<groupId>com.opcoach.genmodeladdon</groupId>
 	<artifactId>com.opcoach.genmodeladdon.core</artifactId>
-	<version>1.6.1-SNAPSHOT</version>
+	<version>1.6.2-SNAPSHOT</version>
 	<packaging>eclipse-plugin</packaging>
 
 </project>
