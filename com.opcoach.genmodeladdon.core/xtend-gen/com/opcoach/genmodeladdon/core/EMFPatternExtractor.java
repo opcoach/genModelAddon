@@ -2,7 +2,6 @@ package com.opcoach.genmodeladdon.core;
 
 import com.google.common.base.Objects;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import org.apache.commons.io.IOUtils;
@@ -47,14 +46,13 @@ public class EMFPatternExtractor implements Runnable {
     this.devInterfacePattern = ip;
   }
   
-  public InputStream extractClassTemplateIncurrentPlugin() {
+  private InputStream extractClassTemplateIncurrentPlugin() {
     try {
       InputStream _xblockexpression = null;
       {
         final Bundle codegenBundle = Platform.getBundle(EMFPatternExtractor.EMF_CODEGEN_PLUGIN_SN);
         final Path path = new Path(EMFPatternExtractor.EMF_CODEGEN_CLASSGEN_PATH);
-        final InputStream jETClassFile = FileLocator.openStream(codegenBundle, path, false);
-        _xblockexpression = jETClassFile;
+        _xblockexpression = FileLocator.openStream(codegenBundle, path, false);
       }
       return _xblockexpression;
     } catch (Throwable _e) {
@@ -68,24 +66,15 @@ public class EMFPatternExtractor implements Runnable {
       final InputStream sourceJetFile = this.extractClassTemplateIncurrentPlugin();
       final IFolder templateFolder = this.createSourceDirectoryStructure();
       final IFile file = templateFolder.getFile(EMFPatternExtractor.TARGET_CLASS_TEMPLATE_FILE);
-      boolean _exists = file.exists();
-      boolean _not = (!_exists);
-      if (_not) {
-        NullProgressMonitor _nullProgressMonitor = new NullProgressMonitor();
-        file.create(sourceJetFile, true, _nullProgressMonitor);
-      }
-      IPath _location = file.getLocation();
-      File _file = _location.toFile();
-      FileInputStream _fileInputStream = new FileInputStream(_file);
       String _encoding = ResourcesPlugin.getEncoding();
-      String content = IOUtils.toString(_fileInputStream, _encoding);
+      String content = IOUtils.toString(sourceJetFile, _encoding);
       String _replaceFirst = content.replaceFirst(EMFPatternExtractor.DEV_CLASS_PATTERN, this.devClassPattern);
       content = _replaceFirst;
       String _replaceFirst_1 = content.replaceFirst(EMFPatternExtractor.DEV_INTERFACE_PATTERN, this.devInterfacePattern);
       content = _replaceFirst_1;
-      IPath _location_1 = file.getLocation();
-      File _file_1 = _location_1.toFile();
-      FileOutputStream _fileOutputStream = new FileOutputStream(_file_1);
+      IPath _location = file.getLocation();
+      File _file = _location.toFile();
+      FileOutputStream _fileOutputStream = new FileOutputStream(_file);
       String _encoding_1 = ResourcesPlugin.getEncoding();
       IOUtils.write(content, _fileOutputStream, _encoding_1);
     } catch (Throwable _e) {

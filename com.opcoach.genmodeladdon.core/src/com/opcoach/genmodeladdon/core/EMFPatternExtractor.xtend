@@ -33,26 +33,26 @@ class EMFPatternExtractor implements Runnable {
 		this.devInterfacePattern = ip
 	}
 
-	def extractClassTemplateIncurrentPlugin() {
+	def private extractClassTemplateIncurrentPlugin() {
 		val codegenBundle = Platform.getBundle(EMF_CODEGEN_PLUGIN_SN)
 		val path = new Path(EMF_CODEGEN_CLASSGEN_PATH);
-		val jETClassFile = FileLocator::openStream(codegenBundle, path, false)
-		jETClassFile
+		// Return the jet class file from the plugin.
+		FileLocator::openStream(codegenBundle, path, false)
 	}
 
 	override run() {
 		val sourceJetFile = extractClassTemplateIncurrentPlugin()
 		val templateFolder = createSourceDirectoryStructure()
 		val file = templateFolder.getFile(TARGET_CLASS_TEMPLATE_FILE)
-		if (!file.exists()) {
-			file.create(sourceJetFile, true, new NullProgressMonitor)
-		}
 
-		var content = IOUtils.toString(new FileInputStream(file.location.toFile), ResourcesPlugin.getEncoding());
+		// Fix issue #49 : always create the file (only 147 ko)
+		// Read original file and replace patterns inside
+		var content = IOUtils.toString(sourceJetFile, ResourcesPlugin.getEncoding());
 
 		content = content.replaceFirst(DEV_CLASS_PATTERN, devClassPattern);
 		content = content.replaceFirst(DEV_INTERFACE_PATTERN, devInterfacePattern);
 
+		// Then write it in the project
 		IOUtils.write(content, new FileOutputStream(file.location.toFile), ResourcesPlugin.getEncoding());
 
 	}
@@ -63,7 +63,7 @@ class EMFPatternExtractor implements Runnable {
 			val javaTargetProject = targetProject as IProject
 			val sourcePath = javaTargetProject.getFolder(TARGET_SOURCE_PATH)
 			createFolderIfNotExists(sourcePath)
-			
+
 			tgtSourcePath = sourcePath.fullPath
 			if (tgtSourcePath != null) {
 				val p = new Path(TARGET_SOURCE_PATH + "/" + TARGET_MODEL_PATH);
@@ -77,21 +77,19 @@ class EMFPatternExtractor implements Runnable {
 	}
 
 	def createFolderIfNotExists(IFolder f) {
-		
+
 		if (!f.exists) {
-			 println("Create folder : " + f)
-			
+			println("Create folder : " + f)
+
 			try {
 				f.create(true, true, new NullProgressMonitor())
 			} catch (Exception e) {
 				println("Unable to create the folder :  " + f);
 				e.printStackTrace
 			}
-		}
-		else
-		{
-			 println("Checked this folder (it exists) : " + f)
-			
+		} else {
+			println("Checked this folder (it exists) : " + f)
+
 		}
 
 	}
