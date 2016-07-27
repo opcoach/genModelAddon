@@ -8,7 +8,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 /**
  * A class to provide some generation common methods
@@ -89,7 +88,6 @@ public class GenerateCommon {
    * Find the model directory in its project
    */
   public static String getModelPathFromStringURI(final String projectName, final String uri) {
-    InputOutput.<String>println(("Model uri is : " + uri));
     int _lastIndexOf = uri.lastIndexOf(projectName);
     int _length = projectName.length();
     int _plus = (_lastIndexOf + _length);

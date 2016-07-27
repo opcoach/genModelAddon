@@ -4,7 +4,7 @@ import com.google.common.base.Objects;
 import com.opcoach.genmodeladdon.core.EMFPatternExtractor;
 import com.opcoach.genmodeladdon.core.GenerateAntFileForCodeGeneration;
 import com.opcoach.genmodeladdon.core.GenerateCommon;
-import com.opcoach.genmodeladdon.core.GenerateFactoryOverrideExtension;
+import com.opcoach.genmodeladdon.core.GenerateExtensions;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -83,6 +83,10 @@ public class GenerateDevStructure {
   
   private String modelDir;
   
+  private Map<String, String> factories = new HashMap<String, String>();
+  
+  private Map<String, String> packages = new HashMap<String, String>();
+  
   /**
    * Build the generator with 4 parameters
    * @param cpattern : the class name pattern used for generation ({0}Impl for instance)
@@ -120,82 +124,84 @@ public class GenerateDevStructure {
    * Generate the file structure. If genFiles is false just compute the files to be generated
    */
   public void generateDevStructure(final boolean genFiles) {
-    this.generateFiles = genFiles;
-    EList<GenPackage> _genPackages = this.genModel.getGenPackages();
-    for (final GenPackage p : _genPackages) {
-      this.generateDevStructure(p);
+    try {
+      this.generateFiles = genFiles;
+      EList<GenPackage> _genPackages = this.genModel.getGenPackages();
+      for (final GenPackage p : _genPackages) {
+        this.generateDevStructure(p);
+      }
+      final GenerateExtensions gfoe = new GenerateExtensions(this.project);
+      gfoe.generateOrUpdateExtensions(this.factories, this.packages);
+      this.project.refreshLocal(IResource.DEPTH_INFINITE, null);
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
     }
   }
   
   public void generateDevStructure(final GenPackage gp) {
-    try {
-      IWorkspace _workspace = ResourcesPlugin.getWorkspace();
-      final IWorkspaceRoot root = _workspace.getRoot();
-      IProject _project = root.getProject(this.projectName);
-      this.project = _project;
-      this.setFolderAsSourceFolder(this.project, this.srcDevDirectory);
-      String _computePackageNameForClasses = this.computePackageNameForClasses(gp);
-      String _replace = _computePackageNameForClasses.replace(".", "/");
-      String _plus = ((this.srcDevDirectory + "/") + _replace);
-      final IFolder srcFolder = this.project.getFolder(_plus);
-      IPath _location = srcFolder.getLocation();
-      String _oSString = _location.toOSString();
-      final String srcAbsolutePath = (_oSString + "/");
-      final File f = new File(srcAbsolutePath);
-      boolean _exists = f.exists();
-      boolean _not = (!_exists);
-      if (_not) {
-        f.mkdirs();
-      }
-      String _computePackageNameForInterfaces = this.computePackageNameForInterfaces(gp);
-      String _replace_1 = _computePackageNameForInterfaces.replace(".", "/");
-      String _plus_1 = ((this.srcDevDirectory + "/") + _replace_1);
-      final IFolder interfaceFolder = this.project.getFolder(_plus_1);
-      IPath _location_1 = interfaceFolder.getLocation();
-      String _oSString_1 = _location_1.toOSString();
-      final String interfaceAbsolutePath = (_oSString_1 + "/");
-      final File f2 = new File(interfaceAbsolutePath);
-      boolean _exists_1 = f2.exists();
-      boolean _not_1 = (!_exists_1);
-      if (_not_1) {
-        f.mkdirs();
-      }
-      InputOutput.<String>println(("Generate classes in    : " + srcAbsolutePath));
-      InputOutput.<String>println(("Generate interfaces in : " + interfaceAbsolutePath));
-      EList<GenClass> _genClasses = gp.getGenClasses();
-      final Function1<GenClass, Boolean> _function = (GenClass it) -> {
-        boolean _isDynamic = it.isDynamic();
-        return Boolean.valueOf((!_isDynamic));
-      };
-      Iterable<GenClass> _filter = IterableExtensions.<GenClass>filter(_genClasses, _function);
-      for (final GenClass c : _filter) {
-        {
-          boolean _isInterface = c.isInterface();
-          boolean _not_2 = (!_isInterface);
-          if (_not_2) {
-            this.generateOverriddenClass(c, srcAbsolutePath);
-          }
-          this.generateOverriddenInterface(c, interfaceAbsolutePath);
+    IWorkspace _workspace = ResourcesPlugin.getWorkspace();
+    final IWorkspaceRoot root = _workspace.getRoot();
+    IProject _project = root.getProject(this.projectName);
+    this.project = _project;
+    this.setFolderAsSourceFolder(this.project, this.srcDevDirectory);
+    String _computePackageNameForClasses = this.computePackageNameForClasses(gp);
+    String _replace = _computePackageNameForClasses.replace(".", "/");
+    String _plus = ((this.srcDevDirectory + "/") + _replace);
+    final IFolder srcFolder = this.project.getFolder(_plus);
+    IPath _location = srcFolder.getLocation();
+    String _oSString = _location.toOSString();
+    final String srcAbsolutePath = (_oSString + "/");
+    final File f = new File(srcAbsolutePath);
+    boolean _exists = f.exists();
+    boolean _not = (!_exists);
+    if (_not) {
+      f.mkdirs();
+    }
+    String _computePackageNameForInterfaces = this.computePackageNameForInterfaces(gp);
+    String _replace_1 = _computePackageNameForInterfaces.replace(".", "/");
+    String _plus_1 = ((this.srcDevDirectory + "/") + _replace_1);
+    final IFolder interfaceFolder = this.project.getFolder(_plus_1);
+    IPath _location_1 = interfaceFolder.getLocation();
+    String _oSString_1 = _location_1.toOSString();
+    final String interfaceAbsolutePath = (_oSString_1 + "/");
+    final File f2 = new File(interfaceAbsolutePath);
+    boolean _exists_1 = f2.exists();
+    boolean _not_1 = (!_exists_1);
+    if (_not_1) {
+      f.mkdirs();
+    }
+    InputOutput.<String>println(("Generate classes in    : " + srcAbsolutePath));
+    InputOutput.<String>println(("Generate interfaces in : " + interfaceAbsolutePath));
+    EList<GenClass> _genClasses = gp.getGenClasses();
+    final Function1<GenClass, Boolean> _function = (GenClass it) -> {
+      boolean _isDynamic = it.isDynamic();
+      return Boolean.valueOf((!_isDynamic));
+    };
+    Iterable<GenClass> _filter = IterableExtensions.<GenClass>filter(_genClasses, _function);
+    for (final GenClass c : _filter) {
+      {
+        boolean _isInterface = c.isInterface();
+        boolean _not_2 = (!_isInterface);
+        if (_not_2) {
+          this.generateOverriddenClass(c, srcAbsolutePath);
         }
+        this.generateOverriddenInterface(c, interfaceAbsolutePath);
       }
-      this.generateOverriddenFactoryInterface(gp, interfaceAbsolutePath);
-      this.generateOverriddenFactoryClass(gp, srcAbsolutePath);
-      this.generateOverriddenPackageInterface(gp, interfaceAbsolutePath);
-      this.project.refreshLocal(IResource.DEPTH_INFINITE, null);
-      final GenerateFactoryOverrideExtension gfoe = new GenerateFactoryOverrideExtension(this.projectName);
-      EPackage _ecorePackage = gp.getEcorePackage();
-      String _nsURI = _ecorePackage.getNsURI();
-      String _computePackageNameForClasses_1 = this.computePackageNameForClasses(gp);
-      String _plus_2 = (_computePackageNameForClasses_1 + ".");
-      String _computeFactoryClassName = this.computeFactoryClassName(gp);
-      String _plus_3 = (_plus_2 + _computeFactoryClassName);
-      gfoe.generateOverideExtension(_nsURI, _plus_3);
-      List<GenPackage> _subGenPackages = gp.getSubGenPackages();
-      for (final GenPackage sp : _subGenPackages) {
-        this.generateDevStructure(sp);
-      }
-    } catch (Throwable _e) {
-      throw Exceptions.sneakyThrow(_e);
+    }
+    this.generateOverriddenFactoryInterface(gp, interfaceAbsolutePath);
+    this.generateOverriddenFactoryClass(gp, srcAbsolutePath);
+    this.generateOverriddenPackageInterface(gp, interfaceAbsolutePath);
+    final String factoryClassName = gp.getQualifiedFactoryClassName();
+    final String packageClassName = gp.getQualifiedPackageInterfaceName();
+    EPackage _ecorePackage = gp.getEcorePackage();
+    String _nsURI = _ecorePackage.getNsURI();
+    this.factories.put(_nsURI, factoryClassName);
+    EPackage _ecorePackage_1 = gp.getEcorePackage();
+    String _nsURI_1 = _ecorePackage_1.getNsURI();
+    this.packages.put(_nsURI_1, packageClassName);
+    List<GenPackage> _subGenPackages = gp.getSubGenPackages();
+    for (final GenPackage sp : _subGenPackages) {
+      this.generateDevStructure(sp);
     }
   }
   
@@ -310,7 +316,7 @@ public class GenerateDevStructure {
    * Generate the ant file and return it (or null.
    */
   public File generateAntFile(final String antFilename) {
-    InputOutput.<String>println(("-------> GENERATE THE ANT FILE : " + antFilename));
+    InputOutput.<String>println(("Generate the ant file : " + antFilename));
     this.refreshWorkspace();
     final GenerateAntFileForCodeGeneration gen = new GenerateAntFileForCodeGeneration();
     try {
@@ -328,7 +334,6 @@ public class GenerateDevStructure {
         throw Exceptions.sneakyThrow(_t);
       }
     }
-    InputOutput.<String>println("-------> END GENERATE THE ANT FILE -----");
     return null;
   }
   
@@ -337,9 +342,8 @@ public class GenerateDevStructure {
    * @param f : the ant file to be called
    */
   public void generateGenModelCode(final File f, final IProgressMonitor monitor) {
-    InputOutput.<String>println("--------- START GENERATE THE EMF CODE -------------");
     String _absolutePath = f.getAbsolutePath();
-    String _plus = ("on : " + _absolutePath);
+    String _plus = ("Generate the EMF Code using the ant file : " + _absolutePath);
     InputOutput.<String>println(_plus);
     final AntRunner runner = new AntRunner();
     String _absolutePath_1 = f.getAbsolutePath();
@@ -355,7 +359,6 @@ public class GenerateDevStructure {
         throw Exceptions.sneakyThrow(_t);
       }
     }
-    InputOutput.<String>println("--------- END GENERATE THE EMF CODE -------------");
   }
   
   public void refreshWorkspace() {
@@ -991,7 +994,7 @@ public class GenerateDevStructure {
   /**
    * Compute the package name for interfaces
    */
-  public String computePackageNameForInterfaces(final GenPackage gp) {
+  private String computePackageNameForInterfaces(final GenPackage gp) {
     String _xblockexpression = null;
     {
       String _xifexpression = null;

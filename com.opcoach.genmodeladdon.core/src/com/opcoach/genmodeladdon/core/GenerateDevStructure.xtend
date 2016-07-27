@@ -47,10 +47,16 @@ class GenerateDevStructure {
 	GenModel genModel
 	var copyright = ""
 	
-	public Map<String, Object> filesNotGenerated = new HashMap()
+	public Map<String, Object> filesNotGenerated = new HashMap
 	
 	String modelName
 	String modelDir
+	
+	// Maps to store for each modelUri the package and factory class names
+	// To manage the extensions for override factory and generated package
+	// Key is Uri and value is class name
+	Map<String, String> factories = new HashMap
+	Map<String, String> packages = new HashMap
 
 	/** Build the generator with 4 parameters
 	 * @param cpattern : the class name pattern used for generation ({0}Impl for instance)
@@ -84,6 +90,14 @@ class GenerateDevStructure {
 			p.generateDevStructure()
 
 		}
+		
+		// Must generate or update extensions in plugin.xml file
+		val gfoe = new GenerateExtensions(project)
+		gfoe.generateOrUpdateExtensions(factories, packages)
+		
+		project.refreshLocal(IResource.DEPTH_INFINITE, null)
+		
+		
 	}
 
 	def void generateDevStructure(GenPackage gp) {
@@ -122,12 +136,14 @@ class GenerateDevStructure {
 		// Generate  package interface (used to have a dev interface compliant with generated code)
 		gp.generateOverriddenPackageInterface(interfaceAbsolutePath)
 
-		project.refreshLocal(IResource.DEPTH_INFINITE, null)
-
-		// Add the factory override extension
-		val gfoe = new GenerateFactoryOverrideExtension(projectName)
-		gfoe.generateOverideExtension(gp.getEcorePackage().nsURI,
-			gp.computePackageNameForClasses + "." + gp.computeFactoryClassName)
+		// remember of factory and package classes for this uri. 
+		// val factoryClassName = gp.computePackageNameForClasses + "." + gp.computeFactoryClassName
+		val factoryClassName = gp.qualifiedFactoryClassName
+		//val packageClassName = gp.computePackageNameForClasses + "." + gp.packageInterfaceName
+		val packageClassName = gp.qualifiedPackageInterfaceName
+		
+		factories.put(gp.getEcorePackage.nsURI, factoryClassName)
+		packages.put(gp.getEcorePackage.nsURI, packageClassName)
 
 		// Iterate on subpackages 
 		for (sp : gp.subGenPackages)
@@ -227,7 +243,7 @@ class GenerateDevStructure {
 	
 	/** Generate the ant file and return it (or null.  */
 	def generateAntFile(String antFilename) {
-		println("-------> GENERATE THE ANT FILE : " + antFilename);
+		println("Generate the ant file : " + antFilename);
 		refreshWorkspace
 		val gen = new GenerateAntFileForCodeGeneration();
 		try {
@@ -240,7 +256,6 @@ class GenerateDevStructure {
 		} catch (CoreException e) {
 			e.printStackTrace;
 		}
-		println("-------> END GENERATE THE ANT FILE -----");
 		return null;
 	}
 	
@@ -249,11 +264,10 @@ class GenerateDevStructure {
 	 * @param f : the ant file to be called */
 	def void generateGenModelCode(File f, IProgressMonitor monitor) {
 
-		println("--------- START GENERATE THE EMF CODE -------------");
-		println("on : " + f.getAbsolutePath());
+		println("Generate the EMF Code using the ant file : " +  f.absolutePath);
 
 		val runner = new AntRunner
-		runner.setBuildFileLocation(f.getAbsolutePath());
+		runner.setBuildFileLocation(f.absolutePath);
 
 		// Bundle b = FrameworkUtil.getBundle(GenModelAddonTestCase.class);
 		// runner.setCustomClasspath(new URL[] { b.getEntry("ant_tasks/importer.ecore.tasks.jar")});
@@ -264,7 +278,6 @@ class GenerateDevStructure {
 		} catch (CoreException e) {
 			e.printStackTrace;
 		}
-		println("--------- END GENERATE THE EMF CODE -------------");
 
 	}
 
@@ -500,14 +513,14 @@ class GenerateDevStructure {
 	}
 
 	/** Compute the package name for class */
-	def computePackageNameForClasses(GenPackage gp) {
+	 def computePackageNameForClasses(GenPackage gp) {
 		val basePackage = if(gp.basePackage == null) "" else gp.basePackage + "."
 		val packSuffix = if(gp.classPackageSuffix == null) "" else "." + gp.classPackageSuffix
 		basePackage + gp.packageName + packSuffix
 	}
 
 	/** Compute the package name for interfaces */
-	def computePackageNameForInterfaces(GenPackage gp) {
+	private def computePackageNameForInterfaces(GenPackage gp) {
 		val basePackage = if(gp.basePackage == null) "" else gp.basePackage + "."
 		val intSuffix = if (gp.interfacePackageSuffix == null || gp.interfacePackageSuffix.length == 0)
 				""

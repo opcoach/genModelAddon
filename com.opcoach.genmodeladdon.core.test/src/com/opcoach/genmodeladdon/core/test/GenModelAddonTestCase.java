@@ -44,7 +44,7 @@ public class GenModelAddonTestCase
 	public static final String PROJECT_GENMODEL = "/com.opcoach.genmodeladdon.sample/model/project.genmodel";
 	public static final String FANNOISE_GENMODEL = "/com.opcoach.genmodeladdon.sample/model_fannoise/fannoise.genmodel";
 
-	private static final String SAMPLE_PROJECT = "com.opcoach.genmodeladdon.sample";
+	protected static final String SAMPLE_PROJECT = "com.opcoach.genmodeladdon.sample";
 
 	protected static Map<String,GenModel> gmMap = new HashMap<String,GenModel>();
 	protected static Map<String,GenerateDevStructure> genMap = new HashMap<String,GenerateDevStructure>();
@@ -103,7 +103,6 @@ public class GenModelAddonTestCase
 
 		// Install the templates
 		String gmt = gen.setGenModelTemplates(gm, true);
-		System.out.println("Result of setGenModelTemplate " + gmt);
 
 		// Generate the dev structure...
 		gen.generateDevStructure(true);

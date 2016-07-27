@@ -6,7 +6,7 @@
       <package
             genModel="model/project.genmodel"
             uri="http://com.opcoach.project/1.0"
-            class="project.MProjectPackage">
+            class="project.MProjectPackage_MUSTBEREMOVED">
       </package>
    </extension>
    <extension
@@ -14,21 +14,21 @@
       <package
             genModel="model/project.genmodel"
             uri="http://www.opcoach.com/project/documentation/1.0"
-            class="project.documentation.MDocumentationPackage">
+            class="project.documentation.MDocumentationPackage_MUSTBEREMOVED">
       </package>
    </extension>
    <extension
          point="org.eclipse.emf.ecore.factory_override">
       <factory
             uri="http://com.opcoach.project/1.0"
-            class="project.impl.ProjectFactoryImpl">
+            class="project.impl.ProjectFactoryImpl_MUSTBEREMOVED">
       </factory>
    </extension>
    <extension
          point="org.eclipse.emf.ecore.factory_override">
       <factory
             uri="http://www.opcoach.com/project/documentation/1.0"
-            class="project.documentation.impl.DocumentationFactoryImpl">
+            class="project.documentation.impl.DocumentationFactoryImpl_MUSTBEREMOVED">
       </factory>
    </extension>
    <extension

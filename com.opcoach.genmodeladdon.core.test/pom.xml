@@ -16,12 +16,49 @@
 	<version>1.6.2-SNAPSHOT</version>
 	<packaging>eclipse-test-plugin</packaging>
 
-
 	<properties>
 		<tychoVersion>${tycho-version}</tychoVersion>
+		 <!-- Some additional surefire properties could be defined here too... 
+        		see : https://eclipse.org/tycho/sitedocs/tycho-surefire/tycho-surefire-plugin/test-mojo.html
+     		-->
 	</properties>
 
 
+  <!-- To launch tests that use the PluginModelManager (see : TestExtensionGeneration)
+     we must have the 'org.eclipse.osgi.compatibility.state' fragment in the test launch. 
+     If we don't add it, we get this error (with --debug option) : 
+        
+        !MESSAGE The Plug-in Development Environment requires the PlatformAdmin service to operate. 
+        Please install the compatibility fragment 'org.eclipse.osgi.compatibility.state'.
+        
+     This is explained in  bug #488036 and #418728.
+     So, this part of this build is necessary to add the dependency to the fragment compatibility.state
+     It is also explained here : http://dev.eclipse.org/mhonarc/lists/tycho-user/msg03277.html
+  -->
+ <build>
+    <plugins>      
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>target-platform-configuration</artifactId>
+        <version>${tycho-version}</version>
+        <configuration>
+          <dependency-resolution>
+            <extraRequirements>
+              <requirement>
+                <type>eclipse-plugin</type>
+                <id>org.eclipse.osgi.compatibility.state</id>
+                <versionRange>0.0.0</versionRange>
+              </requirement>
+            </extraRequirements>
+          </dependency-resolution>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+
+ 
+    <!-- Distinction des profiles entre mac et autres -->
 	<profiles>
 		<profile>
 			<!-- Ignore optional deps to jdt.launching.macosx -->

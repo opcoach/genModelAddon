@@ -102,8 +102,7 @@ public class EMFPatternExtractor implements Runnable {
     return null;
   }
   
-  public String createFolderIfNotExists(final IFolder f) {
-    String _xifexpression = null;
+  public void createFolderIfNotExists(final IFolder f) {
     boolean _exists = f.exists();
     boolean _not = (!_exists);
     if (_not) {
@@ -120,9 +119,6 @@ public class EMFPatternExtractor implements Runnable {
           throw Exceptions.sneakyThrow(_t);
         }
       }
-    } else {
-      _xifexpression = InputOutput.<String>println(("Checked this folder (it exists) : " + f));
     }
-    return _xifexpression;
   }
 }

@@ -101,7 +101,6 @@ class GenerateCommon {
 		/** Find the model directory in its project */
 	def static getModelPathFromStringURI(String projectName, String uri) {
 		
-		println("Model uri is : " + uri)
 		val pathPos = uri.lastIndexOf(projectName) + projectName.length + 1
 		val lastSlashPos = uri.lastIndexOf("/");
 		
