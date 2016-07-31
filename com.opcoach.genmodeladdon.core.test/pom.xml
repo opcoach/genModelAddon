@@ -26,7 +26,7 @@
 
   <!-- To launch tests that use the PluginModelManager (see : TestExtensionGeneration)
      we must have the 'org.eclipse.osgi.compatibility.state' fragment in the test launch. 
-     If we don't add it, we get this error (with --debug option) : 
+     If we don't add it, we get this error (with a maven launch with debug option) : 
         
         !MESSAGE The Plug-in Development Environment requires the PlatformAdmin service to operate. 
         Please install the compatibility fragment 'org.eclipse.osgi.compatibility.state'.
