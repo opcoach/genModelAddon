@@ -50,23 +50,6 @@ public class TestExtensionGeneration extends GenModelAddonTestCase
 		IPluginModelBase base = pm.findModel(project);
 		PDEExtensionRegistry pdeReg = PDECore.getDefault().getExtensionsRegistry();
 
-		/* IFile pluginXml = PDEProject.getPluginXml(project);
-		IFile manifest = PDEProject.getManifest(project);
-		WorkspaceBundlePluginModel base1 = new WorkspaceBundlePluginModel(manifest, pluginXml);
-		base1.load();
-		
-		IPluginModelBase base = null;
-		for (IPluginModelBase m : PluginRegistry.getWorkspaceModels())
-		{
-			IPluginBase pb = m.getPluginBase();
-			String name = pb.getName();
-			String id = pb.getId();
-			BundleDescription bd = m.getBundleDescription();
-			String symbolicName = (bd == null) ? null : bd.getSymbolicName();
-			if (name.equals(SAMPLE_PROJECT))
-				base = m;
-		}  */
-
 		for (IPluginExtension e : base.getExtensions().getExtensions())
 		{
 			if (e.getPoint().equals(FACTORY_OVERRIDE))
@@ -124,6 +107,16 @@ public class TestExtensionGeneration extends GenModelAddonTestCase
 	}
 
 	@Test
+	public void checkFactoryOverrideClassnameForDocumentationProject()
+	{
+		String uriToCheck = "http://www.opcoach.com/project/documentation/1.0";
+		String obtainedName = getClassNameFor(FACTORY_OVERRIDE, FACTORY_ELT, uriToCheck);
+		String expectedFactoryClassname = "com.opcoach.project.documentation.impl.MDocumentationFactoryImpl";
+		assertEquals("The expected classname for factory of documentation project must be " + expectedFactoryClassname,
+				expectedFactoryClassname, obtainedName);
+	}
+
+	@Test
 	public void checkOnlyOneFactoryOverrideForDocumentationProject()
 	{
 		String uriToCheck = "http://www.opcoach.com/project/documentation/1.0";
@@ -138,6 +131,18 @@ public class TestExtensionGeneration extends GenModelAddonTestCase
 		int nbExt = countEltWithUriAttribute(FACTORY_OVERRIDE, FACTORY_ELT, uriToCheck);
 		assertEquals("There must be only one factory override extension for " + uriToCheck, 1, nbExt);
 	}
+	
+	
+	@Test
+	public void checkFactoryOverrideClassnameForFannoiseProject()
+	{
+		String uriToCheck = "http://www.airbus.com.generic/fannoise";
+		String obtainedName = getClassNameFor(FACTORY_OVERRIDE, FACTORY_ELT, uriToCheck);
+		String expectedFactoryClassname = "fannoise.impl.MFanNoiseFactoryImpl";
+		assertEquals("The expected classname for factory of fannoise project must be " + expectedFactoryClassname,
+				expectedFactoryClassname, obtainedName);
+	}
+
 
 	@Test
 	public void checkApplicationExtensionStillThere()
