@@ -18,4 +18,5 @@ bin/
 hs_err_pid*
 
 # generated source code
-**/xtend-gen/*
+**/xtend-gen/**/.*.java._trace
+**/xtend-gen/**/.*.xtendbin
