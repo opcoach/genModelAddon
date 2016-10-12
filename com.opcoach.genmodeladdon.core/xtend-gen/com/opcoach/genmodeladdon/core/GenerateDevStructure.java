@@ -191,11 +191,15 @@ public class GenerateDevStructure {
     this.generateOverriddenFactoryInterface(gp, interfaceAbsolutePath);
     this.generateOverriddenFactoryClass(gp, srcAbsolutePath);
     this.generateOverriddenPackageInterface(gp, interfaceAbsolutePath);
-    final String factoryClassName = gp.getQualifiedFactoryClassName();
+    String _computePackageNameForClasses_1 = this.computePackageNameForClasses(gp);
+    String _plus_2 = (_computePackageNameForClasses_1 + ".");
+    String _computeFactoryClassName = this.computeFactoryClassName(gp);
+    final String factoryClassName = (_plus_2 + _computeFactoryClassName);
     final String packageClassName = gp.getQualifiedPackageInterfaceName();
     EPackage _ecorePackage = gp.getEcorePackage();
     String _nsURI = _ecorePackage.getNsURI();
     this.factories.put(_nsURI, factoryClassName);
+    InputOutput.<String>println(("Added this factory in list : " + factoryClassName));
     EPackage _ecorePackage_1 = gp.getEcorePackage();
     String _nsURI_1 = _ecorePackage_1.getNsURI();
     this.packages.put(_nsURI_1, packageClassName);

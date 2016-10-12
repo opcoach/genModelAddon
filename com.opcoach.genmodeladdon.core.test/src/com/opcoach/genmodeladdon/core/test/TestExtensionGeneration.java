@@ -101,7 +101,7 @@ public class TestExtensionGeneration extends GenModelAddonTestCase
 	{
 		String uriToCheck = "http://com.opcoach.project/1.0";
 		String obtainedName = getClassNameFor(FACTORY_OVERRIDE, FACTORY_ELT, uriToCheck);
-		String expectedFactoryClassname = "com.opcoach.project.impl.MProjectFactoryImpl";
+		String expectedFactoryClassname = "com.opcoach.project.impl.ProjectFactoryImpl";
 		assertEquals("The expected classname for factory of project must be " + expectedFactoryClassname,
 				expectedFactoryClassname, obtainedName);
 	}
@@ -111,7 +111,7 @@ public class TestExtensionGeneration extends GenModelAddonTestCase
 	{
 		String uriToCheck = "http://www.opcoach.com/project/documentation/1.0";
 		String obtainedName = getClassNameFor(FACTORY_OVERRIDE, FACTORY_ELT, uriToCheck);
-		String expectedFactoryClassname = "com.opcoach.project.documentation.impl.MDocumentationFactoryImpl";
+		String expectedFactoryClassname = "com.opcoach.project.documentation.impl.DocumentationFactoryImpl";
 		assertEquals("The expected classname for factory of documentation project must be " + expectedFactoryClassname,
 				expectedFactoryClassname, obtainedName);
 	}
@@ -138,7 +138,7 @@ public class TestExtensionGeneration extends GenModelAddonTestCase
 	{
 		String uriToCheck = "http://www.airbus.com.generic/fannoise";
 		String obtainedName = getClassNameFor(FACTORY_OVERRIDE, FACTORY_ELT, uriToCheck);
-		String expectedFactoryClassname = "fannoise.impl.MFanNoiseFactoryImpl";
+		String expectedFactoryClassname = "fannoise.impl.FanNoiseFactoryImpl";
 		assertEquals("The expected classname for factory of fannoise project must be " + expectedFactoryClassname,
 				expectedFactoryClassname, obtainedName);
 	}

@@ -137,12 +137,11 @@ class GenerateDevStructure {
 		gp.generateOverriddenPackageInterface(interfaceAbsolutePath)
 
 		// remember of factory and package classes for this uri. 
-		// val factoryClassName = gp.computePackageNameForClasses + "." + gp.computeFactoryClassName
-		val factoryClassName = gp.qualifiedFactoryClassName
-		//val packageClassName = gp.computePackageNameForClasses + "." + gp.packageInterfaceName
+	    val factoryClassName = gp.computePackageNameForClasses + "." + gp.computeFactoryClassName
 		val packageClassName = gp.qualifiedPackageInterfaceName
 		
 		factories.put(gp.getEcorePackage.nsURI, factoryClassName)
+		println("Added this factory in list : " + factoryClassName)
 		packages.put(gp.getEcorePackage.nsURI, packageClassName)
 
 		// Iterate on subpackages 
