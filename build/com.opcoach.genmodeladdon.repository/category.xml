@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/com.opcoach.genmodeladdon.feature_1.6.2.qualifier.jar" id="com.opcoach.genmodeladdon.feature" version="1.6.2.qualifier">
+   <feature url="features/com.opcoach.genmodeladdon.feature_1.6.3.qualifier.jar" id="com.opcoach.genmodeladdon.feature" version="1.6.3.qualifier">
       <category name="com.opcoach.genModelAddon"/>
    </feature>
    <category-def name="com.opcoach.genModelAddon" label="Addon for genmodel">
