@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.emf.ecore.factory_override">
+      <factory
+            uri="http://www.opcoach.com/project/documentation/1.0"
+            class="com.opcoach.project.documentation.impl.DocumentationFactoryImpl">
+      </factory>
+   </extension>
+   <extension
+         point="org.eclipse.emf.ecore.factory_override">
+      <factory
+            uri="http://com.opcoach.project/1.0"
+            class="com.opcoach.project.impl.ProjectFactoryImpl">
+      </factory>
+   </extension>
+   <extension
+         point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://www.opcoach.com/project/documentation/1.0"
+            class="com.opcoach.project.documentation.MDocumentationPackage">
+      </package>
+   </extension>
+   <extension
+         point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://com.opcoach.project/1.0"
+            class="com.opcoach.project.MProjectPackage">
+      </package>
+   </extension>
+
+</plugin>
