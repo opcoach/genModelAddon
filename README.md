@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/opcoach/genModelAddon.svg?branch=master)](https://travis-ci.org/opcoach/genModelAddon)
+
 genModelAddon
 =============
 
