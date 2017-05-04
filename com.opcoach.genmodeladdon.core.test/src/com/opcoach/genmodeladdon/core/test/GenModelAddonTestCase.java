@@ -46,16 +46,12 @@ public class GenModelAddonTestCase
 
 	protected static final String SAMPLE_PROJECT = "com.opcoach.genmodeladdon.sample";
 
-	protected static Map<String,GenModel> gmMap = new HashMap<String,GenModel>();
-	protected static Map<String,GenerateDevStructure> genMap = new HashMap<String,GenerateDevStructure>();
+	protected static Map<String, GenModel> gmMap = new HashMap<String, GenModel>();
+	protected static Map<String, GenerateDevStructure> genMap = new HashMap<String, GenerateDevStructure>();
 
-	// protected static GenerateDevStructure gen;
-	
 	protected static IWorkspaceRoot root;
 
 	protected static IProject sampleProject;
-	
-	protected static boolean initDone = false;  // Use to create the project only once
 
 	static
 	{
@@ -69,24 +65,22 @@ public class GenModelAddonTestCase
 		} catch (BundleException e)
 		{
 		}
+
+		// Must crate the project only once in this static block and not in a
+		// BeforeClass !
+		try
+		{
+			// Copy the sample project in the runtime workspace
+			root = initWorkspace();
+
+			initGenModel(PROJECT_GENMODEL, PROJECT_ANT_FILE);
+			initGenModel(FANNOISE_GENMODEL, FANOISE_ANT_FILE);
+		} catch (IOException ex)
+		{
+			ex.printStackTrace();
+		}
 	}
 
-	@BeforeClass
-	public static void init() throws IOException
-	{
-		if (initDone)
-			return; 
-		
-		
-		// Copy the sample project in the runtime workspace
-	    root = initWorkspace();
-	    
-	    initGenModel(PROJECT_GENMODEL, PROJECT_ANT_FILE);
-	    initGenModel(FANNOISE_GENMODEL, FANOISE_ANT_FILE);
-
-	    initDone = true;
-	}
-	
 	public static void initGenModel(String genModelName, String antFilename) throws IOException
 	{
 
@@ -97,12 +91,12 @@ public class GenModelAddonTestCase
 		// Create the generator.
 		GenerateDevStructure gen = new GenerateDevStructure(gm, "{0}Impl", "{0}", "src");
 		genMap.put(genModelName, gen);
-		
+
 		// Remember of sample project
 		sampleProject = root.getProject(SAMPLE_PROJECT);
 
 		// Install the templates
-		String gmt = gen.setGenModelTemplates(gm, true);
+		gen.setGenModelTemplates(gm, true);
 
 		// Generate the dev structure...
 		gen.generateDevStructure(true);
@@ -114,18 +108,16 @@ public class GenModelAddonTestCase
 		gen.generateGenModelCode(antFile, new NullProgressMonitor());
 
 	}
-	
-	
+
 	protected GenModel getGenModel(String name)
 	{
 		return gmMap.get(name);
 	}
-	
+
 	protected GenerateDevStructure getGenDevStructure(String name)
 	{
 		return genMap.get(name);
 	}
-	
 
 	/**
 	 * Read the sample gen model located in com.opcoach.genmodeladdon.sample
@@ -142,7 +134,7 @@ public class GenModelAddonTestCase
 		// Get the resource
 		Resource resource = rset.getResource(URI.createURI("file:/" + path), true);
 		return (GenModel) resource.getContents().get(0);
-		
+
 	}
 
 	/** This method initialize the test workspace with a sample project */
@@ -156,12 +148,12 @@ public class GenModelAddonTestCase
 		// Create a sample empty project in workspace root
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		IProject proj = root.getProject(SAMPLE_PROJECT);
-		
+
 		NullProgressMonitor npm = new NullProgressMonitor();
 		try
 		{
 			if (!proj.exists())
-			proj.create(npm);
+				proj.create(npm);
 
 		} catch (CoreException e1)
 		{
@@ -169,7 +161,6 @@ public class GenModelAddonTestCase
 		}
 
 		// Then get the ant file to run to copy the template project
-
 		AntRunner runner = new AntRunner();
 		Map<String, String> properties = new HashMap<String, String>();
 		properties.put("wsRoot", root.getLocation().toOSString() + File.separator + SAMPLE_PROJECT);
@@ -243,7 +234,7 @@ public class GenModelAddonTestCase
 			fail("The file '" + path + "' should contain the string '" + content + "' but it was not found.");
 
 	}
-	
+
 	/**
 	 * This method checks a file exists
 	 * 
@@ -259,17 +250,17 @@ public class GenModelAddonTestCase
 		{
 			// Gets native File using EFS
 			File javaFile = getFileFromIFile(sampleProject.getFile(new Path(path)));
-			if ( javaFile.exists())
+			if (javaFile.exists())
 				return;
 
 		} catch (CoreException e)
 		{
 			e.printStackTrace();
-		} 
-		   fail("The file '" + path + "' does not exists but it should exists.");
+		}
+		fail("The file '" + path + "' does not exists but it should exists.");
 
 	}
-	
+
 	/**
 	 * This method checks a file does not exists
 	 * 
@@ -285,17 +276,16 @@ public class GenModelAddonTestCase
 		{
 			// Gets native File using EFS
 			File javaFile = getFileFromIFile(sampleProject.getFile(new Path(path)));
-			if ( !javaFile.exists())
+			if (!javaFile.exists())
 				return;
 
 		} catch (CoreException e)
 		{
 			e.printStackTrace();
-		} 
-		   fail("The file '" + path + "' exists but it should not exists !");
+		}
+		fail("The file '" + path + "' exists but it should not exists !");
 
 	}
-
 
 	private File getFileFromIFile(IFile file) throws CoreException
 	{
@@ -352,6 +342,5 @@ public class GenModelAddonTestCase
 
 		return null;
 	}
-
 
 }
