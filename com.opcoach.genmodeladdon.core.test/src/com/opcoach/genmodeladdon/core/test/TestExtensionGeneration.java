@@ -1,6 +1,7 @@
 package com.opcoach.genmodeladdon.core.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,8 +9,10 @@ import java.util.Collection;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.pde.core.plugin.IPluginElement;
 import org.eclipse.pde.core.plugin.IPluginExtension;
+import org.eclipse.pde.core.plugin.IPluginExtensionPoint;
 import org.eclipse.pde.core.plugin.IPluginModelBase;
 import org.eclipse.pde.core.plugin.IPluginObject;
 import org.eclipse.pde.core.plugin.PluginRegistry;
@@ -44,7 +47,7 @@ public class TestExtensionGeneration extends GenModelAddonTestCase
 	{
 		// Initialize extensions of sample project
 		extensionsToBeChecked = new ArrayList<IPluginExtension>();
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(SAMPLE_PROJECT);
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(DEST_SAMPLE_PROJECT);
 		
 		PluginModelManager pm = PluginModelManager.getInstance();
 		IPluginModelBase base = pm.findModel(project);
@@ -161,6 +164,41 @@ public class TestExtensionGeneration extends GenModelAddonTestCase
 		}
 
 		assertEquals("The application extension must be still there and only once", 1, appliExt.size());
+
+	}
+	
+	@Test
+	public void checkSampleExtensionPointStillPresent()
+	{
+		PDEExtensionRegistry pdeReg = PDECore.getDefault().getExtensionsRegistry();		
+		
+		IPluginModelBase base = PluginRegistry.getWorkspaceModels()[0];
+		Collection<IPluginExtensionPoint> appliExt = new ArrayList<>();
+
+	/*	IPluginModelBase ept = pdeReg.findExtensionPointPlugin("com.opcoach.genmodeladdon.sample.sampleExtensionPoint");
+		pdeReg.hasExtensionPoint("com.opcoach.genmodeladdon.sample.sampleExtensionPoint");
+		IExtensionPoint ept = pdeReg.hasExtensionPoint(pointId)
+	*/	
+		
+		
+		//ICI ept est null alors que testit est true !! 
+		
+		IPluginExtensionPoint ept = pdeReg.findExtensionPoint("com.opcoach.genmodeladdon.destsample.sampleExtensionPoint");
+		IPluginExtensionPoint ept2 = pdeReg.findExtensionPoint("sampleExtensionPoint");
+		boolean testit = pdeReg.hasExtensionPoint("com.opcoach.genmodeladdon.destsample.sampleExtensionPoint");
+		boolean testit2 = pdeReg.hasExtensionPoint("com.opcoach.genmodeladdon.sample.sampleExtensionPoint");
+		boolean testit3 = pdeReg.hasExtensionPoint("sampleExtensionPoint");
+
+		IPluginExtensionPoint pt = pdeReg.findExtensionPoint("com.opcoach.genmodeladdon.destsample.sampleExtensionPoint");
+		for (IPluginExtensionPoint ep : pdeReg.findExtensionPointsForPlugin(base))
+		{
+			System.out.println("ep id = " + ep.getId());
+			if (ep.getId().equals("sampleExtensionPoint"))
+				appliExt.add(ep);
+
+		}
+
+		assertNotNull("The sample extension point must be still there", pt);
 
 	}
 

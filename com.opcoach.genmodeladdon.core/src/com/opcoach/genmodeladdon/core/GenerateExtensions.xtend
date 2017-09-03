@@ -10,6 +10,7 @@ import org.eclipse.pde.core.plugin.PluginRegistry
 import org.eclipse.pde.internal.core.PDECore
 import org.eclipse.pde.internal.core.bundle.WorkspaceBundlePluginModel
 import org.eclipse.pde.internal.core.project.PDEProject
+import org.eclipse.pde.core.plugin.IPluginExtensionPoint
 
 // From class PointSelectionPage
 class GenerateExtensions {
@@ -32,22 +33,32 @@ class GenerateExtensions {
 
 		project = p
 		// This code comes from NewProjectCreationOperation...
-		val pluginXml = PDEProject.getPluginXml(project);
-		val manifest = PDEProject.getManifest(project);
-		fModel = new WorkspaceBundlePluginModel(manifest, pluginXml);
+		val pluginXml = PDEProject.getPluginXml(project)
+		val manifest = PDEProject.getManifest(project)
+		fModel = new WorkspaceBundlePluginModel(manifest, pluginXml)
 
 		// Must copy the existing extensions in the new created WorkspaceBundelPluginModel
 		// But these extensions can be found using the workspace models 
 		var IPluginModelBase projetBase
 		for (m : PluginRegistry.getWorkspaceModels()) {
-			if (m.bundleDescription != null && project.name.equals(m.bundleDescription.symbolicName))
+			if (m.bundleDescription !== null && project.name.equals(m.bundleDescription.symbolicName))
 				projetBase = m
 		}
+		
+	/////////	ICI LES POINTS D'EXT du projet cloné ne sont pas trouvés.. Pbme de description dans fmodel base ?  Cf RegistryObject.getExtensionPointsFrom !!
 
-		for (IPluginExtension e : PDECore.getDefault().getExtensionsRegistry().findExtensionsForPlugin(projetBase)) {
-			fModel.getPluginBase().add(e.copyExtension)
-		}
 
+		for (IPluginExtensionPoint ept : PDECore.^default.extensionsRegistry.findExtensionPointsForPlugin(projetBase)) 
+			fModel.pluginBase.add(ept.copyExtensionPoint)
+		
+		//fModel.pluginBase.add(ept2.copyExtensionPoint)
+			//fModel.getPluginBase().add(ept.copyExtensionPoint)
+
+		for (IPluginExtension e : PDECore.^default.extensionsRegistry.findExtensionsForPlugin(projetBase)) {
+			fModel.pluginBase.add(e.copyExtension)
+		} 
+				
+		println("Copy of fModel finished")
 	}
 
 	// Used only for debug
@@ -78,6 +89,18 @@ class GenerateExtensions {
 		}
 
 		return clonedExt
+
+	}
+
+	// Copy an existing extension  point
+	private def copyExtensionPoint(IPluginExtensionPoint extPt) {
+		val clonedExtPt = fModel.factory.createExtensionPoint()
+		clonedExtPt.id = extPt.id
+		clonedExtPt.name = extPt.name
+		clonedExtPt.schema = extPt.schema
+		//clonedExtPt.inTheModel = extPt.inTheModel
+
+		return clonedExtPt
 
 	}
 
@@ -118,7 +141,7 @@ class GenerateExtensions {
 	}
 
 	// Generate the overridden extension if it does not exist yet 
-	def generateOrUpdateExtension(String extName, String modelURI, String nodeName, String classname) {
+	def private generateOrUpdateExtension(String extName, String modelURI, String nodeName, String classname) {
 
 		// search for the extName extension if it exists
 		// and for its nodeName with the same modelURI
@@ -135,7 +158,7 @@ class GenerateExtensions {
 		} while (factoryExt != null)
 
 		// Can create a new updated Extension 
-		val updatedExtension = fModel.getFactory().createExtension()
+		val updatedExtension = fModel.factory.createExtension()
 		updatedExtension.point = extName
 
 		val factoryElement = fModel.factory.createElement(updatedExtension)

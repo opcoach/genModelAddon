@@ -88,9 +88,7 @@ public class GenerateAntFileForCodeGeneration {
       f.createNewFile();
     }
     final FileWriter fw = new FileWriter(f);
-    CharSequence _generateAntFileContent = this.generateAntFileContent(modelDir, modelName);
-    String _string = _generateAntFileContent.toString();
-    fw.write(_string);
+    fw.write(this.generateAntFileContent(modelDir, modelName).toString());
     fw.flush();
     fw.close();
     proj.refreshLocal(IResource.DEPTH_ONE, null);

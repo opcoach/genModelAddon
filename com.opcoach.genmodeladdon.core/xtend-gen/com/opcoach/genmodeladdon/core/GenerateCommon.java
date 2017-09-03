@@ -2,12 +2,9 @@ package com.opcoach.genmodeladdon.core;
 
 import java.util.List;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
 
 /**
  * A class to provide some generation common methods
@@ -18,17 +15,11 @@ public class GenerateCommon {
    * Extract the project name from the genmodel resource
    */
   public static String getProjectName(final GenModel gm) {
-    Resource _eResource = gm.eResource();
-    URI _uRI = _eResource.getURI();
-    return GenerateCommon.getProjectNameFromURI(_uRI);
+    return GenerateCommon.getProjectNameFromURI(gm.eResource().getURI());
   }
   
   public static String getProjectNameFromURI(final URI genModelUri) {
-    IWorkspace _workspace = ResourcesPlugin.getWorkspace();
-    IWorkspaceRoot _root = _workspace.getRoot();
-    java.net.URI _locationURI = _root.getLocationURI();
-    String _string = _locationURI.toString();
-    final URI rootUri = URI.createURI(_string);
+    final URI rootUri = URI.createURI(ResourcesPlugin.getWorkspace().getRoot().getLocationURI().toString());
     final String lastSegOfRootUri = rootUri.lastSegment();
     final String genModelUriStr = genModelUri.toString();
     boolean _startsWith = genModelUriStr.startsWith("platform:/resource/");
@@ -49,9 +40,7 @@ public class GenerateCommon {
     IProject _xblockexpression = null;
     {
       final String projectName = GenerateCommon.getProjectName(gm);
-      IWorkspace _workspace = ResourcesPlugin.getWorkspace();
-      IWorkspaceRoot _root = _workspace.getRoot();
-      _xblockexpression = _root.getProject(projectName);
+      _xblockexpression = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
     }
     return _xblockexpression;
   }
@@ -60,15 +49,12 @@ public class GenerateCommon {
    * Find the model name from the genmodel
    */
   public static String getModelName(final GenModel gm) {
-    Resource _eResource = gm.eResource();
-    final URI uri = _eResource.getURI();
+    final URI uri = gm.eResource().getURI();
     final String s = uri.toString();
     int pos = s.lastIndexOf("/");
     String modelName = s.substring((pos + 1));
-    int _indexOf = modelName.indexOf(".genmodel");
-    pos = _indexOf;
-    String _substring = modelName.substring(0, pos);
-    modelName = _substring;
+    pos = modelName.indexOf(".genmodel");
+    modelName = modelName.substring(0, pos);
     return modelName;
   }
   
@@ -76,12 +62,9 @@ public class GenerateCommon {
    * Find the model directory in its project
    */
   public static String getModelPath(final GenModel gm) {
-    Resource _eResource = gm.eResource();
-    final URI uri = _eResource.getURI();
-    IProject _project = GenerateCommon.getProject(gm);
-    final String projectName = _project.getName();
-    String _string = uri.toString();
-    return GenerateCommon.getModelPathFromStringURI(projectName, _string);
+    final URI uri = gm.eResource().getURI();
+    final String projectName = GenerateCommon.getProject(gm).getName();
+    return GenerateCommon.getModelPathFromStringURI(projectName, uri.toString());
   }
   
   /**
@@ -95,8 +78,7 @@ public class GenerateCommon {
     final int lastSlashPos = uri.lastIndexOf("/");
     String modelDir = ".";
     if ((pathPos < lastSlashPos)) {
-      String _substring = uri.substring(pathPos, lastSlashPos);
-      modelDir = _substring;
+      modelDir = uri.substring(pathPos, lastSlashPos);
     }
     return modelDir;
   }

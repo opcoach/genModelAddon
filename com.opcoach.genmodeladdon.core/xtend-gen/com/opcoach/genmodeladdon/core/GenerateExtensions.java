@@ -5,16 +5,14 @@ import java.util.Map;
 import java.util.Set;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.pde.core.plugin.IExtensionsModelFactory;
 import org.eclipse.pde.core.plugin.IPluginAttribute;
-import org.eclipse.pde.core.plugin.IPluginBase;
 import org.eclipse.pde.core.plugin.IPluginElement;
 import org.eclipse.pde.core.plugin.IPluginExtension;
+import org.eclipse.pde.core.plugin.IPluginExtensionPoint;
 import org.eclipse.pde.core.plugin.IPluginModelBase;
 import org.eclipse.pde.core.plugin.IPluginObject;
 import org.eclipse.pde.core.plugin.PluginRegistry;
 import org.eclipse.pde.internal.core.PDECore;
-import org.eclipse.pde.internal.core.PDEExtensionRegistry;
 import org.eclipse.pde.internal.core.bundle.WorkspaceBundlePluginModel;
 import org.eclipse.pde.internal.core.project.PDEProject;
 import org.eclipse.xtext.xbase.lib.Exceptions;
@@ -48,18 +46,19 @@ public class GenerateExtensions {
       IPluginModelBase projetBase = null;
       IPluginModelBase[] _workspaceModels = PluginRegistry.getWorkspaceModels();
       for (final IPluginModelBase m : _workspaceModels) {
-        if (((!Objects.equal(m.getBundleDescription(), null)) && this.project.getName().equals(m.getBundleDescription().getSymbolicName()))) {
+        if (((m.getBundleDescription() != null) && this.project.getName().equals(m.getBundleDescription().getSymbolicName()))) {
           projetBase = m;
         }
       }
-      PDECore _default = PDECore.getDefault();
-      PDEExtensionRegistry _extensionsRegistry = _default.getExtensionsRegistry();
-      IPluginExtension[] _findExtensionsForPlugin = _extensionsRegistry.findExtensionsForPlugin(projetBase);
-      for (final IPluginExtension e : _findExtensionsForPlugin) {
-        IPluginBase _pluginBase = this.fModel.getPluginBase();
-        IPluginExtension _copyExtension = this.copyExtension(e);
-        _pluginBase.add(_copyExtension);
+      IPluginExtensionPoint[] _findExtensionPointsForPlugin = PDECore.getDefault().getExtensionsRegistry().findExtensionPointsForPlugin(projetBase);
+      for (final IPluginExtensionPoint ept : _findExtensionPointsForPlugin) {
+        this.fModel.getPluginBase().add(this.copyExtensionPoint(ept));
       }
+      IPluginExtension[] _findExtensionsForPlugin = PDECore.getDefault().getExtensionsRegistry().findExtensionsForPlugin(projetBase);
+      for (final IPluginExtension e : _findExtensionsForPlugin) {
+        this.fModel.getPluginBase().add(this.copyExtension(e));
+      }
+      InputOutput.<String>println("Copy of fModel finished");
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
@@ -99,10 +98,8 @@ public class GenerateExtensions {
   
   private IPluginExtension copyExtension(final IPluginExtension ext) {
     try {
-      IExtensionsModelFactory _factory = this.fModel.getFactory();
-      final IPluginExtension clonedExt = _factory.createExtension();
-      String _point = ext.getPoint();
-      clonedExt.setPoint(_point);
+      final IPluginExtension clonedExt = this.fModel.getFactory().createExtension();
+      clonedExt.setPoint(ext.getPoint());
       IPluginObject[] _children = ext.getChildren();
       for (final IPluginObject elt : _children) {
         if ((elt instanceof IPluginElement)) {
@@ -117,24 +114,31 @@ public class GenerateExtensions {
     }
   }
   
+  private IPluginExtensionPoint copyExtensionPoint(final IPluginExtensionPoint extPt) {
+    try {
+      final IPluginExtensionPoint clonedExtPt = this.fModel.getFactory().createExtensionPoint();
+      clonedExtPt.setId(extPt.getId());
+      clonedExtPt.setName(extPt.getName());
+      clonedExtPt.setSchema(extPt.getSchema());
+      return clonedExtPt;
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
   private IPluginElement copyExtensionElement(final IPluginElement elt, final IPluginObject parent) {
     try {
-      IExtensionsModelFactory _factory = this.fModel.getFactory();
-      final IPluginElement clonedElt = _factory.createElement(parent);
-      String _name = elt.getName();
-      clonedElt.setName(_name);
+      final IPluginElement clonedElt = this.fModel.getFactory().createElement(parent);
+      clonedElt.setName(elt.getName());
       IPluginAttribute[] _attributes = elt.getAttributes();
       for (final IPluginAttribute a : _attributes) {
-        String _name_1 = a.getName();
-        String _value = a.getValue();
-        clonedElt.setAttribute(_name_1, _value);
+        clonedElt.setAttribute(a.getName(), a.getValue());
       }
       IPluginObject[] _children = elt.getChildren();
       for (final IPluginObject e : _children) {
         if ((e instanceof IPluginElement)) {
           final IPluginElement ipe = ((IPluginElement) e);
-          IPluginElement _copyExtensionElement = this.copyExtensionElement(ipe, clonedElt);
-          clonedElt.add(_copyExtensionElement);
+          clonedElt.add(this.copyExtensionElement(ipe, clonedElt));
         }
       }
       return clonedElt;
@@ -152,44 +156,35 @@ public class GenerateExtensions {
   public void generateOrUpdateExtensions(final Map<String, String> factories, final Map<String, String> packages) {
     Set<Map.Entry<String, String>> _entrySet = factories.entrySet();
     for (final Map.Entry<String, String> entry : _entrySet) {
-      String _key = entry.getKey();
-      String _value = entry.getValue();
-      this.generateOrUpdateExtension(GenerateExtensions.FACTORY_OVERRIDE, _key, GenerateExtensions.FACTORY_ELT, _value);
+      this.generateOrUpdateExtension(GenerateExtensions.FACTORY_OVERRIDE, entry.getKey(), GenerateExtensions.FACTORY_ELT, entry.getValue());
     }
     Set<Map.Entry<String, String>> _entrySet_1 = packages.entrySet();
     for (final Map.Entry<String, String> entry_1 : _entrySet_1) {
-      String _key_1 = entry_1.getKey();
-      String _value_1 = entry_1.getValue();
-      this.generateOrUpdateExtension(GenerateExtensions.EMF_GENERATED_PACKAGE, _key_1, GenerateExtensions.PACKAGE_ELT, _value_1);
+      this.generateOrUpdateExtension(GenerateExtensions.EMF_GENERATED_PACKAGE, entry_1.getKey(), GenerateExtensions.PACKAGE_ELT, entry_1.getValue());
     }
     this.fModel.save();
   }
   
-  public void generateOrUpdateExtension(final String extName, final String modelURI, final String nodeName, final String classname) {
+  private void generateOrUpdateExtension(final String extName, final String modelURI, final String nodeName, final String classname) {
     try {
       IPluginExtension factoryExt = null;
       do {
         {
-          IPluginExtension _findPluginElement = this.findPluginElement(extName, modelURI, nodeName);
-          factoryExt = _findPluginElement;
+          factoryExt = this.findPluginElement(extName, modelURI, nodeName);
           boolean _notEquals = (!Objects.equal(factoryExt, null));
           if (_notEquals) {
-            IPluginBase _pluginBase = this.fModel.getPluginBase();
-            _pluginBase.remove(factoryExt);
+            this.fModel.getPluginBase().remove(factoryExt);
           }
         }
       } while((!Objects.equal(factoryExt, null)));
-      IExtensionsModelFactory _factory = this.fModel.getFactory();
-      final IPluginExtension updatedExtension = _factory.createExtension();
+      final IPluginExtension updatedExtension = this.fModel.getFactory().createExtension();
       updatedExtension.setPoint(extName);
-      IExtensionsModelFactory _factory_1 = this.fModel.getFactory();
-      final IPluginElement factoryElement = _factory_1.createElement(updatedExtension);
+      final IPluginElement factoryElement = this.fModel.getFactory().createElement(updatedExtension);
       factoryElement.setName(nodeName);
       factoryElement.setAttribute(GenerateExtensions.URI_ATTR, modelURI);
       factoryElement.setAttribute(GenerateExtensions.CLASS_ATTR, classname);
       updatedExtension.add(factoryElement);
-      IPluginBase _pluginBase = this.fModel.getPluginBase();
-      _pluginBase.add(updatedExtension);
+      this.fModel.getPluginBase().add(updatedExtension);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
@@ -200,11 +195,9 @@ public class GenerateExtensions {
    * or 'package' for the emf_generatedPackage extension
    */
   private IPluginExtension findPluginElement(final String extPoint, final String modelURI, final String nodeName) {
-    IPluginBase _pluginBase = this.fModel.getPluginBase();
-    IPluginExtension[] _extensions = _pluginBase.getExtensions();
+    IPluginExtension[] _extensions = this.fModel.getPluginBase().getExtensions();
     for (final IPluginExtension e : _extensions) {
-      String _point = e.getPoint();
-      boolean _equals = _point.equals(extPoint);
+      boolean _equals = e.getPoint().equals(extPoint);
       if (_equals) {
         IPluginObject[] _children = e.getChildren();
         for (final IPluginObject elt : _children) {

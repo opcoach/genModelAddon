@@ -6,6 +6,8 @@
 	<property name="zipFile" value="XXXX" />
 	<property name="zipFileLocation" location="${zipFile}" />
 	<property name="destDir" location="${wsRoot}/" />
+	<property name="srcProjectName" value="com.opcoach.genmodeladdon.sample" />
+	<property name="destProjectName" value="com.opcoach.genmodeladdon.destsample" />
 
 
 	<!-- ================================= 
@@ -23,7 +25,12 @@
 		<echo message="--------------------------------------------------------------" />
 		<mkdir dir="${destDir}"/>
 		<unzip src="${zipFile}" dest="${wsRoot}" />
-
+		<replace file="${destDir}/.project" token="${srcProjectName}" value="${destProjectName}"/>
+		<replace file="${destDir}/META-INF/MANIFEST.MF" token="${srcProjectName}" value="${destProjectName}" />
+		<replace file="${destDir}/schema/sampleExtensionPoint.exsd" token="${srcProjectName}" value="${destProjectName}" />
+		<replace file="${destDir}/model/project.genmodel" token="${srcProjectName}" value="${destProjectName}"/>
+		<replace file="${destDir}/model_fannoise/ananax.genmodel" token="${srcProjectName}" value="${destProjectName}"/>
+		<replace file="${destDir}/model_fannoise/fannoise.genmodel" token="${srcProjectName}" value="${destProjectName}"/>
 	</target>
 
 

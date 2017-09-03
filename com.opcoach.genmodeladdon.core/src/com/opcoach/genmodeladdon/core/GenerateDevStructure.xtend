@@ -209,24 +209,24 @@ class GenerateDevStructure {
 		// Extract EMF templates to modify the way to inherit from ancestor
 		val classJavajet = project.getFile(expectedTemplateDir + "/model/Class.javajet")
 		if (!classJavajet.exists) {
-			val extractor = new EMFPatternExtractor(project, classPattern, interfacePattern);
-			extractor.run();
-			refreshWorkspace();
+			val extractor = new EMFPatternExtractor(project, classPattern, interfacePattern)
+			extractor.run
+			refreshWorkspace
 			changes.append("\nThe Class.javajet has been installed")
 		}
 
 		// Inform user of changes and save the file.
 		if ((changes.length() > 0) && forceSave) {
-			val Map<Object, Object> opt = new HashMap<Object, Object>();
-			opt.put(Resource.OPTION_SAVE_ONLY_IF_CHANGED, Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER);
-			opt.put(Resource.OPTION_LINE_DELIMITER, Resource.OPTION_LINE_DELIMITER_UNSPECIFIED);
+			val Map<Object, Object> opt = new HashMap
+			opt.put(Resource.OPTION_SAVE_ONLY_IF_CHANGED, Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER)
+			opt.put(Resource.OPTION_LINE_DELIMITER, Resource.OPTION_LINE_DELIMITER_UNSPECIFIED)
 			try {
-				gm.eResource().save(opt);
+				gm.eResource().save(opt)
 			} catch (IOException e) {
-				val bundle = FrameworkUtil.getBundle(this.getClass());
-				val logger = Platform.getLog(bundle);
+				val bundle = FrameworkUtil.getBundle(this.getClass())
+				val logger = Platform.getLog(bundle)
 				logger.log(new Status(IStatus.WARNING, bundle.getSymbolicName(),
-					"Unable to save the genModel in : " + gm.eResource(), e));
+					"Unable to save the genModel in : " + gm.eResource(), e))
 			}
 
 		}
@@ -284,6 +284,7 @@ class GenerateDevStructure {
 		try {
 			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
 		} catch (CoreException e) {
+			e.printStackTrace
 		}
 	}
 

@@ -66,17 +66,12 @@ public class EMFPatternExtractor implements Runnable {
       final InputStream sourceJetFile = this.extractClassTemplateIncurrentPlugin();
       final IFolder templateFolder = this.createSourceDirectoryStructure();
       final IFile file = templateFolder.getFile(EMFPatternExtractor.TARGET_CLASS_TEMPLATE_FILE);
-      String _encoding = ResourcesPlugin.getEncoding();
-      String content = IOUtils.toString(sourceJetFile, _encoding);
-      String _replaceFirst = content.replaceFirst(EMFPatternExtractor.DEV_CLASS_PATTERN, this.devClassPattern);
-      content = _replaceFirst;
-      String _replaceFirst_1 = content.replaceFirst(EMFPatternExtractor.DEV_INTERFACE_PATTERN, this.devInterfacePattern);
-      content = _replaceFirst_1;
-      IPath _location = file.getLocation();
-      File _file = _location.toFile();
+      String content = IOUtils.toString(sourceJetFile, ResourcesPlugin.getEncoding());
+      content = content.replaceFirst(EMFPatternExtractor.DEV_CLASS_PATTERN, this.devClassPattern);
+      content = content.replaceFirst(EMFPatternExtractor.DEV_INTERFACE_PATTERN, this.devInterfacePattern);
+      File _file = file.getLocation().toFile();
       FileOutputStream _fileOutputStream = new FileOutputStream(_file);
-      String _encoding_1 = ResourcesPlugin.getEncoding();
-      IOUtils.write(content, _fileOutputStream, _encoding_1);
+      IOUtils.write(content, _fileOutputStream, ResourcesPlugin.getEncoding());
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
@@ -88,8 +83,7 @@ public class EMFPatternExtractor implements Runnable {
       final IProject javaTargetProject = ((IProject) this.targetProject);
       final IFolder sourcePath = javaTargetProject.getFolder(EMFPatternExtractor.TARGET_SOURCE_PATH);
       this.createFolderIfNotExists(sourcePath);
-      IPath _fullPath = sourcePath.getFullPath();
-      tgtSourcePath = _fullPath;
+      tgtSourcePath = sourcePath.getFullPath();
       boolean _notEquals = (!Objects.equal(tgtSourcePath, null));
       if (_notEquals) {
         final Path p = new Path(((EMFPatternExtractor.TARGET_SOURCE_PATH + "/") + EMFPatternExtractor.TARGET_MODEL_PATH));

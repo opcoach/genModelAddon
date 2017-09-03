@@ -19,12 +19,10 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -36,7 +34,6 @@ import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.codegen.ecore.genmodel.GenPackage;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.ETypeParameter;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jdt.core.IClasspathEntry;
@@ -98,21 +95,15 @@ public class GenerateDevStructure {
     String _copyrightText = gm.getCopyrightText();
     boolean _notEquals = (!Objects.equal(_copyrightText, null));
     if (_notEquals) {
-      CharSequence _computeCopyrightComment = this.computeCopyrightComment();
-      String _string = _computeCopyrightComment.toString();
-      this.copyright = _string;
+      this.copyright = this.computeCopyrightComment().toString();
     }
     this.classPattern = cPattern;
     this.interfacePattern = iPattern;
     this.srcDevDirectory = srcDir;
-    IProject _project = GenerateCommon.getProject(gm);
-    this.project = _project;
-    String _name = this.project.getName();
-    this.projectName = _name;
-    String _modelName = GenerateCommon.getModelName(gm);
-    this.modelName = _modelName;
-    String _modelPath = GenerateCommon.getModelPath(gm);
-    this.modelDir = _modelPath;
+    this.project = GenerateCommon.getProject(gm);
+    this.projectName = this.project.getName();
+    this.modelName = GenerateCommon.getModelName(gm);
+    this.modelDir = GenerateCommon.getModelPath(gm);
     this.filesNotGenerated.clear();
   }
   
@@ -139,17 +130,13 @@ public class GenerateDevStructure {
   }
   
   public void generateDevStructure(final GenPackage gp) {
-    IWorkspace _workspace = ResourcesPlugin.getWorkspace();
-    final IWorkspaceRoot root = _workspace.getRoot();
-    IProject _project = root.getProject(this.projectName);
-    this.project = _project;
+    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+    this.project = root.getProject(this.projectName);
     this.setFolderAsSourceFolder(this.project, this.srcDevDirectory);
-    String _computePackageNameForClasses = this.computePackageNameForClasses(gp);
-    String _replace = _computePackageNameForClasses.replace(".", "/");
+    String _replace = this.computePackageNameForClasses(gp).replace(".", "/");
     String _plus = ((this.srcDevDirectory + "/") + _replace);
     final IFolder srcFolder = this.project.getFolder(_plus);
-    IPath _location = srcFolder.getLocation();
-    String _oSString = _location.toOSString();
+    String _oSString = srcFolder.getLocation().toOSString();
     final String srcAbsolutePath = (_oSString + "/");
     final File f = new File(srcAbsolutePath);
     boolean _exists = f.exists();
@@ -157,12 +144,10 @@ public class GenerateDevStructure {
     if (_not) {
       f.mkdirs();
     }
-    String _computePackageNameForInterfaces = this.computePackageNameForInterfaces(gp);
-    String _replace_1 = _computePackageNameForInterfaces.replace(".", "/");
+    String _replace_1 = this.computePackageNameForInterfaces(gp).replace(".", "/");
     String _plus_1 = ((this.srcDevDirectory + "/") + _replace_1);
     final IFolder interfaceFolder = this.project.getFolder(_plus_1);
-    IPath _location_1 = interfaceFolder.getLocation();
-    String _oSString_1 = _location_1.toOSString();
+    String _oSString_1 = interfaceFolder.getLocation().toOSString();
     final String interfaceAbsolutePath = (_oSString_1 + "/");
     final File f2 = new File(interfaceAbsolutePath);
     boolean _exists_1 = f2.exists();
@@ -172,12 +157,11 @@ public class GenerateDevStructure {
     }
     InputOutput.<String>println(("Generate classes in    : " + srcAbsolutePath));
     InputOutput.<String>println(("Generate interfaces in : " + interfaceAbsolutePath));
-    EList<GenClass> _genClasses = gp.getGenClasses();
     final Function1<GenClass, Boolean> _function = (GenClass it) -> {
       boolean _isDynamic = it.isDynamic();
       return Boolean.valueOf((!_isDynamic));
     };
-    Iterable<GenClass> _filter = IterableExtensions.<GenClass>filter(_genClasses, _function);
+    Iterable<GenClass> _filter = IterableExtensions.<GenClass>filter(gp.getGenClasses(), _function);
     for (final GenClass c : _filter) {
       {
         boolean _isInterface = c.isInterface();
@@ -191,18 +175,14 @@ public class GenerateDevStructure {
     this.generateOverriddenFactoryInterface(gp, interfaceAbsolutePath);
     this.generateOverriddenFactoryClass(gp, srcAbsolutePath);
     this.generateOverriddenPackageInterface(gp, interfaceAbsolutePath);
-    String _computePackageNameForClasses_1 = this.computePackageNameForClasses(gp);
-    String _plus_2 = (_computePackageNameForClasses_1 + ".");
+    String _computePackageNameForClasses = this.computePackageNameForClasses(gp);
+    String _plus_2 = (_computePackageNameForClasses + ".");
     String _computeFactoryClassName = this.computeFactoryClassName(gp);
     final String factoryClassName = (_plus_2 + _computeFactoryClassName);
     final String packageClassName = gp.getQualifiedPackageInterfaceName();
-    EPackage _ecorePackage = gp.getEcorePackage();
-    String _nsURI = _ecorePackage.getNsURI();
-    this.factories.put(_nsURI, factoryClassName);
+    this.factories.put(gp.getEcorePackage().getNsURI(), factoryClassName);
     InputOutput.<String>println(("Added this factory in list : " + factoryClassName));
-    EPackage _ecorePackage_1 = gp.getEcorePackage();
-    String _nsURI_1 = _ecorePackage_1.getNsURI();
-    this.packages.put(_nsURI_1, packageClassName);
+    this.packages.put(gp.getEcorePackage().getNsURI(), packageClassName);
     List<GenPackage> _subGenPackages = gp.getSubGenPackages();
     for (final GenPackage sp : _subGenPackages) {
       this.generateDevStructure(sp);
@@ -288,17 +268,15 @@ public class GenerateDevStructure {
       opt.put(Resource.OPTION_SAVE_ONLY_IF_CHANGED, Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER);
       opt.put(Resource.OPTION_LINE_DELIMITER, Resource.OPTION_LINE_DELIMITER_UNSPECIFIED);
       try {
-        Resource _eResource = gm.eResource();
-        _eResource.save(opt);
+        gm.eResource().save(opt);
       } catch (final Throwable _t) {
         if (_t instanceof IOException) {
           final IOException e = (IOException)_t;
-          Class<? extends GenerateDevStructure> _class = this.getClass();
-          final Bundle bundle = FrameworkUtil.getBundle(_class);
+          final Bundle bundle = FrameworkUtil.getBundle(this.getClass());
           final ILog logger = Platform.getLog(bundle);
           String _symbolicName = bundle.getSymbolicName();
-          Resource _eResource_1 = gm.eResource();
-          String _plus = ("Unable to save the genModel in : " + _eResource_1);
+          Resource _eResource = gm.eResource();
+          String _plus = ("Unable to save the genModel in : " + _eResource);
           Status _status = new Status(IStatus.WARNING, _symbolicName, _plus, e);
           logger.log(_status);
         } else {
@@ -350,8 +328,7 @@ public class GenerateDevStructure {
     String _plus = ("Generate the EMF Code using the ant file : " + _absolutePath);
     InputOutput.<String>println(_plus);
     final AntRunner runner = new AntRunner();
-    String _absolutePath_1 = f.getAbsolutePath();
-    runner.setBuildFileLocation(_absolutePath_1);
+    runner.setBuildFileLocation(f.getAbsolutePath());
     try {
       runner.run(monitor);
       this.refreshWorkspace();
@@ -367,12 +344,11 @@ public class GenerateDevStructure {
   
   public void refreshWorkspace() {
     try {
-      IWorkspace _workspace = ResourcesPlugin.getWorkspace();
-      IWorkspaceRoot _root = _workspace.getRoot();
-      _root.refreshLocal(IResource.DEPTH_INFINITE, null);
+      ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
     } catch (final Throwable _t) {
       if (_t instanceof CoreException) {
         final CoreException e = (CoreException)_t;
+        e.printStackTrace();
       } else {
         throw Exceptions.sneakyThrow(_t);
       }
@@ -385,8 +361,7 @@ public class GenerateDevStructure {
       String _computeFactoryInterfaceName = this.computeFactoryInterfaceName(gp);
       String _plus = (path + _computeFactoryInterfaceName);
       final String filename = (_plus + ".java");
-      CharSequence _generateInterfaceFactoryContent = this.generateInterfaceFactoryContent(gp);
-      _xblockexpression = this.generateFile(filename, _generateInterfaceFactoryContent);
+      _xblockexpression = this.generateFile(filename, this.generateInterfaceFactoryContent(gp));
     }
     return _xblockexpression;
   }
@@ -397,8 +372,7 @@ public class GenerateDevStructure {
       String _computeFactoryClassName = this.computeFactoryClassName(gp);
       String _plus = (path + _computeFactoryClassName);
       final String filename = (_plus + ".java");
-      CharSequence _generateClassFactoryContent = this.generateClassFactoryContent(gp);
-      _xblockexpression = this.generateFile(filename, _generateClassFactoryContent);
+      _xblockexpression = this.generateFile(filename, this.generateClassFactoryContent(gp));
     }
     return _xblockexpression;
   }
@@ -409,8 +383,7 @@ public class GenerateDevStructure {
       String _computePackageInterfaceName = this.computePackageInterfaceName(gp);
       String _plus = (path + _computePackageInterfaceName);
       final String filename = (_plus + ".java");
-      CharSequence _generateInterfacePackageContent = this.generateInterfacePackageContent(gp);
-      _xblockexpression = this.generateFile(filename, _generateInterfacePackageContent);
+      _xblockexpression = this.generateFile(filename, this.generateInterfacePackageContent(gp));
     }
     return _xblockexpression;
   }
@@ -419,16 +392,14 @@ public class GenerateDevStructure {
     String _computeClassFilename = this.computeClassFilename(gc);
     String _plus = (path + _computeClassFilename);
     String _plus_1 = (_plus + ".java");
-    CharSequence _generateClassContent = this.generateClassContent(gc);
-    return this.generateFile(_plus_1, _generateClassContent);
+    return this.generateFile(_plus_1, this.generateClassContent(gc));
   }
   
   public Object generateOverriddenInterface(final GenClass gc, final String path) {
     String _computeInterfaceFilename = this.computeInterfaceFilename(gc);
     String _plus = (path + _computeInterfaceFilename);
     String _plus_1 = (_plus + ".java");
-    CharSequence _generateInterfaceContent = this.generateInterfaceContent(gc);
-    return this.generateFile(_plus_1, _generateInterfaceContent);
+    return this.generateFile(_plus_1, this.generateInterfaceContent(gc));
   }
   
   public Object generateFile(final String filename, final Object contents) {
@@ -443,8 +414,7 @@ public class GenerateDevStructure {
         } else {
           if (this.generateFiles) {
             final FileWriter fw = new FileWriter(filename);
-            String _string = contents.toString();
-            fw.write(_string);
+            fw.write(contents.toString());
             fw.flush();
             fw.close();
           }
@@ -460,12 +430,10 @@ public class GenerateDevStructure {
   public String getSrcAbsolutePath() {
     String _xblockexpression = null;
     {
-      IWorkspace _workspace = ResourcesPlugin.getWorkspace();
-      final IWorkspaceRoot root = _workspace.getRoot();
+      final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
       final IProject proj = root.getProject(this.projectName);
       final IFolder srcFolder = proj.getFolder((this.srcDevDirectory + "/"));
-      IPath _location = srcFolder.getLocation();
-      String _oSString = _location.toOSString();
+      String _oSString = srcFolder.getLocation().toOSString();
       _xblockexpression = (_oSString + "/");
     }
     return _xblockexpression;
@@ -473,22 +441,20 @@ public class GenerateDevStructure {
   
   public CharSequence generateClassContent(final GenClass gc) {
     StringConcatenation _builder = new StringConcatenation();
-    _builder.append(this.copyright, "");
+    _builder.append(this.copyright);
     _builder.newLineIfNotEmpty();
     _builder.append("package ");
-    GenPackage _genPackage = gc.getGenPackage();
-    String _computePackageNameForClasses = this.computePackageNameForClasses(_genPackage);
-    _builder.append(_computePackageNameForClasses, "");
+    String _computePackageNameForClasses = this.computePackageNameForClasses(gc.getGenPackage());
+    _builder.append(_computePackageNameForClasses);
     _builder.append(";");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
     _builder.append("import ");
-    GenPackage _genPackage_1 = gc.getGenPackage();
-    String _computePackageNameForInterfaces = this.computePackageNameForInterfaces(_genPackage_1);
-    _builder.append(_computePackageNameForInterfaces, "");
+    String _computePackageNameForInterfaces = this.computePackageNameForInterfaces(gc.getGenPackage());
+    _builder.append(_computePackageNameForInterfaces);
     _builder.append(".");
     String _computeInterfaceFilename = this.computeInterfaceFilename(gc);
-    _builder.append(_computeInterfaceFilename, "");
+    _builder.append(_computeInterfaceFilename);
     _builder.append(";");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
@@ -496,13 +462,13 @@ public class GenerateDevStructure {
     _builder.newLine();
     _builder.append("public class ");
     String _computeClassname = this.computeClassname(gc);
-    _builder.append(_computeClassname, "");
+    _builder.append(_computeClassname);
     _builder.append(" extends ");
     String _computeGeneratedClassName = this.computeGeneratedClassName(gc);
-    _builder.append(_computeGeneratedClassName, "");
+    _builder.append(_computeGeneratedClassName);
     _builder.append(" implements ");
     String _computeInterfaceName = this.computeInterfaceName(gc);
-    _builder.append(_computeInterfaceName, "");
+    _builder.append(_computeInterfaceName);
     _builder.newLineIfNotEmpty();
     _builder.append("{");
     _builder.newLine();
@@ -514,12 +480,11 @@ public class GenerateDevStructure {
   
   public CharSequence generateInterfaceContent(final GenClass gc) {
     StringConcatenation _builder = new StringConcatenation();
-    _builder.append(this.copyright, "");
+    _builder.append(this.copyright);
     _builder.newLineIfNotEmpty();
     _builder.append("package ");
-    GenPackage _genPackage = gc.getGenPackage();
-    String _computePackageNameForInterfaces = this.computePackageNameForInterfaces(_genPackage);
-    _builder.append(_computePackageNameForInterfaces, "");
+    String _computePackageNameForInterfaces = this.computePackageNameForInterfaces(gc.getGenPackage());
+    _builder.append(_computePackageNameForInterfaces);
     _builder.append(";");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
@@ -527,10 +492,10 @@ public class GenerateDevStructure {
     _builder.newLine();
     _builder.append("public interface ");
     String _computeInterfaceName = this.computeInterfaceName(gc);
-    _builder.append(_computeInterfaceName, "");
+    _builder.append(_computeInterfaceName);
     _builder.append(" extends ");
     String _computeGeneratedInterfaceName = this.computeGeneratedInterfaceName(gc);
-    _builder.append(_computeGeneratedInterfaceName, "");
+    _builder.append(_computeGeneratedInterfaceName);
     _builder.newLineIfNotEmpty();
     _builder.append("{");
     _builder.newLine();
@@ -557,20 +522,20 @@ public class GenerateDevStructure {
   
   public CharSequence generateInterfaceFactoryContent(final GenPackage gp) {
     StringConcatenation _builder = new StringConcatenation();
-    _builder.append(this.copyright, "");
+    _builder.append(this.copyright);
     _builder.newLineIfNotEmpty();
     _builder.append("package ");
     String _computePackageNameForInterfaces = this.computePackageNameForInterfaces(gp);
-    _builder.append(_computePackageNameForInterfaces, "");
+    _builder.append(_computePackageNameForInterfaces);
     _builder.append(";");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
     _builder.append("import ");
     String _computePackageNameForClasses = this.computePackageNameForClasses(gp);
-    _builder.append(_computePackageNameForClasses, "");
+    _builder.append(_computePackageNameForClasses);
     _builder.append(".");
     String _computeFactoryClassName = this.computeFactoryClassName(gp);
-    _builder.append(_computeFactoryClassName, "");
+    _builder.append(_computeFactoryClassName);
     _builder.append(";");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
@@ -578,10 +543,10 @@ public class GenerateDevStructure {
     _builder.newLine();
     _builder.append("public interface ");
     String _computeFactoryInterfaceName = this.computeFactoryInterfaceName(gp);
-    _builder.append(_computeFactoryInterfaceName, "");
+    _builder.append(_computeFactoryInterfaceName);
     _builder.append(" extends ");
     String _computeGeneratedFactoryInterfaceName = this.computeGeneratedFactoryInterfaceName(gp);
-    _builder.append(_computeGeneratedFactoryInterfaceName, "");
+    _builder.append(_computeGeneratedFactoryInterfaceName);
     _builder.append(" ");
     _builder.newLineIfNotEmpty();
     _builder.append("{");
@@ -608,18 +573,16 @@ public class GenerateDevStructure {
     _builder.append("\t\t\t\t");
     _builder.newLine();
     {
-      EList<GenClass> _genClasses = gp.getGenClasses();
       final Function1<GenClass, Boolean> _function = (GenClass it) -> {
         boolean _isDynamic = it.isDynamic();
         return Boolean.valueOf((!_isDynamic));
       };
-      Iterable<GenClass> _filter = IterableExtensions.<GenClass>filter(_genClasses, _function);
       final Function1<GenClass, Boolean> _function_1 = (GenClass it) -> {
         boolean _isAbstract = it.isAbstract();
         return Boolean.valueOf((!_isAbstract));
       };
-      Iterable<GenClass> _filter_1 = IterableExtensions.<GenClass>filter(_filter, _function_1);
-      for(final GenClass gc : _filter_1) {
+      Iterable<GenClass> _filter = IterableExtensions.<GenClass>filter(IterableExtensions.<GenClass>filter(gp.getGenClasses(), _function), _function_1);
+      for(final GenClass gc : _filter) {
         _builder.append("\t");
         CharSequence _generateFactoryDef = this.generateFactoryDef(gc);
         _builder.append(_generateFactoryDef, "\t");
@@ -633,11 +596,11 @@ public class GenerateDevStructure {
   
   public CharSequence generateInterfacePackageContent(final GenPackage gp) {
     StringConcatenation _builder = new StringConcatenation();
-    _builder.append(this.copyright, "");
+    _builder.append(this.copyright);
     _builder.newLineIfNotEmpty();
     _builder.append("package ");
     String _computePackageNameForInterfaces = this.computePackageNameForInterfaces(gp);
-    _builder.append(_computePackageNameForInterfaces, "");
+    _builder.append(_computePackageNameForInterfaces);
     _builder.append(";");
     _builder.newLineIfNotEmpty();
     _builder.append("\t\t");
@@ -651,10 +614,10 @@ public class GenerateDevStructure {
     _builder.newLine();
     _builder.append("public interface ");
     String _computePackageInterfaceName = this.computePackageInterfaceName(gp);
-    _builder.append(_computePackageInterfaceName, "");
+    _builder.append(_computePackageInterfaceName);
     _builder.append(" extends ");
     String _computeGeneratedPackageInterfaceName = this.computeGeneratedPackageInterfaceName(gp);
-    _builder.append(_computeGeneratedPackageInterfaceName, "");
+    _builder.append(_computeGeneratedPackageInterfaceName);
     _builder.append(" ");
     _builder.newLineIfNotEmpty();
     _builder.append("{");
@@ -669,15 +632,13 @@ public class GenerateDevStructure {
   public CharSequence generateFactoryDef(final GenClass gc) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("public ");
+    String _extractGenericTypes = this.extractGenericTypes(this.computeInterfaceName(gc));
+    _builder.append(_extractGenericTypes);
     String _computeInterfaceName = this.computeInterfaceName(gc);
-    String _extractGenericTypes = this.extractGenericTypes(_computeInterfaceName);
-    _builder.append(_extractGenericTypes, "");
-    String _computeInterfaceName_1 = this.computeInterfaceName(gc);
-    _builder.append(_computeInterfaceName_1, "");
+    _builder.append(_computeInterfaceName);
     _builder.append(" create");
-    EClass _ecoreClass = gc.getEcoreClass();
-    String _name = _ecoreClass.getName();
-    _builder.append(_name, "");
+    String _name = gc.getEcoreClass().getName();
+    _builder.append(_name);
     _builder.append("();");
     _builder.newLineIfNotEmpty();
     return _builder;
@@ -706,11 +667,11 @@ public class GenerateDevStructure {
   
   public CharSequence generateClassFactoryContent(final GenPackage gp) {
     StringConcatenation _builder = new StringConcatenation();
-    _builder.append(this.copyright, "");
+    _builder.append(this.copyright);
     _builder.newLineIfNotEmpty();
     _builder.append("package ");
     String _computePackageNameForClasses = this.computePackageNameForClasses(gp);
-    _builder.append(_computePackageNameForClasses, "");
+    _builder.append(_computePackageNameForClasses);
     _builder.append(";");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
@@ -718,34 +679,32 @@ public class GenerateDevStructure {
     _builder.newLine();
     _builder.newLine();
     {
-      EList<GenClass> _genClasses = gp.getGenClasses();
       final Function1<GenClass, Boolean> _function = (GenClass it) -> {
         boolean _isDynamic = it.isDynamic();
         return Boolean.valueOf((!_isDynamic));
       };
-      Iterable<GenClass> _filter = IterableExtensions.<GenClass>filter(_genClasses, _function);
       final Function1<GenClass, Boolean> _function_1 = (GenClass it) -> {
         boolean _isAbstract = it.isAbstract();
         return Boolean.valueOf((!_isAbstract));
       };
-      Iterable<GenClass> _filter_1 = IterableExtensions.<GenClass>filter(_filter, _function_1);
-      for(final GenClass gc : _filter_1) {
+      Iterable<GenClass> _filter = IterableExtensions.<GenClass>filter(IterableExtensions.<GenClass>filter(gp.getGenClasses(), _function), _function_1);
+      for(final GenClass gc : _filter) {
         _builder.append("import ");
         String _computePackageNameForInterfaces = this.computePackageNameForInterfaces(gp);
-        _builder.append(_computePackageNameForInterfaces, "");
+        _builder.append(_computePackageNameForInterfaces);
         _builder.append(".");
         String _computeInterfaceFilename = this.computeInterfaceFilename(gc);
-        _builder.append(_computeInterfaceFilename, "");
+        _builder.append(_computeInterfaceFilename);
         _builder.append(";");
         _builder.newLineIfNotEmpty();
       }
     }
     _builder.append("import ");
     String _computePackageNameForInterfaces_1 = this.computePackageNameForInterfaces(gp);
-    _builder.append(_computePackageNameForInterfaces_1, "");
+    _builder.append(_computePackageNameForInterfaces_1);
     _builder.append(".");
     String _computeFactoryInterfaceName = this.computeFactoryInterfaceName(gp);
-    _builder.append(_computeFactoryInterfaceName, "");
+    _builder.append(_computeFactoryInterfaceName);
     _builder.append(";");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
@@ -754,13 +713,13 @@ public class GenerateDevStructure {
     _builder.newLine();
     _builder.append("public class ");
     String _computeFactoryClassName = this.computeFactoryClassName(gp);
-    _builder.append(_computeFactoryClassName, "");
+    _builder.append(_computeFactoryClassName);
     _builder.append(" extends ");
     String _computeGeneratedFactoryClassName = this.computeGeneratedFactoryClassName(gp);
-    _builder.append(_computeGeneratedFactoryClassName, "");
+    _builder.append(_computeGeneratedFactoryClassName);
     _builder.append(" implements ");
     String _computeFactoryInterfaceName_1 = this.computeFactoryInterfaceName(gp);
-    _builder.append(_computeFactoryInterfaceName_1, "");
+    _builder.append(_computeFactoryInterfaceName_1);
     _builder.newLineIfNotEmpty();
     _builder.append("{");
     _builder.newLine();
@@ -819,18 +778,16 @@ public class GenerateDevStructure {
     _builder.append("\t");
     _builder.newLine();
     {
-      EList<GenClass> _genClasses_1 = gp.getGenClasses();
       final Function1<GenClass, Boolean> _function_2 = (GenClass it) -> {
         boolean _isDynamic = it.isDynamic();
         return Boolean.valueOf((!_isDynamic));
       };
-      Iterable<GenClass> _filter_2 = IterableExtensions.<GenClass>filter(_genClasses_1, _function_2);
       final Function1<GenClass, Boolean> _function_3 = (GenClass it) -> {
         boolean _isAbstract = it.isAbstract();
         return Boolean.valueOf((!_isAbstract));
       };
-      Iterable<GenClass> _filter_3 = IterableExtensions.<GenClass>filter(_filter_2, _function_3);
-      for(final GenClass gc_1 : _filter_3) {
+      Iterable<GenClass> _filter_1 = IterableExtensions.<GenClass>filter(IterableExtensions.<GenClass>filter(gp.getGenClasses(), _function_2), _function_3);
+      for(final GenClass gc_1 : _filter_1) {
         _builder.append("\t");
         CharSequence _generateCreateMethod = this.generateCreateMethod(gc_1);
         _builder.append(_generateCreateMethod, "\t");
@@ -845,22 +802,20 @@ public class GenerateDevStructure {
   public CharSequence generateCreateMethod(final GenClass gc) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("public ");
+    String _extractGenericTypes = this.extractGenericTypes(this.computeInterfaceName(gc));
+    _builder.append(_extractGenericTypes);
     String _computeInterfaceName = this.computeInterfaceName(gc);
-    String _extractGenericTypes = this.extractGenericTypes(_computeInterfaceName);
-    _builder.append(_extractGenericTypes, "");
-    String _computeInterfaceName_1 = this.computeInterfaceName(gc);
-    _builder.append(_computeInterfaceName_1, "");
+    _builder.append(_computeInterfaceName);
     _builder.append(" create");
-    EClass _ecoreClass = gc.getEcoreClass();
-    String _name = _ecoreClass.getName();
-    _builder.append(_name, "");
+    String _name = gc.getEcoreClass().getName();
+    _builder.append(_name);
     _builder.append("()");
     _builder.newLineIfNotEmpty();
     _builder.append("{");
     _builder.newLine();
     _builder.append("\t");
-    String _computeInterfaceName_2 = this.computeInterfaceName(gc);
-    _builder.append(_computeInterfaceName_2, "\t");
+    String _computeInterfaceName_1 = this.computeInterfaceName(gc);
+    _builder.append(_computeInterfaceName_1, "\t");
     _builder.append(" result = new ");
     String _computeClassname = this.computeClassname(gc);
     _builder.append(_computeClassname, "\t");
@@ -897,18 +852,14 @@ public class GenerateDevStructure {
    * Compute the class name to be generated
    */
   public String computeClassFilename(final GenClass gc) {
-    EClass _ecoreClass = gc.getEcoreClass();
-    String _name = _ecoreClass.getName();
-    return this.classPattern.replace("{0}", _name);
+    return this.classPattern.replace("{0}", gc.getEcoreClass().getName());
   }
   
   /**
    * Compute the interface name to be generated
    */
   public String computeInterfaceFilename(final GenClass gc) {
-    EClass _ecoreClass = gc.getEcoreClass();
-    String _name = _ecoreClass.getName();
-    return this.interfacePattern.replace("{0}", _name);
+    return this.interfacePattern.replace("{0}", gc.getEcoreClass().getName());
   }
   
   /**
@@ -916,8 +867,7 @@ public class GenerateDevStructure {
    */
   public String computeClassname(final GenClass gc) {
     String _computeClassFilename = this.computeClassFilename(gc);
-    EClass _ecoreClass = gc.getEcoreClass();
-    Object _computeGenericTypes = this.computeGenericTypes(_ecoreClass);
+    Object _computeGenericTypes = this.computeGenericTypes(gc.getEcoreClass());
     return (_computeClassFilename + _computeGenericTypes);
   }
   
@@ -926,25 +876,21 @@ public class GenerateDevStructure {
    */
   public String computeInterfaceName(final GenClass gc) {
     String _computeInterfaceFilename = this.computeInterfaceFilename(gc);
-    EClass _ecoreClass = gc.getEcoreClass();
-    Object _computeGenericTypes = this.computeGenericTypes(_ecoreClass);
+    Object _computeGenericTypes = this.computeGenericTypes(gc.getEcoreClass());
     return (_computeInterfaceFilename + _computeGenericTypes);
   }
   
   public Object computeGenericTypes(final EClass c) {
-    EList<ETypeParameter> _eTypeParameters = c.getETypeParameters();
-    boolean _isEmpty = _eTypeParameters.isEmpty();
+    boolean _isEmpty = c.getETypeParameters().isEmpty();
     if (_isEmpty) {
       return "";
     }
     StringBuffer sb = new StringBuffer("<");
     String sep = "";
-    EList<ETypeParameter> _eTypeParameters_1 = c.getETypeParameters();
-    for (final ETypeParameter pt : _eTypeParameters_1) {
+    EList<ETypeParameter> _eTypeParameters = c.getETypeParameters();
+    for (final ETypeParameter pt : _eTypeParameters) {
       {
-        StringBuffer _append = sb.append(sep);
-        String _name = pt.getName();
-        _append.append(_name);
+        sb.append(sep).append(pt.getName());
         sep = ",";
       }
     }
@@ -1047,24 +993,17 @@ public class GenerateDevStructure {
   public String computeGeneratedClassName(final GenClass c) {
     String _xblockexpression = null;
     {
-      GenPackage _genPackage = c.getGenPackage();
-      GenModel _genModel = _genPackage.getGenModel();
-      final String classPattern = _genModel.getClassNamePattern();
+      final String classPattern = c.getGenPackage().getGenModel().getClassNamePattern();
       String _xifexpression = null;
       boolean _notEquals = (!Objects.equal(classPattern, null));
       if (_notEquals) {
-        EClass _ecoreClass = c.getEcoreClass();
-        String _name = _ecoreClass.getName();
-        String _replace = classPattern.replace("{0}", _name);
-        EClass _ecoreClass_1 = c.getEcoreClass();
-        Object _computeGenericTypes = this.computeGenericTypes(_ecoreClass_1);
+        String _replace = classPattern.replace("{0}", c.getEcoreClass().getName());
+        Object _computeGenericTypes = this.computeGenericTypes(c.getEcoreClass());
         _xifexpression = (_replace + _computeGenericTypes);
       } else {
-        EClass _ecoreClass_2 = c.getEcoreClass();
-        String _name_1 = _ecoreClass_2.getName();
-        String _plus = (_name_1 + "Impl");
-        EClass _ecoreClass_3 = c.getEcoreClass();
-        Object _computeGenericTypes_1 = this.computeGenericTypes(_ecoreClass_3);
+        String _name = c.getEcoreClass().getName();
+        String _plus = (_name + "Impl");
+        Object _computeGenericTypes_1 = this.computeGenericTypes(c.getEcoreClass());
         _xifexpression = (_plus + _computeGenericTypes_1);
       }
       _xblockexpression = _xifexpression;
@@ -1078,24 +1017,17 @@ public class GenerateDevStructure {
   public String computeGeneratedInterfaceName(final GenClass c) {
     String _xblockexpression = null;
     {
-      GenPackage _genPackage = c.getGenPackage();
-      GenModel _genModel = _genPackage.getGenModel();
-      final String interfaceNamePattern = _genModel.getInterfaceNamePattern();
+      final String interfaceNamePattern = c.getGenPackage().getGenModel().getInterfaceNamePattern();
       String _xifexpression = null;
       boolean _notEquals = (!Objects.equal(interfaceNamePattern, null));
       if (_notEquals) {
-        EClass _ecoreClass = c.getEcoreClass();
-        String _name = _ecoreClass.getName();
-        String _replace = interfaceNamePattern.replace("{0}", _name);
-        EClass _ecoreClass_1 = c.getEcoreClass();
-        Object _computeGenericTypes = this.computeGenericTypes(_ecoreClass_1);
+        String _replace = interfaceNamePattern.replace("{0}", c.getEcoreClass().getName());
+        Object _computeGenericTypes = this.computeGenericTypes(c.getEcoreClass());
         _xifexpression = (_replace + _computeGenericTypes);
       } else {
-        EClass _ecoreClass_2 = c.getEcoreClass();
-        String _name_1 = _ecoreClass_2.getName();
-        EClass _ecoreClass_3 = c.getEcoreClass();
-        Object _computeGenericTypes_1 = this.computeGenericTypes(_ecoreClass_3);
-        _xifexpression = (_name_1 + _computeGenericTypes_1);
+        String _name = c.getEcoreClass().getName();
+        Object _computeGenericTypes_1 = this.computeGenericTypes(c.getEcoreClass());
+        _xifexpression = (_name + _computeGenericTypes_1);
       }
       _xblockexpression = _xifexpression;
     }
@@ -1108,8 +1040,7 @@ public class GenerateDevStructure {
   public String computeGeneratedFactoryClassName(final GenPackage gp) {
     String _xblockexpression = null;
     {
-      GenModel _genModel = gp.getGenModel();
-      final String classPattern = _genModel.getClassNamePattern();
+      final String classPattern = gp.getGenModel().getClassNamePattern();
       String _xifexpression = null;
       boolean _notEquals = (!Objects.equal(classPattern, null));
       if (_notEquals) {
@@ -1131,8 +1062,7 @@ public class GenerateDevStructure {
   public String computeGeneratedFactoryInterfaceName(final GenPackage gp) {
     String _xblockexpression = null;
     {
-      GenModel _genModel = gp.getGenModel();
-      final String interfacePattern = _genModel.getInterfaceNamePattern();
+      final String interfacePattern = gp.getGenModel().getInterfaceNamePattern();
       String _xifexpression = null;
       boolean _notEquals = (!Objects.equal(interfacePattern, null));
       if (_notEquals) {
@@ -1154,8 +1084,7 @@ public class GenerateDevStructure {
   public String computeGeneratedPackageInterfaceName(final GenPackage gp) {
     String _xblockexpression = null;
     {
-      GenModel _genModel = gp.getGenModel();
-      final String interfacePattern = _genModel.getInterfaceNamePattern();
+      final String interfacePattern = gp.getGenModel().getInterfaceNamePattern();
       String _xifexpression = null;
       boolean _notEquals = (!Objects.equal(interfacePattern, null));
       if (_notEquals) {

@@ -14,7 +14,7 @@ import com.opcoach.genmodeladdon.core.GenerateCommon;
 
 public class TestGenerateCommon extends GenModelAddonTestCase
 {
-	private static final String PROJECT_SAMPLE_NAME = "com.opcoach.genmodeladdon.sample";
+	private static final String PROJECT_SAMPLE_NAME = DEST_SAMPLE_PROJECT;
 
 	private String getWsHome()
 	{
@@ -23,7 +23,7 @@ public class TestGenerateCommon extends GenModelAddonTestCase
 	@Test
 	public void testGetProjectNameFromSimpleURI()
 	{
-		URI u = URI.createURI(getWsHome() + "/com.opcoach.genmodeladdon.sample/model/project.genmodel");
+		URI u = URI.createURI(getWsHome() + "/" + PROJECT_SAMPLE_NAME + "/model/project.genmodel");
 		String s = GenerateCommon.getProjectNameFromURI(u);
 		assertEquals("Project name must be " + PROJECT_SAMPLE_NAME, PROJECT_SAMPLE_NAME, s);
 	}
@@ -31,7 +31,7 @@ public class TestGenerateCommon extends GenModelAddonTestCase
 	@Test
 	public void testGetProjectNameFromWindowsFileURI()
 	{
-		URI u = URI.createURI("file:/" + getWsHome() + "/com.opcoach.genmodeladdon.sample/model/project.genmodel");
+		URI u = URI.createURI("file:/" + getWsHome() + "/" + PROJECT_SAMPLE_NAME + "/model/project.genmodel");
 		String s = GenerateCommon.getProjectNameFromURI(u);
 		assertEquals("Project name must be " + PROJECT_SAMPLE_NAME, PROJECT_SAMPLE_NAME, s);
 	}

@@ -30,6 +30,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
@@ -39,12 +40,14 @@ import com.opcoach.genmodeladdon.core.GenerateDevStructure;
 public class GenModelAddonTestCase
 {
 
+	protected static final String SRC_SAMPLE_PROJECT = "com.opcoach.genmodeladdon.sample";
+	protected static final String DEST_SAMPLE_PROJECT = "com.opcoach.genmodeladdon.destsample";
+
 	protected static final String FANOISE_ANT_FILE = "generateEMFCode_fanoise.xml";
 	protected static final String PROJECT_ANT_FILE = "generateEMFCode_project.xml";
-	public static final String PROJECT_GENMODEL = "/com.opcoach.genmodeladdon.sample/model/project.genmodel";
-	public static final String FANNOISE_GENMODEL = "/com.opcoach.genmodeladdon.sample/model_fannoise/fannoise.genmodel";
+	public static final String PROJECT_GENMODEL = "/" + DEST_SAMPLE_PROJECT + "/model/project.genmodel";
+	public static final String FANNOISE_GENMODEL = "/" + DEST_SAMPLE_PROJECT + "/model_fannoise/fannoise.genmodel";
 
-	protected static final String SAMPLE_PROJECT = "com.opcoach.genmodeladdon.sample";
 
 	protected static Map<String, GenModel> gmMap = new HashMap<String, GenModel>();
 	protected static Map<String, GenerateDevStructure> genMap = new HashMap<String, GenerateDevStructure>();
@@ -52,11 +55,13 @@ public class GenModelAddonTestCase
 	protected static IWorkspaceRoot root;
 
 	protected static IProject sampleProject;
+	
+	public static boolean projectCreated = false;
 
 	static
 	{
 		// Start manually the jdt.ui and catch the bad exception..
-		// Actually we don't need this plugin but it appears with dependencies
+		// Actually we don't need this plugin (or may ben ant.launching needs it ?) but it appears with dependencies
 		Bundle jdtUI = Platform.getBundle("org.eclipse.jdt.ui");
 		try
 		{
@@ -66,20 +71,30 @@ public class GenModelAddonTestCase
 		{
 		}
 
-		// Must crate the project only once in this static block and not in a
-		// BeforeClass !
-		try
+	} 
+	
+	
+	@BeforeClass
+	public static void createProjectAndGenerate()
+	{
+		System.out.println("******  Creating the projects ");
+		if (!projectCreated)
 		{
-			// Copy the sample project in the runtime workspace
-			root = initWorkspace();
+			try
+			{
+				// Copy the sample project in the runtime workspace
+				root = initWorkspace();
+				initGenModel(PROJECT_GENMODEL, PROJECT_ANT_FILE);
+				initGenModel(FANNOISE_GENMODEL, FANOISE_ANT_FILE);
+			} catch (Exception ex)
+			{
 
-			initGenModel(PROJECT_GENMODEL, PROJECT_ANT_FILE);
-			initGenModel(FANNOISE_GENMODEL, FANOISE_ANT_FILE);
-		} catch (IOException ex)
-		{
-			ex.printStackTrace();
+				ex.printStackTrace();
+			}
+			projectCreated = true;
 		}
 	}
+	
 
 	public static void initGenModel(String genModelName, String antFilename) throws IOException
 	{
@@ -93,7 +108,15 @@ public class GenModelAddonTestCase
 		genMap.put(genModelName, gen);
 
 		// Remember of sample project
-		sampleProject = root.getProject(SAMPLE_PROJECT);
+		sampleProject = root.getProject(DEST_SAMPLE_PROJECT);
+		try
+		{
+			sampleProject.open(new NullProgressMonitor());
+		} catch (CoreException e1)
+		{
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 		// Install the templates
 		gen.setGenModelTemplates(gm, true);
@@ -106,6 +129,14 @@ public class GenModelAddonTestCase
 
 		// Once dev structure is generated and ant file too, can call it !
 		gen.generateGenModelCode(antFile, new NullProgressMonitor());
+
+		try
+		{
+			sampleProject.refreshLocal(IResource.DEPTH_INFINITE, null);
+		} catch (CoreException e)
+		{
+			e.printStackTrace();
+		}
 
 	}
 
@@ -141,30 +172,38 @@ public class GenModelAddonTestCase
 	private static IWorkspaceRoot initWorkspace() throws IOException
 	{
 		// Get the zipped file to extract
-		Bundle b = Platform.getBundle(SAMPLE_PROJECT);
+		Bundle b = Platform.getBundle(SRC_SAMPLE_PROJECT);
 		URL url = b.getEntry("sampleProject.zip");
 		String fileURL = FileLocator.toFileURL(url).toString();
 
 		// Create a sample empty project in workspace root
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		IProject proj = root.getProject(SAMPLE_PROJECT);
+		IProject proj = root.getProject(DEST_SAMPLE_PROJECT);
 
 		NullProgressMonitor npm = new NullProgressMonitor();
 		try
 		{
-			if (!proj.exists())
-				proj.create(npm);
+			if (proj.exists())
+			{
+				// remove previous project version. 
+				System.out.println("Deleting existing project : " + DEST_SAMPLE_PROJECT);
+				proj.delete(true, npm);
+			}
+
+			proj.create(npm);
 
 		} catch (CoreException e1)
 		{
-			// e1.printStackTrace();
+		     e1.printStackTrace();
 		}
 
 		// Then get the ant file to run to copy the template project
 		AntRunner runner = new AntRunner();
 		Map<String, String> properties = new HashMap<String, String>();
-		properties.put("wsRoot", root.getLocation().toOSString() + File.separator + SAMPLE_PROJECT);
+		properties.put("wsRoot", root.getLocation().toOSString() + File.separator + DEST_SAMPLE_PROJECT);
 		properties.put("zipFile", fileURL.replace("file:", ""));
+		properties.put("destProjectName", DEST_SAMPLE_PROJECT);
+		properties.put("srcProjectName", SRC_SAMPLE_PROJECT);
 		runner.addUserProperties(properties);
 		runner.setBuildFileLocation("prepareTestWorkspace.xml");
 		runner.addBuildLogger("org.apache.tools.ant.DefaultLogger");
@@ -173,7 +212,9 @@ public class GenModelAddonTestCase
 			runner.run();
 			root.refreshLocal(IResource.DEPTH_INFINITE, null);
 
-			proj = root.getProject(SAMPLE_PROJECT);
+			// Now close the project and reopen it
+			proj.close(npm);
+		    proj = root.getProject(DEST_SAMPLE_PROJECT);
 			proj.open(npm);
 
 		} catch (CoreException e)
