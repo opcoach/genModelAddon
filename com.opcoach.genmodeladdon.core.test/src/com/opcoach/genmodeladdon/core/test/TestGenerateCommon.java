@@ -16,10 +16,6 @@ public class TestGenerateCommon extends GenModelAddonTestCase
 {
 	private static final String PROJECT_SAMPLE_NAME = DEST_SAMPLE_PROJECT;
 
-	private String getWsHome()
-	{
-		return root.getLocation().toString();
-	}
 	@Test
 	public void testGetProjectNameFromSimpleURI()
 	{
@@ -79,15 +75,10 @@ public class TestGenerateCommon extends GenModelAddonTestCase
 	}
 	
 	
-	
-	
-	
-	
-	
 	@Test
 	public void testCreateSourceDirectory()
 	{
-		EMFPatternExtractor epe = new EMFPatternExtractor(sampleProject, "{0}Impl", "{0}");
+		EMFPatternExtractor epe = new EMFPatternExtractor(getSampleProject(), "{0}Impl", "{0}");
 		IFolder f = epe.createSourceDirectoryStructure();
 		assertNotNull("SourceDirectory must not be null", f);
 
