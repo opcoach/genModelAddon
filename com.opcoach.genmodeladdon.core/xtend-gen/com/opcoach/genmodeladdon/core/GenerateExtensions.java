@@ -18,6 +18,17 @@ import org.eclipse.pde.internal.core.project.PDEProject;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.InputOutput;
 
+/**
+ * This class updates extensions in the current project.
+ * Actually some of extension points must be updated if they already exists
+ * and the factory_override extension must be added.
+ * 
+ * Namely :
+ *  - if there is already an emf.ecore.generated_package it must be updated with the new package class
+ *  - there must be a new emf.ecore.factory_override
+ * 
+ * Some code is inspired from class PointSelectionPage in org.eclipse.pde.internal.ui.wizards.extension
+ */
 @SuppressWarnings("all")
 public class GenerateExtensions {
   private final static String EMF_GENERATED_PACKAGE = "org.eclipse.emf.ecore.generated_package";
@@ -43,28 +54,28 @@ public class GenerateExtensions {
       final IFile manifest = PDEProject.getManifest(this.project);
       WorkspaceBundlePluginModel _workspaceBundlePluginModel = new WorkspaceBundlePluginModel(manifest, pluginXml);
       this.fModel = _workspaceBundlePluginModel;
-      IPluginModelBase projetBase = null;
+      IPluginModelBase sourceModel = null;
       IPluginModelBase[] _workspaceModels = PluginRegistry.getWorkspaceModels();
       for (final IPluginModelBase m : _workspaceModels) {
         if (((m.getBundleDescription() != null) && this.project.getName().equals(m.getBundleDescription().getSymbolicName()))) {
-          projetBase = m;
+          sourceModel = m;
         }
       }
-      IPluginExtensionPoint[] _findExtensionPointsForPlugin = PDECore.getDefault().getExtensionsRegistry().findExtensionPointsForPlugin(projetBase);
-      for (final IPluginExtensionPoint ept : _findExtensionPointsForPlugin) {
+      IPluginExtensionPoint[] _extensionPoints = sourceModel.getExtensions().getExtensionPoints();
+      for (final IPluginExtensionPoint ept : _extensionPoints) {
         this.fModel.getPluginBase().add(this.copyExtensionPoint(ept));
       }
-      IPluginExtension[] _findExtensionsForPlugin = PDECore.getDefault().getExtensionsRegistry().findExtensionsForPlugin(projetBase);
-      for (final IPluginExtension e : _findExtensionsForPlugin) {
+      IPluginExtension[] _extensions = sourceModel.getExtensions().getExtensions();
+      for (final IPluginExtension e : _extensions) {
         this.fModel.getPluginBase().add(this.copyExtension(e));
       }
-      InputOutput.<String>println("Copy of fModel finished");
+      PDECore.getDefault().getModelManager().bundleRootChanged(this.project);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
   }
   
-  private String printExtension(final IPluginExtension ext) {
+  public String printExtension(final IPluginExtension ext) {
     String _xblockexpression = null;
     {
       String _point = ext.getPoint();
@@ -100,6 +111,12 @@ public class GenerateExtensions {
     try {
       final IPluginExtension clonedExt = this.fModel.getFactory().createExtension();
       clonedExt.setPoint(ext.getPoint());
+      int _length = ext.getName().length();
+      boolean _greaterThan = (_length > 0);
+      if (_greaterThan) {
+        clonedExt.setName(ext.getName());
+      }
+      clonedExt.setId(ext.getId());
       IPluginObject[] _children = ext.getChildren();
       for (final IPluginObject elt : _children) {
         if ((elt instanceof IPluginElement)) {
@@ -163,6 +180,7 @@ public class GenerateExtensions {
       this.generateOrUpdateExtension(GenerateExtensions.EMF_GENERATED_PACKAGE, entry_1.getKey(), GenerateExtensions.PACKAGE_ELT, entry_1.getValue());
     }
     this.fModel.save();
+    PDECore.getDefault().getModelManager().bundleRootChanged(this.project);
   }
   
   private void generateOrUpdateExtension(final String extName, final String modelURI, final String nodeName, final String classname) {

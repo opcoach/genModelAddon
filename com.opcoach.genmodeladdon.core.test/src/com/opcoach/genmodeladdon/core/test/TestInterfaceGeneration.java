@@ -1,13 +1,6 @@
 package com.opcoach.genmodeladdon.core.test;
 
-import static org.junit.Assert.assertEquals;
-
-import org.eclipse.emf.codegen.ecore.genmodel.GenClass;
-import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
-import org.eclipse.emf.codegen.ecore.genmodel.GenPackage;
 import org.junit.Test;
-
-import com.opcoach.genmodeladdon.core.GenerateDevStructure;
 
 public class TestInterfaceGeneration extends GenModelAddonTestCase
 {

@@ -52,7 +52,6 @@ public class TestGenerateCommon extends GenModelAddonTestCase
 	@Test
 	public void testGetProjectNameFromPlatformResourceURI()
 	{
-		GenModel gm = getGenModel(FANNOISE_GENMODEL);
 		String s = GenerateCommon.getProjectNameFromURI(URI.createPlatformResourceURI("/projectName/model/project.genmodel", true));
 		assertEquals("Project name must be projectName", "projectName", s);
 	}
@@ -68,9 +67,7 @@ public class TestGenerateCommon extends GenModelAddonTestCase
 	@Test
 	public void testGetModelPathNameFromPlatformResourceURIInModel()
 	{
-		GenModel gm = getGenModel(FANNOISE_GENMODEL);
 		String s = GenerateCommon.getModelPathFromStringURI("com.opcoach.hotel","platform:/resource/com.opcoach.hotel/model/hotel.genmodel");
-		
 		assertEquals("Model Path for this project must be 'model'", "model", s);
 	}
 	

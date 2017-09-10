@@ -2,17 +2,12 @@ package com.opcoach.genmodeladdon.core.test;
 
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.codegen.ecore.genmodel.GenClass;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.codegen.ecore.genmodel.GenPackage;
-import org.eclipse.emf.common.util.URI;
 import org.junit.Test;
 
-import com.opcoach.genmodeladdon.core.EMFPatternExtractor;
-import com.opcoach.genmodeladdon.core.GenerateCommon;
 import com.opcoach.genmodeladdon.core.GenerateDevStructure;
 
  /** this test case controls the good name computation for packages classes like : 

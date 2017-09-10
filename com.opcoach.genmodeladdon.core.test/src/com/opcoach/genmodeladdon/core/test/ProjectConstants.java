@@ -1,8 +1,5 @@
 package com.opcoach.genmodeladdon.core.test;
 
-import com.opcoach.genmodeladdon.core.test.internal.WorkspaceConfigurator;
-
-
 /** Constants for project names and other files */
 public interface ProjectConstants
 {

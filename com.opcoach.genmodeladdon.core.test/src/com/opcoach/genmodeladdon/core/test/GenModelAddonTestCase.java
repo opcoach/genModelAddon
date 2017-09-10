@@ -19,43 +19,46 @@ import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.codegen.ecore.genmodel.GenPackage;
 
 import com.opcoach.genmodeladdon.core.GenerateDevStructure;
-import com.opcoach.genmodeladdon.core.test.internal.WorkspaceConfigurator;
 
+/**
+ * This class is the base class for all testcase. It provides methods to check
+ * if a text is present in a file
+ * 
+ * @author olivier
+ *
+ */
 public class GenModelAddonTestCase implements ProjectConstants
 {
-	
+
 	private String workspaceHome = null;
-	
+
 	private IProject sampleProject = null;
-	
 
 	protected GenModel getGenModel(String name)
 	{
 		return WorkspaceConfigurator.getDefault().getGenModel(name);
 	}
-	
+
 	public GenerateDevStructure getGenDevStructure(String name)
 	{
 		return WorkspaceConfigurator.getDefault().getGenDevStructure(name);
 	}
 
-	
 	protected String getWsHome()
 	{
 		if (workspaceHome == null)
-			workspaceHome =  WorkspaceConfigurator.getDefault().getWorkspaceRoot().getLocation().toString();
-		
+			workspaceHome = WorkspaceConfigurator.getDefault().getWorkspaceRoot().getLocation().toString();
+
 		return workspaceHome;
 	}
 
 	protected IProject getSampleProject()
 	{
 		if (sampleProject == null)
-		  sampleProject =  WorkspaceConfigurator.getDefault().getSampleProject();
-		
+			sampleProject = WorkspaceConfigurator.getDefault().getSampleProject();
+
 		return sampleProject;
 	}
-
 
 	/**
 	 * This method checks if the specified content is in the file

@@ -65,7 +65,7 @@ class GenerateDevStructure {
 	 */
 	new(GenModel gm, String cPattern, String iPattern, String srcDir) {
 		genModel = gm
-		if (gm.copyrightText != null)
+		if (gm.copyrightText !== null)
 			copyright = computeCopyrightComment.toString
 		classPattern = cPattern
 		interfacePattern = iPattern
@@ -74,6 +74,12 @@ class GenerateDevStructure {
 		projectName = project.name
 		modelName = GenerateCommon.getModelName(gm)
 		modelDir = GenerateCommon.getModelPath(gm)
+		
+		project.open(null)
+		var status = "closed"
+		if (project.isOpen) status = "closed"
+		println("Project " + projectName + " is " + status  + " when creating devStructure for " + modelName)
+		
 
 		// Reset the files not generated... (they are kept to ask if they must override existing files)
 		filesNotGenerated.clear
@@ -95,6 +101,7 @@ class GenerateDevStructure {
 		val gfoe = new GenerateExtensions(project)
 		gfoe.generateOrUpdateExtensions(factories, packages)
 		
+		//project.close(null)
 		project.refreshLocal(IResource.DEPTH_INFINITE, null)
 		
 		

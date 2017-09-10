@@ -91,20 +91,31 @@ public class GenerateDevStructure {
    * @param srcDir : the source directory (relative path) in project
    */
   public GenerateDevStructure(final GenModel gm, final String cPattern, final String iPattern, final String srcDir) {
-    this.genModel = gm;
-    String _copyrightText = gm.getCopyrightText();
-    boolean _notEquals = (!Objects.equal(_copyrightText, null));
-    if (_notEquals) {
-      this.copyright = this.computeCopyrightComment().toString();
+    try {
+      this.genModel = gm;
+      String _copyrightText = gm.getCopyrightText();
+      boolean _tripleNotEquals = (_copyrightText != null);
+      if (_tripleNotEquals) {
+        this.copyright = this.computeCopyrightComment().toString();
+      }
+      this.classPattern = cPattern;
+      this.interfacePattern = iPattern;
+      this.srcDevDirectory = srcDir;
+      this.project = GenerateCommon.getProject(gm);
+      this.projectName = this.project.getName();
+      this.modelName = GenerateCommon.getModelName(gm);
+      this.modelDir = GenerateCommon.getModelPath(gm);
+      this.project.open(null);
+      String status = "closed";
+      boolean _isOpen = this.project.isOpen();
+      if (_isOpen) {
+        status = "closed";
+      }
+      InputOutput.<String>println(((((("Project " + this.projectName) + " is ") + status) + " when creating devStructure for ") + this.modelName));
+      this.filesNotGenerated.clear();
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
     }
-    this.classPattern = cPattern;
-    this.interfacePattern = iPattern;
-    this.srcDevDirectory = srcDir;
-    this.project = GenerateCommon.getProject(gm);
-    this.projectName = this.project.getName();
-    this.modelName = GenerateCommon.getModelName(gm);
-    this.modelDir = GenerateCommon.getModelPath(gm);
-    this.filesNotGenerated.clear();
   }
   
   public GenerateDevStructure(final GenModel gm) {

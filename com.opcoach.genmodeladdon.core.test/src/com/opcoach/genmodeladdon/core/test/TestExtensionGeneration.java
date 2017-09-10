@@ -8,8 +8,6 @@ import java.util.Collection;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.pde.core.plugin.IPluginElement;
 import org.eclipse.pde.core.plugin.IPluginExtension;
 import org.eclipse.pde.core.plugin.IPluginExtensionPoint;
@@ -51,7 +49,6 @@ public class TestExtensionGeneration extends GenModelAddonTestCase
 		
 		PluginModelManager pm = PluginModelManager.getInstance();
 		IPluginModelBase base = pm.findModel(project);
-		PDEExtensionRegistry pdeReg = PDECore.getDefault().getExtensionsRegistry();
 
 		for (IPluginExtension e : base.getExtensions().getExtensions())
 		{
@@ -153,7 +150,6 @@ public class TestExtensionGeneration extends GenModelAddonTestCase
 		PDEExtensionRegistry pdeReg = PDECore.getDefault().getExtensionsRegistry();
 
 		IPluginModelBase base = PluginRegistry.getWorkspaceModels()[0];
-		String id = base.getBundleDescription().getSymbolicName();
 		Collection<IPluginExtension> appliExt = new ArrayList<IPluginExtension>();
 
 		for (IPluginExtension e : pdeReg.findExtensionsForPlugin(base))
@@ -175,24 +171,9 @@ public class TestExtensionGeneration extends GenModelAddonTestCase
 		IPluginModelBase base = PluginRegistry.getWorkspaceModels()[0];
 		Collection<IPluginExtensionPoint> appliExt = new ArrayList<>();
 
-	/*	IPluginModelBase ept = pdeReg.findExtensionPointPlugin("com.opcoach.genmodeladdon.sample.sampleExtensionPoint");
-		pdeReg.hasExtensionPoint("com.opcoach.genmodeladdon.sample.sampleExtensionPoint");
-		IExtensionPoint ept = pdeReg.hasExtensionPoint(pointId)
-	*/	
-		
-		
-		//ICI ept est null alors que testit est true !! 
-		
-		IPluginExtensionPoint ept = pdeReg.findExtensionPoint("com.opcoach.genmodeladdon.destsample.sampleExtensionPoint");
-		IPluginExtensionPoint ept2 = pdeReg.findExtensionPoint("sampleExtensionPoint");
-		boolean testit = pdeReg.hasExtensionPoint("com.opcoach.genmodeladdon.destsample.sampleExtensionPoint");
-		boolean testit2 = pdeReg.hasExtensionPoint("com.opcoach.genmodeladdon.sample.sampleExtensionPoint");
-		boolean testit3 = pdeReg.hasExtensionPoint("sampleExtensionPoint");
-
 		IPluginExtensionPoint pt = pdeReg.findExtensionPoint("com.opcoach.genmodeladdon.destsample.sampleExtensionPoint");
 		for (IPluginExtensionPoint ep : pdeReg.findExtensionPointsForPlugin(base))
 		{
-			System.out.println("ep id = " + ep.getId());
 			if (ep.getId().equals("sampleExtensionPoint"))
 				appliExt.add(ep);
 

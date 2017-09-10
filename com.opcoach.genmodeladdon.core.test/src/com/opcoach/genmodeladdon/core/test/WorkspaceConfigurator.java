@@ -1,4 +1,4 @@
-package com.opcoach.genmodeladdon.core.test.internal;
+package com.opcoach.genmodeladdon.core.test;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,12 +20,10 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.junit.BeforeClass;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 
 import com.opcoach.genmodeladdon.core.GenerateDevStructure;
-import com.opcoach.genmodeladdon.core.test.ProjectConstants;
 
 /**
  * This class is used once to initialize the projects : - unzip the sample
@@ -88,20 +86,21 @@ public class WorkspaceConfigurator implements ProjectConstants
 		return root;
 	}
 
+	/** initialize the sample project only once */
 	public IProject getSampleProject()
 	{
 		if (!initDone)
 		{
-			System.out.println("******  Creating the projects ");
+			System.out.println("******  Creating the project in test workspace ");
 			try
 			{
 				// Copy the sample project in the runtime workspace
 				root = initWorkspace();
 				initGenModel(PROJECT_GENMODEL, PROJECT_ANT_FILE);
 				initGenModel(FANNOISE_GENMODEL, FANOISE_ANT_FILE);
+				
 			} catch (Exception ex)
 			{
-
 				ex.printStackTrace();
 			}
 			initDone = true;
@@ -110,9 +109,8 @@ public class WorkspaceConfigurator implements ProjectConstants
 		return sampleProject;
 	}
 
-	public IProject initGenModel(String genModelName, String antFilename) throws IOException
+	public void initGenModel(String genModelName, String antFilename) throws IOException
 	{
-
 		// Read the genModel
 		GenModel gm = readSampleGenModel(root, genModelName);
 		gmMap.put(genModelName, gm);
@@ -123,9 +121,10 @@ public class WorkspaceConfigurator implements ProjectConstants
 
 		// Remember of sample project
 		sampleProject = root.getProject(DEST_SAMPLE_PROJECT);
+		NullProgressMonitor npm = new NullProgressMonitor();
 		try
 		{
-			sampleProject.open(new NullProgressMonitor());
+			sampleProject.open(npm);
 		} catch (CoreException e1)
 		{
 			// TODO Auto-generated catch block
@@ -142,7 +141,7 @@ public class WorkspaceConfigurator implements ProjectConstants
 		File antFile = gen.generateAntFile(antFilename);
 
 		// Once dev structure is generated and ant file too, can call it !
-		gen.generateGenModelCode(antFile, new NullProgressMonitor());
+		gen.generateGenModelCode(antFile, npm);
 
 		try
 		{
@@ -151,7 +150,7 @@ public class WorkspaceConfigurator implements ProjectConstants
 		{
 			e.printStackTrace();
 		}
-		return sampleProject;
+		
 
 	}
 
@@ -166,8 +165,7 @@ public class WorkspaceConfigurator implements ProjectConstants
 	}
 
 	/**
-	 * Read the sample gen model located in com.opcoach.genmodeladdon.sample
-	 * project
+	 * Read the sample gen model located in sample project
 	 */
 	private static GenModel readSampleGenModel(IWorkspaceRoot root, String pathToGenModel)
 	{
@@ -183,11 +181,14 @@ public class WorkspaceConfigurator implements ProjectConstants
 
 	}
 
-	/** This method initialize the test workspace with a sample project */
+	/** This method initialize the test workspace with a sample project 
+	 * It calls the prepareTestWorkspace ant file that will unzip the sample project
+	 * */
 	private IWorkspaceRoot initWorkspace() throws IOException
 	{
 		// Get the zipped file to extract
 		Bundle b = Platform.getBundle(SRC_SAMPLE_PROJECT);
+		
 		URL url = b.getEntry("sampleProject.zip");
 		String fileURL = FileLocator.toFileURL(url).toString();
 
