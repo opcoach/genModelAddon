@@ -1,6 +1,5 @@
 package com.opcoach.genmodeladdon.core
 
-import java.io.File
 import org.eclipse.core.resources.IProject
 import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel

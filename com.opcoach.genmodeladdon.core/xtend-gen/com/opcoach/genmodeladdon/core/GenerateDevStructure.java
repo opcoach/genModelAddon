@@ -1,6 +1,5 @@
 package com.opcoach.genmodeladdon.core;
 
-import com.google.common.base.Objects;
 import com.opcoach.genmodeladdon.core.EMFPatternExtractor;
 import com.opcoach.genmodeladdon.core.GenerateAntFileForCodeGeneration;
 import com.opcoach.genmodeladdon.core.GenerateCommon;
@@ -257,7 +256,7 @@ public class GenerateDevStructure {
     boolean _not_1 = (!_equals);
     if (_not_1) {
       gm.setTemplateDirectory(expectedTemplateDir);
-      if (((!Objects.equal(currentTemplateDir, null)) && (currentTemplateDir.length() > 0))) {
+      if (((currentTemplateDir != null) && (currentTemplateDir.length() > 0))) {
         changes.append("\nThe  template directory must be changed :  \n");
         changes.append(("\n   Previous value was : " + currentTemplateDir));
         changes.append(("\n   New value is       : " + expectedTemplateDir));
@@ -843,7 +842,7 @@ public class GenerateDevStructure {
   public CharSequence computeCopyrightComment() {
     StringConcatenation _builder = new StringConcatenation();
     {
-      if (((!Objects.equal(this.genModel.getCopyrightText(), null)) && (this.genModel.getCopyrightText().length() > 0))) {
+      if (((this.genModel.getCopyrightText() != null) && (this.genModel.getCopyrightText().length() > 0))) {
         _builder.append("/**");
         _builder.newLine();
         _builder.append("  ");
@@ -942,8 +941,8 @@ public class GenerateDevStructure {
     {
       String _xifexpression = null;
       String _basePackage = gp.getBasePackage();
-      boolean _equals = Objects.equal(_basePackage, null);
-      if (_equals) {
+      boolean _tripleEquals = (_basePackage == null);
+      if (_tripleEquals) {
         _xifexpression = "";
       } else {
         String _basePackage_1 = gp.getBasePackage();
@@ -952,8 +951,8 @@ public class GenerateDevStructure {
       final String basePackage = _xifexpression;
       String _xifexpression_1 = null;
       String _classPackageSuffix = gp.getClassPackageSuffix();
-      boolean _equals_1 = Objects.equal(_classPackageSuffix, null);
-      if (_equals_1) {
+      boolean _tripleEquals_1 = (_classPackageSuffix == null);
+      if (_tripleEquals_1) {
         _xifexpression_1 = "";
       } else {
         String _classPackageSuffix_1 = gp.getClassPackageSuffix();
@@ -975,8 +974,8 @@ public class GenerateDevStructure {
     {
       String _xifexpression = null;
       String _basePackage = gp.getBasePackage();
-      boolean _equals = Objects.equal(_basePackage, null);
-      if (_equals) {
+      boolean _tripleEquals = (_basePackage == null);
+      if (_tripleEquals) {
         _xifexpression = "";
       } else {
         String _basePackage_1 = gp.getBasePackage();
@@ -984,7 +983,7 @@ public class GenerateDevStructure {
       }
       final String basePackage = _xifexpression;
       String _xifexpression_1 = null;
-      if ((Objects.equal(gp.getInterfacePackageSuffix(), null) || (gp.getInterfacePackageSuffix().length() == 0))) {
+      if (((gp.getInterfacePackageSuffix() == null) || (gp.getInterfacePackageSuffix().length() == 0))) {
         _xifexpression_1 = "";
       } else {
         String _interfacePackageSuffix = gp.getInterfacePackageSuffix();
@@ -1006,8 +1005,7 @@ public class GenerateDevStructure {
     {
       final String classPattern = c.getGenPackage().getGenModel().getClassNamePattern();
       String _xifexpression = null;
-      boolean _notEquals = (!Objects.equal(classPattern, null));
-      if (_notEquals) {
+      if ((classPattern != null)) {
         String _replace = classPattern.replace("{0}", c.getEcoreClass().getName());
         Object _computeGenericTypes = this.computeGenericTypes(c.getEcoreClass());
         _xifexpression = (_replace + _computeGenericTypes);
@@ -1030,8 +1028,7 @@ public class GenerateDevStructure {
     {
       final String interfaceNamePattern = c.getGenPackage().getGenModel().getInterfaceNamePattern();
       String _xifexpression = null;
-      boolean _notEquals = (!Objects.equal(interfaceNamePattern, null));
-      if (_notEquals) {
+      if ((interfaceNamePattern != null)) {
         String _replace = interfaceNamePattern.replace("{0}", c.getEcoreClass().getName());
         Object _computeGenericTypes = this.computeGenericTypes(c.getEcoreClass());
         _xifexpression = (_replace + _computeGenericTypes);
@@ -1053,8 +1050,7 @@ public class GenerateDevStructure {
     {
       final String classPattern = gp.getGenModel().getClassNamePattern();
       String _xifexpression = null;
-      boolean _notEquals = (!Objects.equal(classPattern, null));
-      if (_notEquals) {
+      if ((classPattern != null)) {
         String _prefix = gp.getPrefix();
         String _plus = (_prefix + "Factory");
         _xifexpression = classPattern.replace("{0}", _plus);
@@ -1075,8 +1071,7 @@ public class GenerateDevStructure {
     {
       final String interfacePattern = gp.getGenModel().getInterfaceNamePattern();
       String _xifexpression = null;
-      boolean _notEquals = (!Objects.equal(interfacePattern, null));
-      if (_notEquals) {
+      if ((interfacePattern != null)) {
         String _prefix = gp.getPrefix();
         String _plus = (_prefix + "Factory");
         _xifexpression = interfacePattern.replace("{0}", _plus);
@@ -1097,8 +1092,7 @@ public class GenerateDevStructure {
     {
       final String interfacePattern = gp.getGenModel().getInterfaceNamePattern();
       String _xifexpression = null;
-      boolean _notEquals = (!Objects.equal(interfacePattern, null));
-      if (_notEquals) {
+      if ((interfacePattern != null)) {
         String _prefix = gp.getPrefix();
         String _plus = (_prefix + "Package");
         _xifexpression = interfacePattern.replace("{0}", _plus);

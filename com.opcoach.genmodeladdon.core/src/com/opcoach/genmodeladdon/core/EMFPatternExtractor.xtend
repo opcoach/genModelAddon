@@ -64,7 +64,7 @@ class EMFPatternExtractor implements Runnable {
 			createFolderIfNotExists(sourcePath)
 
 			tgtSourcePath = sourcePath.fullPath
-			if (tgtSourcePath != null) {
+			if (tgtSourcePath !== null) {
 				val p = new Path(TARGET_SOURCE_PATH + "/" + TARGET_MODEL_PATH);
 				val modelFolder = targetProject.getFolder(p)
 				createFolderIfNotExists(modelFolder)

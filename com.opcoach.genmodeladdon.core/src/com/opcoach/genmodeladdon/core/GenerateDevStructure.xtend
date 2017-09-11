@@ -203,7 +203,7 @@ class GenerateDevStructure {
 		val currentTemplateDir = gm.getTemplateDirectory();
 		if (!expectedTemplateDir.equals(currentTemplateDir)) {
 			gm.setTemplateDirectory(expectedTemplateDir);
-			if ((currentTemplateDir != null) && (currentTemplateDir.length() > 0)) {
+			if ((currentTemplateDir !== null) && (currentTemplateDir.length() > 0)) {
 				changes.append("\nThe  template directory must be changed :  \n");
 				changes.append("\n   Previous value was : " + currentTemplateDir);
 				changes.append("\n   New value is       : " + expectedTemplateDir);
@@ -469,7 +469,7 @@ class GenerateDevStructure {
 	'''
 	
 	def computeCopyrightComment() '''
-	«IF genModel.copyrightText != null && genModel.copyrightText.length > 0»
+	«IF genModel.copyrightText !== null && genModel.copyrightText.length > 0»
 /**
   * «genModel.copyrightText»
 */
@@ -526,15 +526,15 @@ class GenerateDevStructure {
 
 	/** Compute the package name for class */
 	 def computePackageNameForClasses(GenPackage gp) {
-		val basePackage = if(gp.basePackage == null) "" else gp.basePackage + "."
-		val packSuffix = if(gp.classPackageSuffix == null) "" else "." + gp.classPackageSuffix
+		val basePackage = if(gp.basePackage === null) "" else gp.basePackage + "."
+		val packSuffix = if(gp.classPackageSuffix === null) "" else "." + gp.classPackageSuffix
 		basePackage + gp.packageName + packSuffix
 	}
 
 	/** Compute the package name for interfaces */
 	private def computePackageNameForInterfaces(GenPackage gp) {
-		val basePackage = if(gp.basePackage == null) "" else gp.basePackage + "."
-		val intSuffix = if (gp.interfacePackageSuffix == null || gp.interfacePackageSuffix.length == 0)
+		val basePackage = if(gp.basePackage === null) "" else gp.basePackage + "."
+		val intSuffix = if (gp.interfacePackageSuffix === null || gp.interfacePackageSuffix.length == 0)
 				""
 			else
 				"." + gp.interfacePackageSuffix
@@ -548,7 +548,7 @@ class GenerateDevStructure {
 		// Get the class pattern defined in genmodel (if none, this is {0}Impl)
 		val classPattern = c.genPackage.genModel.classNamePattern
 
-		if (classPattern != null)
+		if (classPattern !== null)
 			classPattern.replace("{0}", c.ecoreClass.name) + c.ecoreClass.computeGenericTypes
 		else
 			c.ecoreClass.name + "Impl" + c.ecoreClass.computeGenericTypes
@@ -560,7 +560,7 @@ class GenerateDevStructure {
 		// Get the class pattern defined in genmodel (if none, this is {0}Impl)
 		val interfaceNamePattern = c.genPackage.genModel.interfaceNamePattern
 
-		if (interfaceNamePattern != null)
+		if (interfaceNamePattern !== null)
 			interfaceNamePattern.replace("{0}", c.ecoreClass.name) + c.ecoreClass.computeGenericTypes
 		else
 			c.ecoreClass.name + c.ecoreClass.computeGenericTypes
@@ -572,7 +572,7 @@ class GenerateDevStructure {
 		// Get the class pattern defined in genmodel (if none, this is {0}Impl)
 		val classPattern = gp.genModel.classNamePattern
 
-		if (classPattern != null)
+		if (classPattern !== null)
 			classPattern.replace("{0}", gp.prefix + "Factory")
 		else
 			gp.prefix + "FactoryImpl"
@@ -584,7 +584,7 @@ class GenerateDevStructure {
 		// Get the class pattern defined in genmodel (if none, this is {0}Impl)
 		val interfacePattern = gp.genModel.interfaceNamePattern
 
-		if (interfacePattern != null)
+		if (interfacePattern !== null)
 			interfacePattern.replace("{0}", gp.prefix + "Factory")
 		else
 			gp.prefix + "Factory"
@@ -596,7 +596,7 @@ class GenerateDevStructure {
 		// Get the class pattern defined in genmodel (if none, this is {0}Impl)
 		val interfacePattern = gp.genModel.interfaceNamePattern
 
-		if (interfacePattern != null)
+		if (interfacePattern !== null)
 			interfacePattern.replace("{0}", gp.prefix + "Package")
 		else
 			gp.prefix + "Package"

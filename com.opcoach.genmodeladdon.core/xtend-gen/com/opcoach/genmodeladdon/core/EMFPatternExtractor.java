@@ -1,6 +1,5 @@
 package com.opcoach.genmodeladdon.core;
 
-import com.google.common.base.Objects;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -84,8 +83,7 @@ public class EMFPatternExtractor implements Runnable {
       final IFolder sourcePath = javaTargetProject.getFolder(EMFPatternExtractor.TARGET_SOURCE_PATH);
       this.createFolderIfNotExists(sourcePath);
       tgtSourcePath = sourcePath.getFullPath();
-      boolean _notEquals = (!Objects.equal(tgtSourcePath, null));
-      if (_notEquals) {
+      if ((tgtSourcePath != null)) {
         final Path p = new Path(((EMFPatternExtractor.TARGET_SOURCE_PATH + "/") + EMFPatternExtractor.TARGET_MODEL_PATH));
         final IFolder modelFolder = this.targetProject.getFolder(p);
         this.createFolderIfNotExists(modelFolder);
