@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Test
 Bundle-SymbolicName: com.opcoach.genmodeladdon.core.test;singleton:=true
-Bundle-Version: 1.6.2.qualifier
+Bundle-Version: 1.6.4.qualifier
 Bundle-Vendor: OPCOACH
-Fragment-Host: com.opcoach.genmodeladdon.core;bundle-version="1.6.0"
+Fragment-Host: com.opcoach.genmodeladdon.core;bundle-version="1.6.4"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.junit,
  org.eclipse.ant.core,
@@ -13,7 +13,7 @@ Require-Bundle: org.junit,
  org.eclipse.emf.ant,
  org.eclipse.jdt.launching,
  org.eclipse.jdt.launching.macosx;resolution:=optional,
- com.opcoach.genmodeladdon.sample;bundle-version="1.6.2",
+ com.opcoach.genmodeladdon.sample,
  org.eclipse.ant.launching
 Export-Package: com.opcoach.genmodeladdon.core.test
 Bundle-ClassPath: ant_tasks/importer.ecore.tasks.jar,
