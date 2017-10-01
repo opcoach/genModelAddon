@@ -9,9 +9,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.junit,
  org.eclipse.ant.core,
  org.eclipse.core.filesystem,
- com.opcoach.genmodeladdon.sample,
- org.eclipse.emf.ant,
- org.eclipse.ant.launching;bundle-version="1.2.0"
+ com.opcoach.genmodeladdon.sample
 Export-Package: com.opcoach.genmodeladdon.core.test
 Bundle-ClassPath: ant_tasks/importer.ecore.tasks.jar,
  .

@@ -66,8 +66,6 @@ public class WorkspaceConfigurator implements ProjectConstants
 		{
 		}
 		
-		// Initialize workspace and project.
-		getSampleProject();
 
 	}
 
