@@ -23,7 +23,7 @@ import org.eclipse.pde.internal.core.project.PDEProject
  * 
  * Some code is inspired from class PointSelectionPage in org.eclipse.pde.internal.ui.wizards.extension
  */
-class GenerateExtensions {
+package class GenerateExtensions {
 
 	// The 2 extension points to manage with their elements and attributes
 	static val EMF_GENERATED_PACKAGE = "org.eclipse.emf.ecore.generated_package"
@@ -35,7 +35,7 @@ class GenerateExtensions {
 
 	// The new plugin model that will be generated from current project
 	WorkspaceBundlePluginModel fModel;
-
+	
 	// The input project that contains the extensions to be updated/added 
 	IProject project
 
@@ -168,12 +168,12 @@ class GenerateExtensions {
 		do {
 			factoryExt = findPluginElement(extName, modelURI, nodeName)
 
-			if (factoryExt != null) {
+			if (factoryExt !== null) {
 				// remove it from current plugin.xml to recreate it with correct values
 				fModel.getPluginBase().remove(factoryExt)
 			}
 
-		} while (factoryExt != null)
+		} while (factoryExt !== null)
 
 		// Can create a new updated Extension 
 		val updatedExtension = fModel.factory.createExtension()

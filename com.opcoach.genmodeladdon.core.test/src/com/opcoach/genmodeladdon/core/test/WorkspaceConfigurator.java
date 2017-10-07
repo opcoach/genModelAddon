@@ -128,27 +128,9 @@ public class WorkspaceConfigurator implements ProjectConstants
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-
-		// Install the templates
-		gen.setGenModelTemplates(gm, true);
-
-		// Generate the dev structure...
-		gen.generateDevStructure(true);
-
-		// Generate the ant file to generate emf code
-		File antFile = gen.generateAntFile(antFilename);
-
-		// Once dev structure is generated and ant file too, can call it !
-		gen.generateGenModelCode(antFile, npm);
-
-		try
-		{
-			sampleProject.refreshLocal(IResource.DEPTH_INFINITE, null);
-		} catch (CoreException e)
-		{
-			e.printStackTrace();
-		}
 		
+		// Do all in the right order ! 
+		gen.generateAll(antFilename);
 
 	}
 

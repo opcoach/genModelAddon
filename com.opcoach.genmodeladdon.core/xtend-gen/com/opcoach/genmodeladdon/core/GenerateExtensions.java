@@ -1,6 +1,5 @@
 package com.opcoach.genmodeladdon.core;
 
-import com.google.common.base.Objects;
 import java.util.Map;
 import java.util.Set;
 import org.eclipse.core.resources.IFile;
@@ -30,7 +29,7 @@ import org.eclipse.xtext.xbase.lib.InputOutput;
  * Some code is inspired from class PointSelectionPage in org.eclipse.pde.internal.ui.wizards.extension
  */
 @SuppressWarnings("all")
-public class GenerateExtensions {
+class GenerateExtensions {
   private final static String EMF_GENERATED_PACKAGE = "org.eclipse.emf.ecore.generated_package";
   
   private final static String FACTORY_OVERRIDE = "org.eclipse.emf.ecore.factory_override";
@@ -189,12 +188,11 @@ public class GenerateExtensions {
       do {
         {
           factoryExt = this.findPluginElement(extName, modelURI, nodeName);
-          boolean _notEquals = (!Objects.equal(factoryExt, null));
-          if (_notEquals) {
+          if ((factoryExt != null)) {
             this.fModel.getPluginBase().remove(factoryExt);
           }
         }
-      } while((!Objects.equal(factoryExt, null)));
+      } while((factoryExt != null));
       final IPluginExtension updatedExtension = this.fModel.getFactory().createExtension();
       updatedExtension.setPoint(extName);
       final IPluginElement factoryElement = this.fModel.getFactory().createElement(updatedExtension);

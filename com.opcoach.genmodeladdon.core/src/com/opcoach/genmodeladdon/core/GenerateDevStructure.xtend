@@ -55,8 +55,8 @@ class GenerateDevStructure {
 	// Maps to store for each modelUri the package and factory class names
 	// To manage the extensions for override factory and generated package
 	// Key is Uri and value is class name
-	Map<String, String> factories = new HashMap
-	Map<String, String> packages = new HashMap
+	 Map<String, String> factories = new HashMap
+	 Map<String, String> packages = new HashMap
 
 	/** Build the generator with 4 parameters
 	 * @param cpattern : the class name pattern used for generation ({0}Impl for instance)
@@ -97,11 +97,6 @@ class GenerateDevStructure {
 
 		}
 		
-		// Must generate or update extensions in plugin.xml file
-		val gfoe = new GenerateExtensions(project)
-		gfoe.generateOrUpdateExtensions(factories, packages)
-		
-		//project.close(null)
 		project.refreshLocal(IResource.DEPTH_INFINITE, null)
 		
 		
@@ -274,7 +269,12 @@ class GenerateDevStructure {
 
 		val runner = new AntRunner
 		runner.setBuildFileLocation(f.absolutePath);
-
+	
+	    // Uncomment the 2 following lines to display the traces when running 
+	    // the EMF code generation ! 
+	   /* 	runner.addBuildLogger("org.apache.tools.ant.DefaultLogger");
+		runner.arguments = "-verbose -debug"
+		*/
 		// Bundle b = FrameworkUtil.getBundle(GenModelAddonTestCase.class);
 		// runner.setCustomClasspath(new URL[] { b.getEntry("ant_tasks/importer.ecore.tasks.jar")});
 		try {
@@ -286,8 +286,41 @@ class GenerateDevStructure {
 		}
 
 	}
+	
+	// Generate or update extensions...
+	def generateExtensions()
+	{
+		val gfoe = new GenerateExtensions(project);
+		gfoe.generateOrUpdateExtensions(factories, packages);
+		
+	}
+	
+	
+	// This method do the global process in the right order 
+	def generateAll(String antFilename)
+	{
+		// Install the templates
+		setGenModelTemplates(genModel, true);
 
-	def void refreshWorkspace() {
+		// Generate the dev structure...
+		generateDevStructure(true);
+
+		// Generate the ant file to generate emf code
+		val antFile = generateAntFile(antFilename);
+
+		// Once dev structure is generated and ant file too, can call it !
+		generateGenModelCode(antFile, new NullProgressMonitor);
+
+		
+		// Must generate or update extensions in plugin.xml file
+		// BUT AFTER THE EMF CODE GENERATION !!
+		generateExtensions();
+		
+		refreshWorkspace
+	
+	}
+
+	def refreshWorkspace() {
 		try {
 			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
 		} catch (CoreException e) {
@@ -460,7 +493,7 @@ class GenerateDevStructure {
 		}
 	'''
 
-	def generateCreateMethod(GenClass gc) '''
+	private def generateCreateMethod(GenClass gc) '''
 		public «gc.computeInterfaceName.extractGenericTypes»«gc.computeInterfaceName» create«gc.ecoreClass.name»()
 		{
 			«gc.computeInterfaceName» result = new «gc.computeClassname»();
