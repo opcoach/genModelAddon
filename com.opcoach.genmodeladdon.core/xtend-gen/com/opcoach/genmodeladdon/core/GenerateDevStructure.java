@@ -131,8 +131,6 @@ public class GenerateDevStructure {
       for (final GenPackage p : _genPackages) {
         this.generateDevStructure(p);
       }
-      final GenerateExtensions gfoe = new GenerateExtensions(this.project);
-      gfoe.generateOrUpdateExtensions(this.factories, this.packages);
       this.project.refreshLocal(IResource.DEPTH_INFINITE, null);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -342,6 +340,30 @@ public class GenerateDevStructure {
     try {
       runner.run(monitor);
       this.refreshWorkspace();
+    } catch (final Throwable _t) {
+      if (_t instanceof CoreException) {
+        final CoreException e = (CoreException)_t;
+        e.printStackTrace();
+      } else {
+        throw Exceptions.sneakyThrow(_t);
+      }
+    }
+  }
+  
+  public void generateExtensions() {
+    final GenerateExtensions gfoe = new GenerateExtensions(this.project);
+    gfoe.generateOrUpdateExtensions(this.factories, this.packages);
+  }
+  
+  public void generateAll(final String antFilename) {
+    this.setGenModelTemplates(this.genModel, true);
+    this.generateDevStructure(true);
+    final File antFile = this.generateAntFile(antFilename);
+    NullProgressMonitor _nullProgressMonitor = new NullProgressMonitor();
+    this.generateGenModelCode(antFile, _nullProgressMonitor);
+    this.generateExtensions();
+    try {
+      this.project.refreshLocal(IResource.DEPTH_INFINITE, null);
     } catch (final Throwable _t) {
       if (_t instanceof CoreException) {
         final CoreException e = (CoreException)_t;

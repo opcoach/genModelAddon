@@ -35,7 +35,7 @@ class GenerateExtensions {
 
 	// The new plugin model that will be generated from current project
 	WorkspaceBundlePluginModel fModel;
-
+	
 	// The input project that contains the extensions to be updated/added 
 	IProject project
 
