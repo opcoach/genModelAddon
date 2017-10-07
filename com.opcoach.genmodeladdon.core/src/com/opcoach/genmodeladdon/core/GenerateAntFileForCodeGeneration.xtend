@@ -17,8 +17,10 @@ class GenerateAntFileForCodeGeneration {
 <!--  Dont forget to launch this ant file in the same JRE than your Eclipse -->
 
 <project name="project" default="generateCode">
+	<taskdef name="emf.Ecore2Java" classname="org.eclipse.emf.importer.ecore.taskdefs.EcoreGeneratorTask"/>
 	<description> Build the javacode from ecore model   </description>
 	<target name="generateCode" description="description">
+	    <echo message="   --> Generate emf code for «modelDir»/«modelName».ecore"/>
 		<emf.Ecore2Java genModel="«modelDir»/«modelName».genmodel" 
 			model="«modelDir»/«modelName».ecore" 
 			generatemodelproject="true" 
