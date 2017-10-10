@@ -1,6 +1,5 @@
 package com.opcoach.genmodeladdon.core;
 
-import com.opcoach.genmodeladdon.core.EMFPatternExtractor;
 import com.opcoach.genmodeladdon.core.GenerateAntFileForCodeGeneration;
 import com.opcoach.genmodeladdon.core.GenerateCommon;
 import com.opcoach.genmodeladdon.core.GenerateExtensions;
@@ -13,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.eclipse.ant.core.AntRunner;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
@@ -261,15 +259,6 @@ public class GenerateDevStructure {
       } else {
         changes.append(("The template directory has been set to : " + expectedTemplateDir));
       }
-    }
-    final IFile classJavajet = this.project.getFile((expectedTemplateDir + "/model/Class.javajet"));
-    boolean _exists = classJavajet.exists();
-    boolean _not_2 = (!_exists);
-    if (_not_2) {
-      final EMFPatternExtractor extractor = new EMFPatternExtractor(this.project, this.classPattern, this.interfacePattern);
-      extractor.run();
-      this.refreshWorkspace();
-      changes.append("\nThe Class.javajet has been installed");
     }
     if (((changes.length() > 0) && forceSave)) {
       final Map<Object, Object> opt = new HashMap<Object, Object>();

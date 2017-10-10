@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Core
-Bundle-SymbolicName: com.opcoach.genmodeladdon.core
+Bundle-SymbolicName: com.opcoach.genmodeladdon.core;singleton:=true
 Bundle-Version: 1.6.4.qualifier
 Bundle-Vendor: OPCOACH
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

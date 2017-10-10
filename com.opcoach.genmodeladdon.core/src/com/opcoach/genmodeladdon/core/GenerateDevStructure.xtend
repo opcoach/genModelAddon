@@ -209,6 +209,7 @@ class GenerateDevStructure {
 		}
 
 		// Extract EMF templates to modify the way to inherit from ancestor
+		/** 
 		val classJavajet = project.getFile(expectedTemplateDir + "/model/Class.javajet")
 		if (!classJavajet.exists) {
 			val extractor = new EMFPatternExtractor(project, classPattern, interfacePattern)
@@ -216,6 +217,8 @@ class GenerateDevStructure {
 			refreshWorkspace
 			changes.append("\nThe Class.javajet has been installed")
 		}
+		* */
+
 
 		// Inform user of changes and save the file.
 		if ((changes.length() > 0) && forceSave) {

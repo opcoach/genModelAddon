@@ -71,7 +71,7 @@ public class TestGenerateCommon extends GenModelAddonTestCase
 		assertEquals("Model Path for this project must be 'model'", "model", s);
 	}
 	
-	
+/*	
 	@Test
 	public void testCreateSourceDirectory()
 	{
@@ -80,7 +80,7 @@ public class TestGenerateCommon extends GenModelAddonTestCase
 		assertNotNull("SourceDirectory must not be null", f);
 
 	}
-	
+	*/
 	
 
 }
