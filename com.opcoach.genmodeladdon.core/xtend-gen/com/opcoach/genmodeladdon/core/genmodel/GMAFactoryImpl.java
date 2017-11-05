@@ -21,48 +21,27 @@ public class GMAFactoryImpl extends GenModelFactoryImpl {
   
   @Override
   public GenFeature createGenFeature() {
-    GMAGenFeatureImpl _xblockexpression = null;
-    {
-      InputOutput.<String>println("Create a GMAGenFeatureImpl ");
-      _xblockexpression = new GMAGenFeatureImpl();
-    }
-    return _xblockexpression;
+    return new GMAGenFeatureImpl();
   }
   
   @Override
   public GenClass createGenClass() {
-    GMAGenClassImpl _xblockexpression = null;
-    {
-      InputOutput.<String>println("Create a GMAGenClassIMpl ");
-      _xblockexpression = new GMAGenClassImpl();
-    }
-    return _xblockexpression;
+    return new GMAGenClassImpl();
   }
   
   @Override
   public GenModel createGenModel() {
-    InputOutput.<String>println("Create a GMAGenModelImpl ");
     final GMAGenModelImpl res = new GMAGenModelImpl();
     return res;
   }
   
   @Override
   public GenOperation createGenOperation() {
-    GMAGenOperationImpl _xblockexpression = null;
-    {
-      InputOutput.<String>println("Create a GMAGenOperationImpl ");
-      _xblockexpression = new GMAGenOperationImpl();
-    }
-    return _xblockexpression;
+    return new GMAGenOperationImpl();
   }
   
   @Override
   public GenPackage createGenPackage() {
-    GMAGenPackageImpl _xblockexpression = null;
-    {
-      InputOutput.<String>println("Create a GMAGenOperationImpl ");
-      _xblockexpression = new GMAGenPackageImpl();
-    }
-    return _xblockexpression;
+    return new GMAGenPackageImpl();
   }
 }

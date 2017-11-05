@@ -11,31 +11,25 @@ class GMAFactoryImpl extends GenModelFactoryImpl {
 	}
 
 	override GenFeature createGenFeature() {
-		println("Create a GMAGenFeatureImpl ")
-
 		// GenFeatureImpl genFeature = ;
 		new GMAGenFeatureImpl
 	}
 
 	override GenClass createGenClass() {
-		println("Create a GMAGenClassIMpl ")
 		new GMAGenClassImpl
 	}
 
 	override GenModel createGenModel() {
-		println("Create a GMAGenModelImpl ")
 
 		val res = new GMAGenModelImpl
 		return res
 	}
 
 	override createGenOperation() {
-		println("Create a GMAGenOperationImpl ")
 		new GMAGenOperationImpl
 	}
 
 	override createGenPackage() {
-		println("Create a GMAGenOperationImpl ")
 		new GMAGenPackageImpl
 	}
 
