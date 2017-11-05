@@ -8,7 +8,12 @@ import org.eclipse.emf.codegen.ecore.genmodel.impl.GenClassImpl;
 public class GMAGenClassImpl extends GenClassImpl {
   @Override
   public String getClassExtends() {
-    return GMATransform.replaceDevName(this, super.getClassExtends());
+    String _xblockexpression = null;
+    {
+      final String ext = super.getClassExtends();
+      _xblockexpression = GMATransform.replaceDevName(this, ext);
+    }
+    return _xblockexpression;
   }
   
   @Override

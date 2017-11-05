@@ -6,7 +6,8 @@ import org.eclipse.emf.codegen.ecore.genmodel.GenFeature
 class GMAGenClassImpl extends GenClassImpl {
 
 	override getClassExtends() {
-		GMATransform.replaceDevName(this, super.classExtends)
+		val ext = super.classExtends
+		GMATransform.replaceDevName(this, ext)
 	}
 
 	override getClassImplements() {

@@ -6,37 +6,37 @@ import org.eclipse.emf.codegen.ecore.genmodel.GenModel
 import org.eclipse.emf.codegen.ecore.genmodel.impl.GenModelFactoryImpl
 
 class GMAFactoryImpl extends GenModelFactoryImpl {
-   new()
-	{
+	new() {
 		println("Create the GMA Factory")
 	}
-	
-	override GenFeature createGenFeature()
-	{
+
+	override GenFeature createGenFeature() {
 		println("Create a GMAGenFeatureImpl ")
 
-	   // GenFeatureImpl genFeature = ;
+		// GenFeatureImpl genFeature = ;
+		new GMAGenFeatureImpl
+	}
 
-	    new GMAGenFeatureImpl
-	}
-	
-	override GenClass createGenClass()
-	{
+	override GenClass createGenClass() {
 		println("Create a GMAGenClassIMpl ")
-		 new GMAGenClassImpl
+		new GMAGenClassImpl
 	}
-	
-	override GenModel createGenModel()
-	{
+
+	override GenModel createGenModel() {
 		println("Create a GMAGenModelImpl ")
 
 		val res = new GMAGenModelImpl
 		return res
 	}
-	
+
 	override createGenOperation() {
 		println("Create a GMAGenOperationImpl ")
 		new GMAGenOperationImpl
 	}
-	
+
+	override createGenPackage() {
+		println("Create a GMAGenOperationImpl ")
+		new GMAGenPackageImpl
+	}
+
 }

@@ -29,7 +29,6 @@ import org.osgi.framework.FrameworkUtil
 
 /** This class is used to proceed the different steps to generate the development structure
  * A method is defined for each step :
- * setGenModelTemplates : will set the dynamic templates and import the Class.javajet if not preset
  * generateDevStructure : generate the development structure
  * generateAntFile : generate the ant file to generate the code (usefull for automatic builder)
  * generateGenModelCode : generate the EMF code using templates (calls the ant file)
@@ -185,16 +184,18 @@ class GenerateDevStructure {
 	 * it returns the a String containing the changes that has been done on genmodel.
 	 */
 	def public String setGenModelTemplates(GenModel gm, boolean forceSave) {
-		val changes = new StringBuffer();
+	//	val changes = new StringBuffer();
+		
+				gm.importOrganizing = true;
+		
 
-		if (!gm.isDynamicTemplates()) {
+	/* 	if (!gm.isDynamicTemplates()) {
 			gm.setDynamicTemplates(true);
 			changes.append("The dynamic template property must be set to true");
-		}
+		} */
 
-		gm.importOrganizing = true;
 
-		val expectedTemplateDir = "/" + projectName + "/templates";
+	/* 	val expectedTemplateDir = "/" + projectName + "/templates";
 		val currentTemplateDir = gm.getTemplateDirectory();
 		if (!expectedTemplateDir.equals(currentTemplateDir)) {
 			gm.setTemplateDirectory(expectedTemplateDir);
@@ -206,10 +207,10 @@ class GenerateDevStructure {
 			} else {
 				changes.append("The template directory has been set to : " + expectedTemplateDir);
 			}
-		}
+		} */
 
 		// Extract EMF templates to modify the way to inherit from ancestor
-		/** 
+		/* 
 		val classJavajet = project.getFile(expectedTemplateDir + "/model/Class.javajet")
 		if (!classJavajet.exists) {
 			val extractor = new EMFPatternExtractor(project, classPattern, interfacePattern)
@@ -221,7 +222,7 @@ class GenerateDevStructure {
 
 
 		// Inform user of changes and save the file.
-		if ((changes.length() > 0) && forceSave) {
+		/* if ((changes.length() > 0) && forceSave) {
 			val Map<Object, Object> opt = new HashMap
 			opt.put(Resource.OPTION_SAVE_ONLY_IF_CHANGED, Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER)
 			opt.put(Resource.OPTION_LINE_DELIMITER, Resource.OPTION_LINE_DELIMITER_UNSPECIFIED)
@@ -235,8 +236,9 @@ class GenerateDevStructure {
 			}
 
 		}
-
-		return changes.toString;
+	*/ 
+		return ""; // changes.toString;
+		
 
 	}
 
@@ -268,19 +270,20 @@ class GenerateDevStructure {
 	 * @param f : the ant file to be called */
 	def void generateGenModelCode(File f, IProgressMonitor monitor) {
 
-		println("Generate the EMF Code using the ant file : " +  f.absolutePath);
 
 		val runner = new AntRunner
 		runner.setBuildFileLocation(f.absolutePath);
 	
 	    // Uncomment the 2 following lines to display the traces when running 
 	    // the EMF code generation ! 
-	   /* 	runner.addBuildLogger("org.apache.tools.ant.DefaultLogger");
+	   	runner.addBuildLogger("org.apache.tools.ant.DefaultLogger");
 		runner.arguments = "-verbose -debug"
-		*/
+		
 		// Bundle b = FrameworkUtil.getBundle(GenModelAddonTestCase.class);
 		// runner.setCustomClasspath(new URL[] { b.getEntry("ant_tasks/importer.ecore.tasks.jar")});
 		try {
+			println("  --> Generate the EMF Code using the ant file : " +  f.absolutePath);
+			
 			runner.run(monitor);
 			refreshWorkspace
 

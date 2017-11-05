@@ -2,11 +2,10 @@ package com.opcoach.genmodeladdon.core.genmodel;
 
 import com.opcoach.genmodeladdon.core.genmodel.GMAGenModelImpl;
 import com.opcoach.genmodeladdon.core.genmodel.GMATransform;
-import java.io.FileWriter;
 import java.util.Collection;
 import java.util.List;
 import org.eclipse.emf.codegen.util.ImportManager;
-import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 
 /**
  * An Import manager wrapper to override the emitImports
@@ -40,32 +39,38 @@ public class GMAImportManager extends ImportManager {
   
   @Override
   public String getImportedName(final String qualifiedName, final boolean autoImport) {
-    return this.dim.getImportedName(qualifiedName, autoImport);
+    final String res = this.dim.getImportedName(qualifiedName, autoImport);
+    return res;
   }
   
   @Override
   public String getImportedName(final String qualifiedName) {
-    return this.dim.getImportedName(qualifiedName);
+    final String res = this.dim.getImportedName(qualifiedName);
+    return res;
   }
   
   @Override
   public void addImport(final String packageName, final String shortName) {
-    this.dim.addImport(packageName, shortName);
+    boolean _equals = "*".equals(shortName);
+    if (_equals) {
+      InputOutput.<String>println(("Found a short name \'*\' for packageName :" + packageName));
+    }
+    this.dim.addImport(GMATransform.replaceDevName(this.gm, packageName), GMATransform.replaceDevName(this.gm, shortName));
   }
   
   @Override
   public void addImport(final String qualifiedName) {
-    this.dim.addImport(qualifiedName);
+    this.dim.addImport(GMATransform.replaceDevName(this.gm, qualifiedName));
   }
   
   @Override
   public void addPseudoImport(final String qualifiedName) {
-    this.dim.addPseudoImport(qualifiedName);
+    this.dim.addPseudoImport(GMATransform.replaceDevName(this.gm, qualifiedName));
   }
   
   @Override
   public void addMasterImport(final String packageName, final String shortName) {
-    this.dim.addMasterImport(packageName, shortName);
+    this.dim.addMasterImport(GMATransform.replaceDevName(this.gm, packageName), GMATransform.replaceDevName(this.gm, shortName));
   }
   
   @Override
@@ -90,19 +95,7 @@ public class GMAImportManager extends ImportManager {
   
   @Override
   public String computeSortedImports() {
-    try {
-      final String sortedImports = this.dim.computeSortedImports();
-      final FileWriter fw = new FileWriter("/tmp/imports");
-      fw.write(sortedImports);
-      fw.close();
-      final String after = GMATransform.replaceDevName(this.gm, sortedImports);
-      final FileWriter fwa = new FileWriter("/tmp/importsAfter");
-      fwa.write(after);
-      fwa.close();
-      return after;
-    } catch (Throwable _e) {
-      throw Exceptions.sneakyThrow(_e);
-    }
+    return this.dim.computeSortedImports();
   }
   
   @Override

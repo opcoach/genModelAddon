@@ -19,20 +19,15 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.codegen.ecore.genmodel.GenClass;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.codegen.ecore.genmodel.GenPackage;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.ETypeParameter;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -42,13 +37,10 @@ import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.FrameworkUtil;
 
 /**
  * This class is used to proceed the different steps to generate the development structure
  * A method is defined for each step :
- * setGenModelTemplates : will set the dynamic templates and import the Class.javajet if not preset
  * generateDevStructure : generate the development structure
  * generateAntFile : generate the ant file to generate the code (usefull for automatic builder)
  * generateGenModelCode : generate the EMF code using templates (calls the ant file)
@@ -238,50 +230,8 @@ public class GenerateDevStructure {
    * it returns the a String containing the changes that has been done on genmodel.
    */
   public String setGenModelTemplates(final GenModel gm, final boolean forceSave) {
-    final StringBuffer changes = new StringBuffer();
-    boolean _isDynamicTemplates = gm.isDynamicTemplates();
-    boolean _not = (!_isDynamicTemplates);
-    if (_not) {
-      gm.setDynamicTemplates(true);
-      changes.append("The dynamic template property must be set to true");
-    }
     gm.setImportOrganizing(true);
-    final String expectedTemplateDir = (("/" + this.projectName) + "/templates");
-    final String currentTemplateDir = gm.getTemplateDirectory();
-    boolean _equals = expectedTemplateDir.equals(currentTemplateDir);
-    boolean _not_1 = (!_equals);
-    if (_not_1) {
-      gm.setTemplateDirectory(expectedTemplateDir);
-      if (((currentTemplateDir != null) && (currentTemplateDir.length() > 0))) {
-        changes.append("\nThe  template directory must be changed :  \n");
-        changes.append(("\n   Previous value was : " + currentTemplateDir));
-        changes.append(("\n   New value is       : " + expectedTemplateDir));
-      } else {
-        changes.append(("The template directory has been set to : " + expectedTemplateDir));
-      }
-    }
-    if (((changes.length() > 0) && forceSave)) {
-      final Map<Object, Object> opt = new HashMap<Object, Object>();
-      opt.put(Resource.OPTION_SAVE_ONLY_IF_CHANGED, Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER);
-      opt.put(Resource.OPTION_LINE_DELIMITER, Resource.OPTION_LINE_DELIMITER_UNSPECIFIED);
-      try {
-        gm.eResource().save(opt);
-      } catch (final Throwable _t) {
-        if (_t instanceof IOException) {
-          final IOException e = (IOException)_t;
-          final Bundle bundle = FrameworkUtil.getBundle(this.getClass());
-          final ILog logger = Platform.getLog(bundle);
-          String _symbolicName = bundle.getSymbolicName();
-          Resource _eResource = gm.eResource();
-          String _plus = ("Unable to save the genModel in : " + _eResource);
-          Status _status = new Status(IStatus.WARNING, _symbolicName, _plus, e);
-          logger.log(_status);
-        } else {
-          throw Exceptions.sneakyThrow(_t);
-        }
-      }
-    }
-    return changes.toString();
+    return "";
   }
   
   /**
@@ -321,12 +271,14 @@ public class GenerateDevStructure {
    * @param f : the ant file to be called
    */
   public void generateGenModelCode(final File f, final IProgressMonitor monitor) {
-    String _absolutePath = f.getAbsolutePath();
-    String _plus = ("Generate the EMF Code using the ant file : " + _absolutePath);
-    InputOutput.<String>println(_plus);
     final AntRunner runner = new AntRunner();
     runner.setBuildFileLocation(f.getAbsolutePath());
+    runner.addBuildLogger("org.apache.tools.ant.DefaultLogger");
+    runner.setArguments("-verbose -debug");
     try {
+      String _absolutePath = f.getAbsolutePath();
+      String _plus = ("  --> Generate the EMF Code using the ant file : " + _absolutePath);
+      InputOutput.<String>println(_plus);
       runner.run(monitor);
       this.refreshWorkspace();
     } catch (final Throwable _t) {

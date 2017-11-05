@@ -35,4 +35,9 @@ public class GMAGenFeatureImpl extends GenFeatureImpl {
   public String getInternalTypeCast() {
     return GMATransform.replaceDevName(this, super.getInternalTypeCast());
   }
+  
+  @Override
+  public String getType(final GenClass context) {
+    return GMATransform.replaceDevName(this, super.getType(context));
+  }
 }

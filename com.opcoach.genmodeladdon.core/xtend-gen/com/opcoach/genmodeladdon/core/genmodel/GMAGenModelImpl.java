@@ -1,10 +1,10 @@
 package com.opcoach.genmodeladdon.core.genmodel;
 
-import com.google.common.base.Objects;
 import com.opcoach.genmodeladdon.core.genmodel.GMAImportManager;
 import com.opcoach.genmodeladdon.core.genmodel.GMATransform;
 import org.eclipse.emf.codegen.ecore.genmodel.impl.GenModelImpl;
 import org.eclipse.emf.codegen.util.ImportManager;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class GMAGenModelImpl extends GenModelImpl {
@@ -13,6 +13,7 @@ public class GMAGenModelImpl extends GenModelImpl {
   private ImportManager delegatedImportManager;
   
   public GMATransform getGMATransform() {
+    InputOutput.<String>println("Enter in getGMATransform ");
     if ((this.gmaTransform == null)) {
       GMATransform _gMATransform = new GMATransform(this);
       this.gmaTransform = _gMATransform;
@@ -23,14 +24,20 @@ public class GMAGenModelImpl extends GenModelImpl {
   
   @Override
   public void setImportManager(final ImportManager im) {
-    final GMAImportManager dim = new GMAImportManager(im, this, "");
-    super.setImportManager(dim);
+    if ((this.delegatedImportManager == null)) {
+      if ((im instanceof GMAImportManager)) {
+        this.delegatedImportManager = im;
+      } else {
+        GMAImportManager _gMAImportManager = new GMAImportManager(im, this, "");
+        this.delegatedImportManager = _gMAImportManager;
+      }
+    }
   }
   
   @Override
   public ImportManager getImportManager() {
-    boolean _equals = Objects.equal(this.delegatedImportManager, null);
-    if (_equals) {
+    if ((this.delegatedImportManager == null)) {
+      InputOutput.<String>println("Create a GMAImportManager");
       ImportManager _importManager = super.getImportManager();
       GMAImportManager _gMAImportManager = new GMAImportManager(_importManager, this, "");
       this.delegatedImportManager = _gMAImportManager;

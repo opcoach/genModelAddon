@@ -1,6 +1,5 @@
 package com.opcoach.genmodeladdon.core.genmodel
 
-import java.io.FileWriter
 import java.util.Collection
 import java.util.List
 import org.eclipse.emf.codegen.util.ImportManager
@@ -34,32 +33,36 @@ class GMAImportManager extends ImportManager {
 
 	override String getImportedName(String qualifiedName, boolean autoImport)
 	{
-		return dim.getImportedName(qualifiedName, autoImport);
+		val res = dim.getImportedName(qualifiedName, autoImport);
+		return res;
 	}
 
 	override String getImportedName(String qualifiedName)
 	{
-		return dim.getImportedName(qualifiedName);
+		val res = dim.getImportedName(qualifiedName);
+		return res
 	}
 
 	override void addImport(String packageName, String shortName)
 	{
-		dim.addImport(packageName, shortName);
+		if ("*".equals(shortName))
+		   println("Found a short name '*' for packageName :" + packageName)
+		dim.addImport(GMATransform.replaceDevName(gm,packageName), GMATransform.replaceDevName(gm,shortName));
 	}
 
 	override void addImport(String qualifiedName)
 	{
-		dim.addImport(qualifiedName);
+		dim.addImport(GMATransform.replaceDevName(gm,qualifiedName));
 	}
 
 	override void addPseudoImport(String qualifiedName)
 	{
-		dim.addPseudoImport(qualifiedName);
+		dim.addPseudoImport(GMATransform.replaceDevName(gm,qualifiedName));
 	}
 
 	override void addMasterImport(String packageName, String shortName)
 	{
-		dim.addMasterImport(packageName, shortName);
+		dim.addMasterImport(GMATransform.replaceDevName(gm,packageName), GMATransform.replaceDevName(gm,shortName));
 	}
 
 	override boolean hasImport(String shortName)
@@ -84,18 +87,20 @@ class GMAImportManager extends ImportManager {
 
 	override String computeSortedImports()
 	{
-		val sortedImports = dim.computeSortedImports()
-		val fw = new FileWriter("/tmp/imports")
+		return dim.computeSortedImports
+		
+		/* val sortedImports = dim.computeSortedImports()
+		val fw = new FileWriter("/tmp/imports.txt")
 		fw.write(sortedImports)
 		fw.close
 		
 		val after = GMATransform.replaceDevName(gm, sortedImports)
 		
-	    val fwa = new FileWriter("/tmp/importsAfter")
+	    val fwa = new FileWriter("/tmp/importsAfter.txt")
 		fwa.write(after)
 		fwa.close
 		
-		return after
+		return after */
 	}
 
 	override void addCompilationUnitImports(String compilationUnitContents)

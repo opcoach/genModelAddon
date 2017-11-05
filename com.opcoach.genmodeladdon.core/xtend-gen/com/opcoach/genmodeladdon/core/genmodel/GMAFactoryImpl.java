@@ -4,10 +4,12 @@ import com.opcoach.genmodeladdon.core.genmodel.GMAGenClassImpl;
 import com.opcoach.genmodeladdon.core.genmodel.GMAGenFeatureImpl;
 import com.opcoach.genmodeladdon.core.genmodel.GMAGenModelImpl;
 import com.opcoach.genmodeladdon.core.genmodel.GMAGenOperationImpl;
+import com.opcoach.genmodeladdon.core.genmodel.GMAGenPackageImpl;
 import org.eclipse.emf.codegen.ecore.genmodel.GenClass;
 import org.eclipse.emf.codegen.ecore.genmodel.GenFeature;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.codegen.ecore.genmodel.GenOperation;
+import org.eclipse.emf.codegen.ecore.genmodel.GenPackage;
 import org.eclipse.emf.codegen.ecore.genmodel.impl.GenModelFactoryImpl;
 import org.eclipse.xtext.xbase.lib.InputOutput;
 
@@ -50,6 +52,16 @@ public class GMAFactoryImpl extends GenModelFactoryImpl {
     {
       InputOutput.<String>println("Create a GMAGenOperationImpl ");
       _xblockexpression = new GMAGenOperationImpl();
+    }
+    return _xblockexpression;
+  }
+  
+  @Override
+  public GenPackage createGenPackage() {
+    GMAGenPackageImpl _xblockexpression = null;
+    {
+      InputOutput.<String>println("Create a GMAGenOperationImpl ");
+      _xblockexpression = new GMAGenPackageImpl();
     }
     return _xblockexpression;
   }
