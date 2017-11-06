@@ -1,10 +1,14 @@
 package com.opcoach.genmodeladdon.core.genmodel;
 
+import com.opcoach.genmodeladdon.core.GMAConstants;
+import com.opcoach.genmodeladdon.core.GenerateCommon;
 import com.opcoach.genmodeladdon.core.genmodel.GMAGenModelImpl;
 import java.text.MessageFormat;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.function.Consumer;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.codegen.ecore.genmodel.GenBase;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.codegen.ecore.genmodel.GenPackage;
@@ -17,34 +21,66 @@ import org.eclipse.emf.ecore.EPackage;
  * This class computes the new names for generated classes according to pattern name matching
  */
 @SuppressWarnings("all")
-public class GMATransform {
-  protected Map<String, String> devNames;
+public class GMATransform implements GMAConstants {
+  protected Map<String, String> devNames = new TreeMap<String, String>();
   
-  private String devInterfaceNamePattern;
+  private String devInterfaceNamePattern = GMAConstants.ADVISED_DEV_INTERFACE_PATTERN;
   
-  private String genInterfaceNamePattern;
+  private String genInterfaceNamePattern = GMAConstants.ADVISED_GEN_INTERFACE_PATTERN;
   
-  private String devClassNamePattern;
+  private String devClassNamePattern = GMAConstants.ADVISED_DEV_CLASS_IMPL_PATTERN;
   
-  private String genClassNamePattern;
+  private String genClassNamePattern = GMAConstants.ADVISED_GEN_CLASS_IMPL_PATTERN;
   
   private GenModel gm;
   
   private boolean isInit = false;
   
   public GMATransform(final GenModel gm) {
-    this(gm, "{0}", "M{0}", "{0}Impl", "M{0}Impl");
+    this(gm, true);
   }
   
-  public GMATransform(final GenModel gm, final String devInterfaceNamePattern, final String genInterfaceNamePattern, final String devClassNamePattern, final String genClassNamePattern) {
-    super();
-    this.devInterfaceNamePattern = devInterfaceNamePattern;
-    this.genInterfaceNamePattern = genInterfaceNamePattern;
+  private GMATransform(final GenModel gm, final boolean mustInitNames) {
+    this.gm = gm;
+    if (mustInitNames) {
+      this.initNames();
+    }
+  }
+  
+  public GMATransform(final GenModel gm, final String devIntNamePattern, final String genIntNamePattern, final String devClassNamePattern, final String genClassNamePattern) {
+    this(gm, false);
+    this.devInterfaceNamePattern = devIntNamePattern;
+    this.genInterfaceNamePattern = genIntNamePattern;
     this.devClassNamePattern = devClassNamePattern;
     this.genClassNamePattern = genClassNamePattern;
-    this.gm = gm;
-    TreeMap<String, String> _treeMap = new TreeMap<String, String>();
-    this.devNames = _treeMap;
+  }
+  
+  private void initValue(final String v, final Consumer<String> consumer) {
+    if ((v != null)) {
+      consumer.accept(v);
+    }
+  }
+  
+  private void initNames() {
+    final Consumer<String> _function = (String v) -> {
+      this.genClassNamePattern = v;
+    };
+    this.initValue(this.gm.getClassNamePattern(), _function);
+    final Consumer<String> _function_1 = (String v) -> {
+      this.genInterfaceNamePattern = v;
+    };
+    this.initValue(this.gm.getInterfaceNamePattern(), _function_1);
+    final IFile f = GenerateCommon.getModelFile(this.gm);
+    if ((f != null)) {
+      final Consumer<String> _function_2 = (String v) -> {
+        this.devClassNamePattern = v;
+      };
+      this.initValue(GenerateCommon.getProperty(f, GMAConstants.PROP_CLASS_PATTERN), _function_2);
+      final Consumer<String> _function_3 = (String v) -> {
+        this.devInterfaceNamePattern = v;
+      };
+      this.initValue(GenerateCommon.getProperty(f, GMAConstants.PROP_INTERFACE_PATTERN), _function_3);
+    }
   }
   
   public boolean init() {
