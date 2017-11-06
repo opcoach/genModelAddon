@@ -34,21 +34,19 @@ class GMAImportManager extends ImportManager {
 
 	override String getImportedName(String qualifiedName, boolean autoImport)
 	{
-		val res = dim.getImportedName(qualifiedName, autoImport);
+		val res = dim.getImportedName(GMATransform.replaceDevName(gm,qualifiedName), autoImport);
 		return res;
 	}
 
 	override String getImportedName(String qualifiedName)
 	{
-		val res = dim.getImportedName(qualifiedName);
+		val res = dim.getImportedName(GMATransform.replaceDevName(gm,qualifiedName));
 		return res
 	}
 
 	override void addImport(String packageName, String shortName)
 	{
-		if ("*".equals(shortName))
-		   println("Found a short name '*' for packageName :" + packageName)
-		dim.addImport(GMATransform.replaceDevName(gm,packageName), GMATransform.replaceDevName(gm,shortName));
+		dim.addImport(packageName, GMATransform.replaceDevName(gm,shortName));
 	}
 
 	override void addImport(String qualifiedName)
@@ -90,7 +88,13 @@ class GMAImportManager extends ImportManager {
 
 	override String computeSortedImports()
 	{
-		return GMATransform.replaceDevName(gm, dim.computeSortedImports)
+		// THIS METHOD IS NEVER CALLED BY DELEGATION BECAUSE IT IS CALLED INTERNALLY BY 
+		// emitSortedImport
+		val before = dim.computeSortedImports
+		val after = GMATransform.replaceDevName(gm, before)
+		println(" *** Computed Import before : " + before)
+		println(" *** Computed Import after : " + after)
+		return after
 		
 	/* 	val sortedImports = dim.computeSortedImports()
 		val fw = new FileWriter("/tmp/imports.txt")

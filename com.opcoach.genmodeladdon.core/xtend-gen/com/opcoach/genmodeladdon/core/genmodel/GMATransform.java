@@ -12,7 +12,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 /**
  * This class computes the new names for generated classes according to pattern name matching
@@ -119,7 +118,6 @@ public class GMATransform {
     }
     if ((dt != null)) {
       final String after = dt.replaceDevName(stringToTranslate);
-      InputOutput.<String>println(((("Replaced : " + stringToTranslate) + "\n with : ") + after));
       return after;
     } else {
       return stringToTranslate;

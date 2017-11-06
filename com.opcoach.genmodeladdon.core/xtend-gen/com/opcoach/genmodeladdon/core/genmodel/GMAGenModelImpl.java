@@ -74,6 +74,11 @@ public class GMAGenModelImpl extends GenModelImpl {
   }
   
   @Override
+  public void emitSortedImports() {
+    super.emitSortedImports();
+  }
+  
+  @Override
   public void setImportManager(final ImportManager im) {
     if ((im == null)) {
       return;

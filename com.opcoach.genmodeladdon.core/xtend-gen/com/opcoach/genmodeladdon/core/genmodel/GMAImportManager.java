@@ -39,23 +39,19 @@ public class GMAImportManager extends ImportManager {
   
   @Override
   public String getImportedName(final String qualifiedName, final boolean autoImport) {
-    final String res = this.dim.getImportedName(qualifiedName, autoImport);
+    final String res = this.dim.getImportedName(GMATransform.replaceDevName(this.gm, qualifiedName), autoImport);
     return res;
   }
   
   @Override
   public String getImportedName(final String qualifiedName) {
-    final String res = this.dim.getImportedName(qualifiedName);
+    final String res = this.dim.getImportedName(GMATransform.replaceDevName(this.gm, qualifiedName));
     return res;
   }
   
   @Override
   public void addImport(final String packageName, final String shortName) {
-    boolean _equals = "*".equals(shortName);
-    if (_equals) {
-      InputOutput.<String>println(("Found a short name \'*\' for packageName :" + packageName));
-    }
-    this.dim.addImport(GMATransform.replaceDevName(this.gm, packageName), GMATransform.replaceDevName(this.gm, shortName));
+    this.dim.addImport(packageName, GMATransform.replaceDevName(this.gm, shortName));
   }
   
   @Override
@@ -97,7 +93,11 @@ public class GMAImportManager extends ImportManager {
   
   @Override
   public String computeSortedImports() {
-    return GMATransform.replaceDevName(this.gm, this.dim.computeSortedImports());
+    final String before = this.dim.computeSortedImports();
+    final String after = GMATransform.replaceDevName(this.gm, before);
+    InputOutput.<String>println((" *** Computed Import before : " + before));
+    InputOutput.<String>println((" *** Computed Import after : " + after));
+    return after;
   }
   
   @Override

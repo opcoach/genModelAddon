@@ -62,6 +62,10 @@ class GMAGenModelImpl extends GenModelImpl {
 	def setGMATransform(GMATransform gmat) {
 		gmaTransform = gmat
 	}
+	
+	override emitSortedImports() {
+		super.emitSortedImports()
+	}
 
 	override setImportManager(ImportManager im) {
 		if (im === null)

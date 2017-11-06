@@ -18,7 +18,7 @@ class GMATransform {
 	String devClassNamePattern
 	String genClassNamePattern
 	GenModel gm 
-	boolean isInit = false;
+	boolean isInit = false
 
 	new (GenModel gm)
 	{
@@ -52,25 +52,25 @@ class GMATransform {
 	def clear()
 	{
 		devNames.clear
-		isInit = false;
+		isInit = false
 	}
 
 	def void computeNames(EPackage p) {
 		for (c : p.getEClassifiers()) {
 			if ((c instanceof EClass) && !c.name.endsWith("Package")) {
-				val devIntName = MessageFormat.format(devInterfaceNamePattern, c.getName());
-				val genIntName = MessageFormat.format(genInterfaceNamePattern, c.getName());
+				val devIntName = MessageFormat.format(devInterfaceNamePattern, c.getName())
+				val genIntName = MessageFormat.format(genInterfaceNamePattern, c.getName())
 				// System.out.println("Put : " + genIntName + "," + devIntName);
-				devNames.put(genIntName, devIntName);
+				devNames.put(genIntName, devIntName)
 
-				val genClassName = MessageFormat.format(genClassNamePattern, c.getName());
-				val devClassName = MessageFormat.format(devClassNamePattern, c.getName());
+				val genClassName = MessageFormat.format(genClassNamePattern, c.getName())
+				val devClassName = MessageFormat.format(devClassNamePattern, c.getName())
 				// System.out.println("Put : " + genClassName + "," + devClassName);
-				devNames.put(genClassName, devClassName);
+				devNames.put(genClassName, devClassName)
 			}
 		}
 		for (EPackage childPackage : p.getESubpackages())
-			computeNames(childPackage);
+			computeNames(childPackage)
 	}
 
 	def replaceDevName(String stringToTranslate) {
@@ -79,11 +79,11 @@ class GMATransform {
 		for (String key : devNames.keySet()) {
 			if (stringToTranslate.contains(key)) {
 				// System.out.println("String : " + stringToTranslate + " contains " + key + " will replace with " + devNames.get(key) );
-				res = res.replaceAll(key, devNames.get(key));
+				res = res.replaceAll(key, devNames.get(key))
 			}
 		}
 
-		return res;
+		return res
 	}
 	
 	/** Transform a String with default computed names with the new names */
@@ -101,12 +101,9 @@ class GMATransform {
 		if (dt !== null)
 		{
 		    val after = dt.replaceDevName(stringToTranslate)
-		    println("Replaced : " + stringToTranslate + "\n with : " + after)
 		    return after
-		   
 		    }
 		 else 
 		    return stringToTranslate
-		
 	}
 }
