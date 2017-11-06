@@ -95,6 +95,7 @@ public class WorkspaceConfigurator implements ProjectConstants
 				// Copy the sample project in the runtime workspace
 				root = initWorkspace();
 				initGenModel(PROJECT_GENMODEL, PROJECT_ANT_FILE);
+				Thread.sleep(2000); // Wait for refresh (important)
 				initGenModel(FANNOISE_GENMODEL, FANOISE_ANT_FILE);
 				
 			} catch (Exception ex)
