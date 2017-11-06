@@ -32,5 +32,13 @@ class GMAFactoryImpl extends GenModelFactoryImpl {
 	override createGenPackage() {
 		new GMAGenPackageImpl
 	}
+	
+	override createGenParameter() {
+		new GMAGenParameterImpl
+	}
 
+	override createGenTypeParameter() {
+		new GMAGenTypeParameterImpl
+	}
+	
 }

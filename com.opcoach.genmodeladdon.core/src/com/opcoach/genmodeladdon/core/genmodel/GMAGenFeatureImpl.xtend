@@ -33,4 +33,38 @@ class GMAGenFeatureImpl extends GenFeatureImpl {
 		GMATransform.replaceDevName(this,super.getType(context))
 	}
 	
+	override getArrayItemType(GenClass context) {
+		GMATransform.replaceDevName(this,super.getArrayItemType(context))
+	}
+	
+	override getImportedMapKeyType(GenClass context) {
+		GMATransform.replaceDevName(this,super.getImportedMapKeyType(context))
+	}
+	
+	override getImportedMapTemplateArguments(GenClass context) {
+		GMATransform.replaceDevName(this,super.getImportedMapTemplateArguments(context))
+	}
+	
+	override getImportedMapValueType(GenClass context) {
+		GMATransform.replaceDevName(this,super.getImportedMapValueType(context))
+	}
+	
+	override getListTemplateArguments(GenClass context) {
+		GMATransform.replaceDevName(this,super.getListTemplateArguments(context))
+	}
+	
+	override getQualifiedListItemType(GenClass context) {
+		GMATransform.replaceDevName(this,super.getQualifiedListItemType(context))
+	}
+	
+	
+	override getRawListItemType(GenClass context) { 
+		GMATransform.replaceDevName(this,super.getRawListItemType(context))
+	}
+	
+	override getQualifiedObjectType(GenClass context) {
+		GMATransform.replaceDevName(this,super.getQualifiedObjectType(context))
+	}
+	
+	
 }

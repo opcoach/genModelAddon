@@ -60,7 +60,9 @@ public class GMAImportManager extends ImportManager {
   
   @Override
   public void addImport(final String qualifiedName) {
-    this.dim.addImport(GMATransform.replaceDevName(this.gm, qualifiedName));
+    final String rep = GMATransform.replaceDevName(this.gm, qualifiedName);
+    InputOutput.<String>println(((("Replace this import :  " + qualifiedName) + "\n by this one : ") + rep));
+    this.dim.addImport(rep);
   }
   
   @Override
@@ -95,12 +97,12 @@ public class GMAImportManager extends ImportManager {
   
   @Override
   public String computeSortedImports() {
-    return this.dim.computeSortedImports();
+    return GMATransform.replaceDevName(this.gm, this.dim.computeSortedImports());
   }
   
   @Override
   public void addCompilationUnitImports(final String compilationUnitContents) {
-    this.dim.addCompilationUnitImports(compilationUnitContents);
+    this.dim.addCompilationUnitImports(GMATransform.replaceDevName(this.gm, compilationUnitContents));
   }
   
   @Override

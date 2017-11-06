@@ -273,8 +273,6 @@ public class GenerateDevStructure {
   public void generateGenModelCode(final File f, final IProgressMonitor monitor) {
     final AntRunner runner = new AntRunner();
     runner.setBuildFileLocation(f.getAbsolutePath());
-    runner.addBuildLogger("org.apache.tools.ant.DefaultLogger");
-    runner.setArguments("-verbose -debug");
     try {
       String _absolutePath = f.getAbsolutePath();
       String _plus = ("  --> Generate the EMF Code using the ant file : " + _absolutePath);

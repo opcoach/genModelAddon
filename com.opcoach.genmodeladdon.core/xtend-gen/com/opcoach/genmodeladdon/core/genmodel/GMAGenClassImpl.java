@@ -22,6 +22,16 @@ public class GMAGenClassImpl extends GenClassImpl {
   }
   
   @Override
+  public String getClassTypeArguments() {
+    return GMATransform.replaceDevName(this, super.getClassTypeArguments());
+  }
+  
+  @Override
+  public String getTypeParameters() {
+    return GMATransform.replaceDevName(this, super.getTypeParameters());
+  }
+  
+  @Override
   public String getInterfaceExtends() {
     return GMATransform.replaceDevName(this, super.getInterfaceExtends());
   }

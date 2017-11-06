@@ -7,19 +7,12 @@ import org.eclipse.emf.codegen.ecore.genmodel.GenPackage;
 import org.eclipse.emf.codegen.ecore.genmodel.impl.GenModelImpl;
 import org.eclipse.emf.codegen.util.ImportManager;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class GMAGenModelImpl extends GenModelImpl {
   private GMATransform gmaTransform = null;
   
-  /**
-   * override getImportManager() {
-   * 		return delegatedImportManager
-   * }
-   */
   public GMATransform getGMATransform() {
-    InputOutput.<String>println("Enter in getGMATransform ");
     if ((this.gmaTransform == null)) {
       GMATransform _gMATransform = new GMATransform(this);
       this.gmaTransform = _gMATransform;

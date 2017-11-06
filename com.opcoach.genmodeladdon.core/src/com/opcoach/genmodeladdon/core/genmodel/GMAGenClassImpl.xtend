@@ -13,6 +13,14 @@ class GMAGenClassImpl extends GenClassImpl {
 	override getClassImplements() {
 		GMATransform.replaceDevName(this, super.classImplements)
 	}
+	
+	override getClassTypeArguments() {
+		GMATransform.replaceDevName(this, super.getClassTypeArguments())
+	}
+	
+	override getTypeParameters() {
+		GMATransform.replaceDevName(this, super.getTypeParameters())
+	}
 
 	override getInterfaceExtends() {
 		GMATransform.replaceDevName(this, super.interfaceExtends)
@@ -22,6 +30,9 @@ class GMAGenClassImpl extends GenClassImpl {
 		GMATransform.replaceDevName(this, super.getListConstructor(genFeature))
 
 	}
+	
+	
+	
 	
 
 }

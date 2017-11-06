@@ -79,7 +79,7 @@ class GMATransform {
 		for (String key : devNames.keySet()) {
 			if (stringToTranslate.contains(key)) {
 				// System.out.println("String : " + stringToTranslate + " contains " + key + " will replace with " + devNames.get(key) );
-				res = stringToTranslate.replaceAll(key, devNames.get(key));
+				res = res.replaceAll(key, devNames.get(key));
 			}
 		}
 

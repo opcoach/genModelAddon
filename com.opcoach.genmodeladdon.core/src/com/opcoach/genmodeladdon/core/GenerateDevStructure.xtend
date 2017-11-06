@@ -276,8 +276,8 @@ class GenerateDevStructure {
 	
 	    // Uncomment the 2 following lines to display the traces when running 
 	    // the EMF code generation ! 
-	   	runner.addBuildLogger("org.apache.tools.ant.DefaultLogger");
-		runner.arguments = "-verbose -debug"
+	   //	runner.addBuildLogger("org.apache.tools.ant.DefaultLogger");
+	//	runner.arguments = "-verbose -debug"
 		
 		// Bundle b = FrameworkUtil.getBundle(GenModelAddonTestCase.class);
 		// runner.setCustomClasspath(new URL[] { b.getEntry("ant_tasks/importer.ecore.tasks.jar")});

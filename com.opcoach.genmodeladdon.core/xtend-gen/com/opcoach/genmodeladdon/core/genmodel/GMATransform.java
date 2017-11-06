@@ -101,7 +101,7 @@ public class GMATransform {
     for (final String key : _keySet) {
       boolean _contains = stringToTranslate.contains(key);
       if (_contains) {
-        res = stringToTranslate.replaceAll(key, this.devNames.get(key));
+        res = res.replaceAll(key, this.devNames.get(key));
       }
     }
     return res;

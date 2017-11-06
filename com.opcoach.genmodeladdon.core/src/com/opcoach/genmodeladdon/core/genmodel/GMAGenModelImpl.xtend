@@ -8,26 +8,14 @@ class GMAGenModelImpl extends GenModelImpl {
 
 	GMATransform gmaTransform = null
 
-	// static ImportManager delegatedImportManager
-	/*  new()
-	 * {
-	 * 	   super()
-	 * 	   if (delegatedImportManager === null)
-	 * 	       delegatedImportManager = new GMAImportManager(new ImportManager(""), this, "")
-	 * 	   setImportManager( delegatedImportManager )
-	 }*/
-	/* 	override getImportManager() {
-	 * 		return delegatedImportManager
-	 } */
-	def GMATransform getGMATransform() {
 
-		println("Enter in getGMATransform ")
+	def GMATransform getGMATransform() {
 
 		if (gmaTransform === null) {
 			gmaTransform = new GMATransform(this)
 			gmaTransform.init()
 
-			// Must also set it on all subGenModels and dependencies..
+			// Must also set it on all subGenModels and dependencies.. (code like super.setImportManager)
 			// We also need to set it on any GenModels holding any used or static packages that may be refered to.
 			//
 			for (GenPackage genPackage : getUsedGenPackages()) {
@@ -91,13 +79,4 @@ class GMAGenModelImpl extends GenModelImpl {
 
 	}
 
-/* 
- * 	override getImportManager() {
- * 		if (delegatedImportManager === null) {
- * 			println("Create a GMAImportManager")
- * 			delegatedImportManager = new GMAImportManager(super.getImportManager(), this, "")
- * 		}
- * 		return delegatedImportManager
- * 	}
- */
 }

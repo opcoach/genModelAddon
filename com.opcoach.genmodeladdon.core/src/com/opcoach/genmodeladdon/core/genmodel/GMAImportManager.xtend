@@ -1,5 +1,6 @@
 package com.opcoach.genmodeladdon.core.genmodel
 
+import java.io.FileWriter
 import java.util.Collection
 import java.util.List
 import org.eclipse.emf.codegen.util.ImportManager
@@ -52,7 +53,9 @@ class GMAImportManager extends ImportManager {
 
 	override void addImport(String qualifiedName)
 	{
-		dim.addImport(GMATransform.replaceDevName(gm,qualifiedName));
+		val rep = GMATransform.replaceDevName(gm,qualifiedName)
+		println("Replace this import :  " + qualifiedName + "\n by this one : " + rep)
+		dim.addImport(rep)
 	}
 
 	override void addPseudoImport(String qualifiedName)
@@ -72,7 +75,7 @@ class GMAImportManager extends ImportManager {
 
 	override Collection<String> getImports()
 	{
-		return dim.getImports();
+		return dim.imports
 	}
 
 	override String getLineDelimiter()
@@ -87,9 +90,9 @@ class GMAImportManager extends ImportManager {
 
 	override String computeSortedImports()
 	{
-		return dim.computeSortedImports
+		return GMATransform.replaceDevName(gm, dim.computeSortedImports)
 		
-		/* val sortedImports = dim.computeSortedImports()
+	/* 	val sortedImports = dim.computeSortedImports()
 		val fw = new FileWriter("/tmp/imports.txt")
 		fw.write(sortedImports)
 		fw.close
@@ -105,7 +108,7 @@ class GMAImportManager extends ImportManager {
 
 	override void addCompilationUnitImports(String compilationUnitContents)
 	{
-		dim.addCompilationUnitImports(compilationUnitContents);
+		dim.addCompilationUnitImports(GMATransform.replaceDevName(gm,compilationUnitContents));
 	}
 
 	override void markImportLocation(StringBuilder stringBuilder)
