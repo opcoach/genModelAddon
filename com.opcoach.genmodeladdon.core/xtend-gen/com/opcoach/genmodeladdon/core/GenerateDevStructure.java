@@ -35,7 +35,6 @@ import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 /**
@@ -100,7 +99,6 @@ public class GenerateDevStructure {
       if (_isOpen) {
         status = "closed";
       }
-      InputOutput.<String>println(((((("Project " + this.projectName) + " is ") + status) + " when creating devStructure for ") + this.modelName));
       this.filesNotGenerated.clear();
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -153,8 +151,6 @@ public class GenerateDevStructure {
     if (_not_1) {
       f.mkdirs();
     }
-    InputOutput.<String>println(("Generate classes in    : " + srcAbsolutePath));
-    InputOutput.<String>println(("Generate interfaces in : " + interfaceAbsolutePath));
     final Function1<GenClass, Boolean> _function = (GenClass it) -> {
       boolean _isDynamic = it.isDynamic();
       return Boolean.valueOf((!_isDynamic));
@@ -179,7 +175,6 @@ public class GenerateDevStructure {
     final String factoryClassName = (_plus_2 + _computeFactoryClassName);
     final String packageClassName = gp.getQualifiedPackageInterfaceName();
     this.factories.put(gp.getEcorePackage().getNsURI(), factoryClassName);
-    InputOutput.<String>println(("Added this factory in list : " + factoryClassName));
     this.packages.put(gp.getEcorePackage().getNsURI(), packageClassName);
     List<GenPackage> _subGenPackages = gp.getSubGenPackages();
     for (final GenPackage sp : _subGenPackages) {
@@ -245,7 +240,6 @@ public class GenerateDevStructure {
    * Generate the ant file and return it (or null.
    */
   public File generateAntFile(final String antFilename) {
-    InputOutput.<String>println(("Generate the ant file : " + antFilename));
     this.refreshWorkspace();
     final GenerateAntFileForCodeGeneration gen = new GenerateAntFileForCodeGeneration();
     try {
@@ -274,9 +268,6 @@ public class GenerateDevStructure {
     final AntRunner runner = new AntRunner();
     runner.setBuildFileLocation(f.getAbsolutePath());
     try {
-      String _absolutePath = f.getAbsolutePath();
-      String _plus = ("  --> Generate the EMF Code using the ant file : " + _absolutePath);
-      InputOutput.<String>println(_plus);
       runner.run(monitor);
       this.refreshWorkspace();
     } catch (final Throwable _t) {
@@ -306,14 +297,19 @@ public class GenerateDevStructure {
   
   public void refreshWorkspace() {
     try {
-      ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
-    } catch (final Throwable _t) {
-      if (_t instanceof CoreException) {
-        final CoreException e = (CoreException)_t;
-        e.printStackTrace();
-      } else {
-        throw Exceptions.sneakyThrow(_t);
+      try {
+        ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
+        Thread.sleep(1000);
+      } catch (final Throwable _t) {
+        if (_t instanceof CoreException) {
+          final CoreException e = (CoreException)_t;
+          e.printStackTrace();
+        } else {
+          throw Exceptions.sneakyThrow(_t);
+        }
       }
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
     }
   }
   

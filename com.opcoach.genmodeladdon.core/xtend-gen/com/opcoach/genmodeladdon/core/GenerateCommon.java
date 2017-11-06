@@ -49,13 +49,16 @@ public class GenerateCommon {
    * Find the model name from the genmodel
    */
   public static String getModelName(final GenModel gm) {
-    final URI uri = gm.eResource().getURI();
-    final String s = uri.toString();
-    int pos = s.lastIndexOf("/");
-    String modelName = s.substring((pos + 1));
-    pos = modelName.indexOf(".genmodel");
-    modelName = modelName.substring(0, pos);
-    return modelName;
+    String _xblockexpression = null;
+    {
+      final URI uri = gm.eResource().getURI();
+      final String s = uri.toString();
+      int pos = s.lastIndexOf("/");
+      String modelName = s.substring((pos + 1));
+      pos = modelName.indexOf(".genmodel");
+      _xblockexpression = modelName.substring(0, pos);
+    }
+    return _xblockexpression;
   }
   
   /**

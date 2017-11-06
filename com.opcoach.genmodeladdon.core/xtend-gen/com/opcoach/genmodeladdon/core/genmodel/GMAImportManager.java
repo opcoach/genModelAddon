@@ -5,7 +5,6 @@ import com.opcoach.genmodeladdon.core.genmodel.GMATransform;
 import java.util.Collection;
 import java.util.List;
 import org.eclipse.emf.codegen.util.ImportManager;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 /**
  * An Import manager wrapper to override the emitImports
@@ -57,7 +56,6 @@ public class GMAImportManager extends ImportManager {
   @Override
   public void addImport(final String qualifiedName) {
     final String rep = GMATransform.replaceDevName(this.gm, qualifiedName);
-    InputOutput.<String>println(((("Replace this import :  " + qualifiedName) + "\n by this one : ") + rep));
     this.dim.addImport(rep);
   }
   
@@ -93,11 +91,7 @@ public class GMAImportManager extends ImportManager {
   
   @Override
   public String computeSortedImports() {
-    final String before = this.dim.computeSortedImports();
-    final String after = GMATransform.replaceDevName(this.gm, before);
-    InputOutput.<String>println((" *** Computed Import before : " + before));
-    InputOutput.<String>println((" *** Computed Import after : " + after));
-    return after;
+    return GMATransform.replaceDevName(this.gm, this.dim.computeSortedImports());
   }
   
   @Override

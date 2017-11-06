@@ -1,6 +1,5 @@
 package com.opcoach.genmodeladdon.core.genmodel
 
-import java.io.FileWriter
 import java.util.Collection
 import java.util.List
 import org.eclipse.emf.codegen.util.ImportManager
@@ -52,7 +51,6 @@ class GMAImportManager extends ImportManager {
 	override void addImport(String qualifiedName)
 	{
 		val rep = GMATransform.replaceDevName(gm,qualifiedName)
-		println("Replace this import :  " + qualifiedName + "\n by this one : " + rep)
 		dim.addImport(rep)
 	}
 
@@ -68,17 +66,17 @@ class GMAImportManager extends ImportManager {
 
 	override boolean hasImport(String shortName)
 	{
-		return dim.hasImport(shortName);
+		 dim.hasImport(shortName);
 	}
 
 	override Collection<String> getImports()
 	{
-		return dim.imports
+	     dim.imports
 	}
 
 	override String getLineDelimiter()
 	{
-		return dim.getLineDelimiter();
+		 dim.getLineDelimiter();
 	}
 
 	override void setLineDelimiter(String lineDelimiter)
@@ -90,24 +88,7 @@ class GMAImportManager extends ImportManager {
 	{
 		// THIS METHOD IS NEVER CALLED BY DELEGATION BECAUSE IT IS CALLED INTERNALLY BY 
 		// emitSortedImport
-		val before = dim.computeSortedImports
-		val after = GMATransform.replaceDevName(gm, before)
-		println(" *** Computed Import before : " + before)
-		println(" *** Computed Import after : " + after)
-		return after
-		
-	/* 	val sortedImports = dim.computeSortedImports()
-		val fw = new FileWriter("/tmp/imports.txt")
-		fw.write(sortedImports)
-		fw.close
-		
-		val after = GMATransform.replaceDevName(gm, sortedImports)
-		
-	    val fwa = new FileWriter("/tmp/importsAfter.txt")
-		fwa.write(after)
-		fwa.close
-		
-		return after */
+		GMATransform.replaceDevName(gm, dim.computeSortedImports)
 	}
 
 	override void addCompilationUnitImports(String compilationUnitContents)

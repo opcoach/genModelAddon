@@ -15,14 +15,9 @@ import org.eclipse.emf.codegen.ecore.genmodel.GenPackage;
 import org.eclipse.emf.codegen.ecore.genmodel.GenParameter;
 import org.eclipse.emf.codegen.ecore.genmodel.GenTypeParameter;
 import org.eclipse.emf.codegen.ecore.genmodel.impl.GenModelFactoryImpl;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class GMAFactoryImpl extends GenModelFactoryImpl {
-  public GMAFactoryImpl() {
-    InputOutput.<String>println("Create the GMA Factory");
-  }
-  
   @Override
   public GenFeature createGenFeature() {
     return new GMAGenFeatureImpl();
@@ -35,8 +30,7 @@ public class GMAFactoryImpl extends GenModelFactoryImpl {
   
   @Override
   public GenModel createGenModel() {
-    final GMAGenModelImpl res = new GMAGenModelImpl();
-    return res;
+    return new GMAGenModelImpl();
   }
   
   @Override

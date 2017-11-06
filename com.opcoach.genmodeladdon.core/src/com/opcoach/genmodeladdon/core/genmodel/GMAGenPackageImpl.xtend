@@ -19,6 +19,5 @@ class GMAGenPackageImpl extends GenPackageImpl {
 	override getFactoryInstanceName() {
 		GMATransform.replaceDevName(this,super.getFactoryInstanceName())
 	}
-	
-	
+
 }

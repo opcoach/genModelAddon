@@ -8,7 +8,6 @@ class GMAGenModelImpl extends GenModelImpl {
 
 	GMATransform gmaTransform = null
 
-
 	def GMATransform getGMATransform() {
 
 		if (gmaTransform === null) {
@@ -62,7 +61,7 @@ class GMAGenModelImpl extends GenModelImpl {
 	def setGMATransform(GMATransform gmat) {
 		gmaTransform = gmat
 	}
-	
+
 	override emitSortedImports() {
 		super.emitSortedImports()
 	}

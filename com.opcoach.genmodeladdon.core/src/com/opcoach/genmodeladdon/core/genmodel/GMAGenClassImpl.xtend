@@ -30,9 +30,5 @@ class GMAGenClassImpl extends GenClassImpl {
 		GMATransform.replaceDevName(this, super.getListConstructor(genFeature))
 
 	}
-	
-	
-	
-	
 
 }

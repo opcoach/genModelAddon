@@ -46,13 +46,13 @@ class EMFPatternExtractor implements Runnable {
 
 		// Fix issue #49 : always create the file (only 147 ko)
 		// Read original file and replace patterns inside
-		var content = IOUtils.toString(sourceJetFile, ResourcesPlugin.getEncoding());
+		var content = IOUtils.toString(sourceJetFile, ResourcesPlugin.getEncoding())
 
-		content = content.replaceFirst(DEV_CLASS_PATTERN, devClassPattern);
-		content = content.replaceFirst(DEV_INTERFACE_PATTERN, devInterfacePattern);
+		content = content.replaceFirst(DEV_CLASS_PATTERN, devClassPattern)
+		content = content.replaceFirst(DEV_INTERFACE_PATTERN, devInterfacePattern)
 
 		// Then write it in the project
-		IOUtils.write(content, new FileOutputStream(file.location.toFile), ResourcesPlugin.getEncoding());
+		IOUtils.write(content, new FileOutputStream(file.location.toFile), ResourcesPlugin.getEncoding())
 
 	}
 
@@ -83,7 +83,7 @@ class EMFPatternExtractor implements Runnable {
 			try {
 				f.create(true, true, new NullProgressMonitor())
 			} catch (Exception e) {
-				println("Unable to create the folder :  " + f);
+				println("Unable to create the folder :  " + f)
 				e.printStackTrace
 			}
 		} 

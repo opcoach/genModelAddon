@@ -6,12 +6,8 @@ import org.eclipse.emf.codegen.ecore.genmodel.GenModel
 import org.eclipse.emf.codegen.ecore.genmodel.impl.GenModelFactoryImpl
 
 class GMAFactoryImpl extends GenModelFactoryImpl {
-	new() {
-		println("Create the GMA Factory")
-	}
 
 	override GenFeature createGenFeature() {
-		// GenFeatureImpl genFeature = ;
 		new GMAGenFeatureImpl
 	}
 
@@ -20,9 +16,7 @@ class GMAFactoryImpl extends GenModelFactoryImpl {
 	}
 
 	override GenModel createGenModel() {
-
-		val res = new GMAGenModelImpl
-		return res
+		new GMAGenModelImpl
 	}
 
 	override createGenOperation() {
@@ -32,7 +26,7 @@ class GMAFactoryImpl extends GenModelFactoryImpl {
 	override createGenPackage() {
 		new GMAGenPackageImpl
 	}
-	
+
 	override createGenParameter() {
 		new GMAGenParameterImpl
 	}
@@ -40,5 +34,5 @@ class GMAFactoryImpl extends GenModelFactoryImpl {
 	override createGenTypeParameter() {
 		new GMAGenTypeParameterImpl
 	}
-	
+
 }

@@ -185,7 +185,7 @@ package class GenerateExtensions {
 		factoryElement.setAttribute(CLASS_ATTR, classname)
 
 		updatedExtension.add(factoryElement)
-		fModel.getPluginBase().add(updatedExtension);
+		fModel.getPluginBase().add(updatedExtension)
 
 	}
 

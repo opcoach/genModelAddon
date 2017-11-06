@@ -17,14 +17,14 @@ class GMATransform {
 	String genInterfaceNamePattern
 	String devClassNamePattern
 	String genClassNamePattern
-	GenModel gm 
+	GenModel gm
 	boolean isInit = false
 
-	new (GenModel gm)
-	{
+	new(GenModel gm) {
 		this(gm, "{0}", "M{0}", "{0}Impl", "M{0}Impl")
-		
+
 	}
+
 	new(GenModel gm, String devInterfaceNamePattern, String genInterfaceNamePattern, String devClassNamePattern,
 		String genClassNamePattern) {
 		super()
@@ -48,9 +48,8 @@ class GMATransform {
 			isInit = true
 		}
 	}
-	
-	def clear()
-	{
+
+	def clear() {
 		devNames.clear
 		isInit = false
 	}
@@ -58,13 +57,13 @@ class GMATransform {
 	def void computeNames(EPackage p) {
 		for (c : p.getEClassifiers()) {
 			if ((c instanceof EClass) && !c.name.endsWith("Package")) {
-				val devIntName = MessageFormat.format(devInterfaceNamePattern, c.getName())
-				val genIntName = MessageFormat.format(genInterfaceNamePattern, c.getName())
+				val devIntName = MessageFormat.format(devInterfaceNamePattern, c.name)
+				val genIntName = MessageFormat.format(genInterfaceNamePattern, c.name)
 				// System.out.println("Put : " + genIntName + "," + devIntName);
 				devNames.put(genIntName, devIntName)
 
-				val genClassName = MessageFormat.format(genClassNamePattern, c.getName())
-				val devClassName = MessageFormat.format(devClassNamePattern, c.getName())
+				val genClassName = MessageFormat.format(genClassNamePattern, c.name)
+				val devClassName = MessageFormat.format(devClassNamePattern, c.name)
 				// System.out.println("Put : " + genClassName + "," + devClassName);
 				devNames.put(genClassName, devClassName)
 			}
@@ -85,25 +84,20 @@ class GMATransform {
 
 		return res
 	}
-	
+
 	/** Transform a String with default computed names with the new names */
-	static def replaceDevName(GenBase base, String stringToTranslate)
-	{
+	static def replaceDevName(GenBase base, String stringToTranslate) {
 		// Check it base has a GenModelImpl with its own devtransform
 		val genModel = base.genModel
 		var GMATransform dt = null
-		if (genModel instanceof GMAGenModelImpl)
-		{
+		if (genModel instanceof GMAGenModelImpl) {
 			val gm = genModel as GMAGenModelImpl
 			dt = gm.GMATransform
 		}
-		   
+
 		if (dt !== null)
-		{
-		    val after = dt.replaceDevName(stringToTranslate)
-		    return after
-		    }
-		 else 
-		    return stringToTranslate
+			dt.replaceDevName(stringToTranslate)
+		else
+			return stringToTranslate
 	}
 }

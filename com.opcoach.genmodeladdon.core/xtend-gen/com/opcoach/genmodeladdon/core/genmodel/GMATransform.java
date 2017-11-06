@@ -110,17 +110,22 @@ public class GMATransform {
    * Transform a String with default computed names with the new names
    */
   public static String replaceDevName(final GenBase base, final String stringToTranslate) {
-    final GenModel genModel = base.getGenModel();
-    GMATransform dt = null;
-    if ((genModel instanceof GMAGenModelImpl)) {
-      final GMAGenModelImpl gm = ((GMAGenModelImpl) genModel);
-      dt = gm.getGMATransform();
+    String _xblockexpression = null;
+    {
+      final GenModel genModel = base.getGenModel();
+      GMATransform dt = null;
+      if ((genModel instanceof GMAGenModelImpl)) {
+        final GMAGenModelImpl gm = ((GMAGenModelImpl) genModel);
+        dt = gm.getGMATransform();
+      }
+      String _xifexpression = null;
+      if ((dt != null)) {
+        _xifexpression = dt.replaceDevName(stringToTranslate);
+      } else {
+        return stringToTranslate;
+      }
+      _xblockexpression = _xifexpression;
     }
-    if ((dt != null)) {
-      final String after = dt.replaceDevName(stringToTranslate);
-      return after;
-    } else {
-      return stringToTranslate;
-    }
+    return _xblockexpression;
   }
 }
