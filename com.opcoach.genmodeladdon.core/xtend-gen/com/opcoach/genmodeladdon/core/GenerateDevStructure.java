@@ -219,14 +219,10 @@ public class GenerateDevStructure {
   }
   
   /**
-   * This method checks if the genModel has a dynamic templates property and a
-   * template directory set to projectName/templates
-   * It also copies the ClassJava.jet from the core project.
-   * it returns the a String containing the changes that has been done on genmodel.
+   * This method initializes the genModel with convenient values
    */
-  public String setGenModelTemplates(final GenModel gm, final boolean forceSave) {
-    gm.setImportOrganizing(true);
-    return "";
+  public void initializeGenModelConvenientProperties() {
+    this.genModel.setImportOrganizing(true);
   }
   
   /**
@@ -286,7 +282,7 @@ public class GenerateDevStructure {
   }
   
   public void generateAll(final String antFilename) {
-    this.setGenModelTemplates(this.genModel, true);
+    this.initializeGenModelConvenientProperties();
     this.generateDevStructure(true);
     final File antFile = this.generateAntFile(antFilename);
     NullProgressMonitor _nullProgressMonitor = new NullProgressMonitor();

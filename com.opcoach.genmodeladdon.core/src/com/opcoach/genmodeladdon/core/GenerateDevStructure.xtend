@@ -173,18 +173,13 @@ class GenerateDevStructure {
 	}
 
 	/**
-	 * This method checks if the genModel has a dynamic templates property and a
-	 * template directory set to projectName/templates
-	 * It also copies the ClassJava.jet from the core project.
-	 * it returns the a String containing the changes that has been done on genmodel.
+	 * This method initializes the genModel with convenient values
 	 */
-	def public String setGenModelTemplates(GenModel gm, boolean forceSave) {
+	def public void initializeGenModelConvenientProperties() {
 		
-				gm.importOrganizing = true
-	
-		return "" 
+		// By default organize imports in genmodel
+		genModel.importOrganizing = true
 		
-
 	}
 
 	/** Generate the ant file and return it (or null.  */
@@ -248,8 +243,8 @@ class GenerateDevStructure {
 	// This method do the global process in the right order 
 	def generateAll(String antFilename)
 	{
-		// Install the templates
-		setGenModelTemplates(genModel, true)
+		// set some genModel convenient properties.
+		initializeGenModelConvenientProperties()
 
 		// Generate the dev structure...
 		generateDevStructure(true)

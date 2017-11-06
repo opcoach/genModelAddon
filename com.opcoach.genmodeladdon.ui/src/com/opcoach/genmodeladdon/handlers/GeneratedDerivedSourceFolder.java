@@ -51,15 +51,9 @@ public class GeneratedDerivedSourceFolder extends GenerateParentHandler
 
 			final GenerateDevStructure gds = new GenerateDevStructure(gm, cp, ip, src);
 
-			// Check the genModel dynamic templates.
-			String changes = gds.setGenModelTemplates(gm, false);
-			if (changes.length() > 0)
-			{
-				if (!confirmSaveGenModelTemplates(gm, changes))
-					return;
-			}
+			// set some genModel convenient properties.
+			gds.initializeGenModelConvenientProperties();
 						
-
 			// Try to generate to check the files that could be
 			// overridden
 			gds.generateDevStructure(false);
@@ -164,31 +158,6 @@ public class GeneratedDerivedSourceFolder extends GenerateParentHandler
 
 		}
 	}
-
-	
-	/**
-	 * This method checks if the genModel has a dynamic templates property and a
-	 * template directory set to projectName/templates
-	 */
-	private boolean confirmSaveGenModelTemplates(GenModel gm, String changes)
-	{
-		boolean result = false;
-
-		// Inform user of changes and save the file.
-		if (changes.length() > 0)
-		{
-			if (result = MessageDialog.openConfirm(parentShell, "Your genModel file must be updated",
-					"Do you confirm the following changes on your gen model : \n\n" + changes))
-			{
-				Util.saveGenModel(gm, parentShell);
-			}
-
-		}
-
-		return result;
-
-	}
-
 
 	
 
