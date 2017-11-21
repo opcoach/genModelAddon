@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.codegen.ecore.genmodel.GenClass;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.codegen.ecore.genmodel.GenPackage;
+import org.junit.BeforeClass;
 
 import com.opcoach.genmodeladdon.core.GenerateDevStructure;
 
@@ -34,6 +35,12 @@ public class GenModelAddonTestCase implements ProjectConstants
 
 	private IProject sampleProject = null;
 
+	@BeforeClass
+	public static void globalInit()
+	{
+		 WorkspaceConfigurator.getDefault().getSampleProject();
+	}
+	
 	protected GenModel getGenModel(String name)
 	{
 		return WorkspaceConfigurator.getDefault().getGenModel(name);

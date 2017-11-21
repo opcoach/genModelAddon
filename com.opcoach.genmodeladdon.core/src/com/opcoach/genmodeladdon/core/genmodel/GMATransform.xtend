@@ -14,7 +14,7 @@ import org.eclipse.emf.ecore.EPackage
 /** This class computes the new names for generated classes according to pattern name matching */
 class GMATransform implements GMAConstants {
 
-	// The map of devnames : key = implementation name, value = devName
+// The map of devnames : key = implementation name, value = devName
 	protected Map<String, String> devNames = new TreeMap<String, String>()
 
 	String devInterfaceNamePattern = ADVISED_DEV_INTERFACE_PATTERN
@@ -51,15 +51,15 @@ class GMATransform implements GMAConstants {
 
 	}
 
-	// Set the value in the consumer if not null
+// Set the value in the consumer if not null
 	private def initValue(String v, Consumer<String> consumer) {
 		if (v !== null)
 			consumer.accept(v)
 	}
 
 	private def initNames() {
-		initValue(gm.classNamePattern, [v|genClassNamePattern = v])
-		initValue(gm.interfaceNamePattern, [v|genInterfaceNamePattern = v])
+		initValue(gm.classNamePattern, [v|this.genClassNamePattern = v])
+		initValue(gm.interfaceNamePattern, [v|this.genInterfaceNamePattern = v])
 
 		val f = GenerateCommon.getModelFile(gm)
 		if (f !== null) {
@@ -104,17 +104,48 @@ class GMATransform implements GMAConstants {
 			computeNames(childPackage)
 	}
 
-	def replaceDevName(String stringToTranslate) {
-		var res = stringToTranslate
-		// Search for the genName string in stringToTransalte
-		for (String key : devNames.keySet()) {
-			if (stringToTranslate.contains(key)) {
-				// System.out.println("String : " + stringToTranslate + " contains " + key + " will replace with " + devNames.get(key) );
-				res = res.replaceAll(key, devNames.get(key))
-			}
-		}
 
-		return res
+	/**
+	 * Replace the development name (a key in the map) as many times as necessary. 
+	 * But it must be replaced only if the key is found with not a letter before or after. 
+	 *  Examples :
+	 * <blockquote>     public class MProject  -->   public class Project  </blockquote>
+	 *   <blockquote>   public class MyMProject extends MProject  --> public class MyMProject extends Project </blockquote>
+	 *   <blockquote>   public class MyMProject extends MProject implements YourMProject  --> public class MyMProject extends Project implements YourMProject  </blockquote>
+	 * 
+	 */
+	def replaceDevName(String stringToTranslate) {
+		var res = new StringBuffer(stringToTranslate) // Current copy recreated in the loop
+		for (entry : devNames.entrySet()) {
+
+			val key = entry.key
+			val value = entry.value
+
+			var s = 0
+			while (res.indexOf(key, s) != -1) {
+			    s = res.indexOf(key,s)
+				val e = s + key.length
+				// Must change the string only if it is a real single word : 
+				// of if it is at the beginning or at the end of the string.
+				val startIsOk = (s == 0) || !Character.isLetterOrDigit(res.charAt(s - 1))
+				val endIsOk = (e == res.length) || !Character.isLetterOrDigit(res.charAt(e))
+
+				if (startIsOk && endIsOk)
+					res = res.replace(s, e, value)
+					
+			    // Must continue so search after the end...
+		        s = e
+			}
+
+		} // end for entry
+		
+		return res.toString
+	}
+	
+	def static void main(String[] args) {
+		println("pour . " + Character.isLetterOrDigit('.') )
+		println("pour < " + Character.isLetterOrDigit('<') )
+		println("pour > " + Character.isLetterOrDigit('>') )
 	}
 
 	/** Transform a String with default computed names with the new names */
@@ -132,4 +163,5 @@ class GMATransform implements GMAConstants {
 		else
 			return stringToTranslate
 	}
+
 }

@@ -81,8 +81,6 @@ public class GenerateCommon implements GMAConstants {
     } catch (final Throwable _t) {
       if (_t instanceof Exception) {
         final Exception e = (Exception)_t;
-        e.printStackTrace();
-        result = null;
       } else {
         throw Exceptions.sneakyThrow(_t);
       }

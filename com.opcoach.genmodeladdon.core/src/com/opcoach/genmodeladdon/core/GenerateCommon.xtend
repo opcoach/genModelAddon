@@ -63,8 +63,7 @@ class GenerateCommon implements GMAConstants {
 		try {
 			result = f.getPersistentProperty(qn)
 		} catch (Exception e) {
-			e.printStackTrace
-			result = null
+			// There is no property file... no value.
 		}
 		return result
 	}

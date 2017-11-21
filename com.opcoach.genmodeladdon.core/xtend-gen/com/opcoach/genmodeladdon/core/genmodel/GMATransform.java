@@ -16,6 +16,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 
 /**
  * This class computes the new names for generated classes according to pattern name matching
@@ -130,16 +131,50 @@ public class GMATransform implements GMAConstants {
     }
   }
   
+  /**
+   * Replace the development name (a key in the map) as many times as necessary.
+   * But it must be replaced only if the key is found with not a letter before or after.
+   *  Examples :
+   * <blockquote>     public class MProject  -->   public class Project  </blockquote>
+   *   <blockquote>   public class MyMProject extends MProject  --> public class MyMProject extends Project </blockquote>
+   *   <blockquote>   public class MyMProject extends MProject implements YourMProject  --> public class MyMProject extends Project implements YourMProject  </blockquote>
+   */
   public String replaceDevName(final String stringToTranslate) {
-    String res = stringToTranslate;
-    Set<String> _keySet = this.devNames.keySet();
-    for (final String key : _keySet) {
-      boolean _contains = stringToTranslate.contains(key);
-      if (_contains) {
-        res = res.replaceAll(key, this.devNames.get(key));
+    StringBuffer res = new StringBuffer(stringToTranslate);
+    Set<Map.Entry<String, String>> _entrySet = this.devNames.entrySet();
+    for (final Map.Entry<String, String> entry : _entrySet) {
+      {
+        final String key = entry.getKey();
+        final String value = entry.getValue();
+        int s = 0;
+        while ((res.indexOf(key, s) != (-1))) {
+          {
+            s = res.indexOf(key, s);
+            int _length = key.length();
+            final int e = (s + _length);
+            final boolean startIsOk = ((s == 0) || (!Character.isLetterOrDigit(res.charAt((s - 1)))));
+            final boolean endIsOk = ((e == res.length()) || (!Character.isLetterOrDigit(res.charAt(e))));
+            if ((startIsOk && endIsOk)) {
+              res = res.replace(s, e, value);
+            }
+            s = e;
+          }
+        }
       }
     }
-    return res;
+    return res.toString();
+  }
+  
+  public static void main(final String[] args) {
+    boolean _isLetterOrDigit = Character.isLetterOrDigit('.');
+    String _plus = ("pour . " + Boolean.valueOf(_isLetterOrDigit));
+    InputOutput.<String>println(_plus);
+    boolean _isLetterOrDigit_1 = Character.isLetterOrDigit('<');
+    String _plus_1 = ("pour < " + Boolean.valueOf(_isLetterOrDigit_1));
+    InputOutput.<String>println(_plus_1);
+    boolean _isLetterOrDigit_2 = Character.isLetterOrDigit('>');
+    String _plus_2 = ("pour > " + Boolean.valueOf(_isLetterOrDigit_2));
+    InputOutput.<String>println(_plus_2);
   }
   
   /**

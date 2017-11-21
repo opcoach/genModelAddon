@@ -22,7 +22,7 @@ public class TestGenModelCascade extends GenModelAddonTestCase
 	@Test
 	public void theFannoiseProjectMustImportWorkflow()
 	{
-		assertFileContains("src-gen/fannoise/MFanNoiseProject.java", "import ananax.Workflow");
+		assertFileContains("src-gen/fannoise/MFanNoiseProject.java", "import ananax.Workflow;");
 	}
 
 
