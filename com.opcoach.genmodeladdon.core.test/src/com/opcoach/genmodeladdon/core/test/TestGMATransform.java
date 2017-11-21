@@ -13,24 +13,6 @@ public class TestGMATransform extends GenModelAddonTestCase
 {
 	
 	
-	
-	
-	/**  Examples 
-	 * 
-	    public class MProjecttototo
-	    import com.opcoach.project.MProject;
-	    public class MyDocMProject extends MProject
-	    MProjectInformation
-	    <MProject>  <MProject,MyMProject>
-	    
-	
-	
-	
-	
-	 *
-	 */
-	
-	
 	class GMATransformStub extends GMATransform
 	{
 
@@ -40,6 +22,8 @@ public class TestGMATransform extends GenModelAddonTestCase
 			init();
 			// Add other strings to replace... just for tests.
 			devNames.put("MWorkflow", "Workflow");
+			devNames.put("Satellite", "DevSatellite");
+			devNames.put("System", "DevSystem");
 		}
 	
 	}
@@ -112,7 +96,16 @@ public class TestGMATransform extends GenModelAddonTestCase
 		assertEquals(expected, gmat.replaceDevName(source));
 	}
 
+	@Test
+	public void testWithKeyShorterThanValue()
+	{
+		String source   = "Satellite SatelliteTest setSatellite(Satellite s) DevSatelliteFactory SatelliteFactory System .Satellite <Satellite> EList<Satellite> Map<Satellite,String> Map<Satellite ,String>  .System;";
+		String expected = "DevSatellite SatelliteTest setSatellite(DevSatellite s) DevSatelliteFactory SatelliteFactory DevSystem .DevSatellite <DevSatellite> EList<DevSatellite> Map<DevSatellite,String> Map<DevSatellite ,String>  .DevSystem;";
+		assertEquals(expected, gmat.replaceDevName(source));
+	}
+
 	
+
 
 
 }
