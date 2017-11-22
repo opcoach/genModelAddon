@@ -17,7 +17,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 /**
  * This class computes the new names for generated classes according to pattern name matching
@@ -123,21 +122,9 @@ public class GMATransform implements GMAConstants {
         if (((c instanceof EClass) && (!c.getName().endsWith("Package")))) {
           final String devIntName = MessageFormat.format(this.devInterfaceNamePattern, c.getName());
           final String genIntName = MessageFormat.format(this.genInterfaceNamePattern, c.getName());
-          int _length = genIntName.length();
-          boolean _equals_1 = (_length == 0);
-          if (_equals_1) {
-            InputOutput.<String>println(("Found an empty string for key for this devName " + devIntName));
-          }
-          InputOutput.<String>println(((("Put : " + genIntName) + ",") + devIntName));
           this.devNames.put(genIntName, devIntName);
           final String genClassName = MessageFormat.format(this.genClassNamePattern, c.getName());
           final String devClassName = MessageFormat.format(this.devClassNamePattern, c.getName());
-          int _length_1 = genClassName.length();
-          boolean _equals_2 = (_length_1 == 0);
-          if (_equals_2) {
-            InputOutput.<String>println(("Found an empty string for key for this devName " + this.devClassNamePattern));
-          }
-          InputOutput.<String>println(((("Put : " + genClassName) + ",") + devClassName));
           this.devNames.put(genClassName, devClassName);
         }
       }
@@ -163,41 +150,23 @@ public class GMATransform implements GMAConstants {
       {
         final String key = entry.getKey();
         final String value = entry.getValue();
-        int _length = key.length();
-        boolean _equals = (_length == 0);
-        if (_equals) {
-          InputOutput.<String>println(("Found an empty key for this value :  " + value));
-        } else {
-          int s = 0;
-          while ((res.indexOf(key, s) != (-1))) {
-            {
-              s = res.indexOf(key, s);
-              int _length_1 = key.length();
-              final int e = (s + _length_1);
-              final boolean startIsOk = ((s == 0) || (!Character.isLetterOrDigit(res.charAt((s - 1)))));
-              final boolean endIsOk = ((e == res.length()) || (!Character.isLetterOrDigit(res.charAt(e))));
-              if ((startIsOk && endIsOk)) {
-                res = res.replace(s, e, value);
-              }
-              s = e;
+        int s = 0;
+        while ((res.indexOf(key, s) != (-1))) {
+          {
+            s = res.indexOf(key, s);
+            int _length = key.length();
+            final int e = (s + _length);
+            final boolean startIsOk = ((s == 0) || (!Character.isLetterOrDigit(res.charAt((s - 1)))));
+            final boolean endIsOk = ((e == res.length()) || (!Character.isLetterOrDigit(res.charAt(e))));
+            if ((startIsOk && endIsOk)) {
+              res = res.replace(s, e, value);
             }
+            s = e;
           }
         }
       }
     }
     return res.toString();
-  }
-  
-  public static void main(final String[] args) {
-    boolean _isLetterOrDigit = Character.isLetterOrDigit('.');
-    String _plus = ("pour . " + Boolean.valueOf(_isLetterOrDigit));
-    InputOutput.<String>println(_plus);
-    boolean _isLetterOrDigit_1 = Character.isLetterOrDigit('<');
-    String _plus_1 = ("pour < " + Boolean.valueOf(_isLetterOrDigit_1));
-    InputOutput.<String>println(_plus_1);
-    boolean _isLetterOrDigit_2 = Character.isLetterOrDigit('>');
-    String _plus_2 = ("pour > " + Boolean.valueOf(_isLetterOrDigit_2));
-    InputOutput.<String>println(_plus_2);
   }
   
   /**

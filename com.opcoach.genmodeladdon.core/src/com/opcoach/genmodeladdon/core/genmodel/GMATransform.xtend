@@ -94,18 +94,12 @@ class GMATransform implements GMAConstants {
 				if ((c instanceof EClass) && !c.name.endsWith("Package")) {
 					val devIntName = MessageFormat.format(devInterfaceNamePattern, c.name)
 					val genIntName = MessageFormat.format(genInterfaceNamePattern, c.name)
-					// System.out.println("Put : " + genIntName + "," + devIntName);
-					if (genIntName.length() == 0)
-						println("Found an empty string for key for this devName " + devIntName)
-					println("Put : " + genIntName + "," + devIntName);
-
+					// println("Put : " + genIntName + "," + devIntName);
 					devNames.put(genIntName, devIntName)
 
 					val genClassName = MessageFormat.format(genClassNamePattern, c.name)
 					val devClassName = MessageFormat.format(devClassNamePattern, c.name)
-					if (genClassName.length() == 0)
-						println("Found an empty string for key for this devName " + devClassNamePattern)
-					println("Put : " + genClassName + "," + devClassName);
+					// println("Put : " + genClassName + "," + devClassName);
 					devNames.put(genClassName, devClassName)
 				}
 			}
@@ -131,35 +125,24 @@ class GMATransform implements GMAConstants {
 			val key = entry.key
 			val value = entry.value
 
-			if (key.length == 0)
-				println("Found an empty key for this value :  " + value)
-			else {
+			var s = 0
+			while (res.indexOf(key, s) != -1) {
+				s = res.indexOf(key, s)
+				val e = s + key.length
+				// Must change the string only if it is a real single word : 
+				// of if it is at the beginning or at the end of the string.
+				val startIsOk = (s == 0) || !Character.isLetterOrDigit(res.charAt(s - 1))
+				val endIsOk = (e == res.length) || !Character.isLetterOrDigit(res.charAt(e))
 
-				var s = 0
-				while (res.indexOf(key, s) != -1) {
-					s = res.indexOf(key, s)
-					val e = s + key.length
-					// Must change the string only if it is a real single word : 
-					// of if it is at the beginning or at the end of the string.
-					val startIsOk = (s == 0) || !Character.isLetterOrDigit(res.charAt(s - 1))
-					val endIsOk = (e == res.length) || !Character.isLetterOrDigit(res.charAt(e))
+				if (startIsOk && endIsOk)
+					res = res.replace(s, e, value)
 
-					if (startIsOk && endIsOk)
-						res = res.replace(s, e, value)
-
-					// Must continue so search after the end...
-					s = e
-				}
+				// Must continue so search after the end...
+				s = e
 			}
 
 		} // end for entry
 		return res.toString
-	}
-
-	def static void main(String[] args) {
-		println("pour . " + Character.isLetterOrDigit('.'))
-		println("pour < " + Character.isLetterOrDigit('<'))
-		println("pour > " + Character.isLetterOrDigit('>'))
 	}
 
 	/** Transform a String with default computed names with the new names */

@@ -12,6 +12,8 @@ public interface GMAConstants {
   
   public final static QualifiedName PROP_SRCDIR = new QualifiedName(GMAConstants.PLUGIN_ID, "srcDir");
   
+  public final static String PARAM_DEBUG_MODE = "-gmaDebug";
+  
   public final static QualifiedName PROP_GENEMFCODE = new QualifiedName(GMAConstants.PLUGIN_ID, "generateEMFCodeAfter");
   
   public final static QualifiedName PROP_GMA = new QualifiedName(GMAConstants.PLUGIN_ID, "genModelAddon");

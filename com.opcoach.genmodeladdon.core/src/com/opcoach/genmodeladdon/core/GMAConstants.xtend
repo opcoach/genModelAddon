@@ -4,12 +4,15 @@ import org.eclipse.core.runtime.QualifiedName
 
 interface GMAConstants {
 	
-	public static final String PLUGIN_ID = "com.opcoach.genmodeladdon.core";
+	public static val String PLUGIN_ID = "com.opcoach.genmodeladdon.core";
 
 	// Define the properties to be stored in the project for dev interface and class patterns
 	public static val PROP_INTERFACE_PATTERN = new QualifiedName(PLUGIN_ID, "interfacePattern");
 	public static val PROP_CLASS_PATTERN = new QualifiedName(PLUGIN_ID, "classPattern");
 	public static val PROP_SRCDIR = new QualifiedName(PLUGIN_ID, "srcDir");
+	
+	// Debug parameter to set on application
+	public static val PARAM_DEBUG_MODE = "-gmaDebug";
 	
 	// Store the EMF generate property after dev code generation
 	public static val PROP_GENEMFCODE = new QualifiedName(PLUGIN_ID, "generateEMFCodeAfter");

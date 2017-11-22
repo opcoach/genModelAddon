@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.CoreException
 import org.eclipse.core.runtime.IProgressMonitor
 import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.core.runtime.Path
+import org.eclipse.core.runtime.Platform
 import org.eclipse.emf.codegen.ecore.genmodel.GenClass
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel
 import org.eclipse.emf.codegen.ecore.genmodel.GenPackage
@@ -21,7 +22,6 @@ import org.eclipse.emf.ecore.EClass
 import org.eclipse.jdt.core.IClasspathEntry
 import org.eclipse.jdt.core.IJavaProject
 import org.eclipse.jdt.core.JavaCore
-import com.opcoach.genmodeladdon.core.genmodel.GMAFactoryImpl
 
 /** This class is used to proceed the different steps to generate the development structure
  * A method is defined for each step :
@@ -42,6 +42,8 @@ class GenerateDevStructure {
 	GenModel genModel
 	var copyright = ""
 	
+	boolean debug = false   // Initialized with argument -gmaDebug
+	
 	public Map<String, Object> filesNotGenerated = new HashMap
 	
 	String modelName
@@ -59,6 +61,12 @@ class GenerateDevStructure {
 	 * @param srcDir : the source directory (relative path) in project
 	 */
 	new(GenModel gm, String cPattern, String iPattern, String srcDir) {
+		
+		if (Platform.applicationArgs.contains(GMAConstants.PARAM_DEBUG_MODE))
+		{
+		  debug = true
+	    }
+		  
 		genModel = gm
 		if (gm.copyrightText !== null)
 			copyright = computeCopyrightComment.toString
@@ -215,25 +223,24 @@ class GenerateDevStructure {
 		val runner = new AntRunner
 		runner.setBuildFileLocation(f.absolutePath)
 	
-	    // Uncomment the 2 following lines to display the traces when running 
-	    // the EMF code generation ! 
-	   	runner.addBuildLogger("org.apache.tools.ant.DefaultLogger");
-		runner.arguments = "-verbose -debug"
-		
+	    // Add traces during ant generation if debug mode (-gmaDebug) 
+	    if (debug)
+	    {
+	      	runner.addBuildLogger("org.apache.tools.ant.DefaultLogger");
+		    runner.arguments = "-verbose -debug"
+		}
 		
 		try {
-			// println("  --> Generate the EMF Code using the ant file : " +  f.absolutePath);
+			if (debug)
+			   println("  --> Generate the EMF Code using the ant file : " +  f.absolutePath);
 			
-			GMAFactoryImpl.setAvailable(true)
 			runner.run(monitor)
 			refreshWorkspace
 
 		} catch (CoreException e) {
 			e.printStackTrace
 		}
-		finally{
-						GMAFactoryImpl.setAvailable(false)
-		}
+		
 
 	}
 	

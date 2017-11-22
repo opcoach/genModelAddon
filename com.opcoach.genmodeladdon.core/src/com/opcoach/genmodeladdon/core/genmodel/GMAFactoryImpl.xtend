@@ -10,38 +10,33 @@ import org.eclipse.emf.codegen.ecore.genmodel.impl.GenModelFactoryImpl
  */
 class GMAFactoryImpl extends GenModelFactoryImpl {
 
-	static boolean isAvailable = false
-
-	def static setAvailable(boolean avail) {
-		isAvailable = avail
-	}
 
 	override GenFeature createGenFeature() {
-		if(isAvailable) new GMAGenFeatureImpl else super.createGenFeature
+		new GMAGenFeatureImpl
 	}
 
 	override GenClass createGenClass() {
-		if(isAvailable) new GMAGenClassImpl else super.createGenClass
+		new GMAGenClassImpl
 	}
 
 	override GenModel createGenModel() {
-		if(isAvailable) new GMAGenModelImpl else super.createGenModel
+		new GMAGenModelImpl
 	}
 
 	override createGenOperation() {
-		if(isAvailable) new GMAGenOperationImpl else super.createGenOperation
+		new GMAGenOperationImpl
 	}
 
 	override createGenPackage() {
-		if(isAvailable) new GMAGenPackageImpl else super.createGenPackage
+		new GMAGenPackageImpl
 	}
 
 	override createGenParameter() {
-		if(isAvailable) new GMAGenParameterImpl else super.createGenParameter
+		new GMAGenParameterImpl
 	}
 
 	override createGenTypeParameter() {
-		if(isAvailable) new GMAGenTypeParameterImpl else super.createGenTypeParameter
+		new GMAGenTypeParameterImpl
 	}
 
 }

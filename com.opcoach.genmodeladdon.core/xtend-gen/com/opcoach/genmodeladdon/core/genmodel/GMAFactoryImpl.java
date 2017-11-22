@@ -22,86 +22,38 @@ import org.eclipse.emf.codegen.ecore.genmodel.impl.GenModelFactoryImpl;
  */
 @SuppressWarnings("all")
 public class GMAFactoryImpl extends GenModelFactoryImpl {
-  private static boolean isAvailable = false;
-  
-  public static boolean setAvailable(final boolean avail) {
-    return GMAFactoryImpl.isAvailable = avail;
-  }
-  
   @Override
   public GenFeature createGenFeature() {
-    GenFeature _xifexpression = null;
-    if (GMAFactoryImpl.isAvailable) {
-      _xifexpression = new GMAGenFeatureImpl();
-    } else {
-      _xifexpression = super.createGenFeature();
-    }
-    return _xifexpression;
+    return new GMAGenFeatureImpl();
   }
   
   @Override
   public GenClass createGenClass() {
-    GenClass _xifexpression = null;
-    if (GMAFactoryImpl.isAvailable) {
-      _xifexpression = new GMAGenClassImpl();
-    } else {
-      _xifexpression = super.createGenClass();
-    }
-    return _xifexpression;
+    return new GMAGenClassImpl();
   }
   
   @Override
   public GenModel createGenModel() {
-    GenModel _xifexpression = null;
-    if (GMAFactoryImpl.isAvailable) {
-      _xifexpression = new GMAGenModelImpl();
-    } else {
-      _xifexpression = super.createGenModel();
-    }
-    return _xifexpression;
+    return new GMAGenModelImpl();
   }
   
   @Override
   public GenOperation createGenOperation() {
-    GenOperation _xifexpression = null;
-    if (GMAFactoryImpl.isAvailable) {
-      _xifexpression = new GMAGenOperationImpl();
-    } else {
-      _xifexpression = super.createGenOperation();
-    }
-    return _xifexpression;
+    return new GMAGenOperationImpl();
   }
   
   @Override
   public GenPackage createGenPackage() {
-    GenPackage _xifexpression = null;
-    if (GMAFactoryImpl.isAvailable) {
-      _xifexpression = new GMAGenPackageImpl();
-    } else {
-      _xifexpression = super.createGenPackage();
-    }
-    return _xifexpression;
+    return new GMAGenPackageImpl();
   }
   
   @Override
   public GenParameter createGenParameter() {
-    GenParameter _xifexpression = null;
-    if (GMAFactoryImpl.isAvailable) {
-      _xifexpression = new GMAGenParameterImpl();
-    } else {
-      _xifexpression = super.createGenParameter();
-    }
-    return _xifexpression;
+    return new GMAGenParameterImpl();
   }
   
   @Override
   public GenTypeParameter createGenTypeParameter() {
-    GenTypeParameter _xifexpression = null;
-    if (GMAFactoryImpl.isAvailable) {
-      _xifexpression = new GMAGenTypeParameterImpl();
-    } else {
-      _xifexpression = super.createGenTypeParameter();
-    }
-    return _xifexpression;
+    return new GMAGenTypeParameterImpl();
   }
 }

@@ -1,9 +1,9 @@
 package com.opcoach.genmodeladdon.core;
 
+import com.opcoach.genmodeladdon.core.GMAConstants;
 import com.opcoach.genmodeladdon.core.GenerateAntFileForCodeGeneration;
 import com.opcoach.genmodeladdon.core.GenerateCommon;
 import com.opcoach.genmodeladdon.core.GenerateExtensions;
-import com.opcoach.genmodeladdon.core.genmodel.GMAFactoryImpl;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.codegen.ecore.genmodel.GenClass;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.codegen.ecore.genmodel.GenPackage;
@@ -36,6 +37,7 @@ import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 /**
@@ -63,6 +65,8 @@ public class GenerateDevStructure {
   
   private String copyright = "";
   
+  private boolean debug = false;
+  
   public Map<String, Object> filesNotGenerated = new HashMap<String, Object>();
   
   private String modelName;
@@ -81,6 +85,10 @@ public class GenerateDevStructure {
    */
   public GenerateDevStructure(final GenModel gm, final String cPattern, final String iPattern, final String srcDir) {
     try {
+      boolean _contains = ((List<String>)Conversions.doWrapArray(Platform.getApplicationArgs())).contains(GMAConstants.PARAM_DEBUG_MODE);
+      if (_contains) {
+        this.debug = true;
+      }
       this.genModel = gm;
       String _copyrightText = gm.getCopyrightText();
       boolean _tripleNotEquals = (_copyrightText != null);
@@ -264,10 +272,16 @@ public class GenerateDevStructure {
   public void generateGenModelCode(final File f, final IProgressMonitor monitor) {
     final AntRunner runner = new AntRunner();
     runner.setBuildFileLocation(f.getAbsolutePath());
-    runner.addBuildLogger("org.apache.tools.ant.DefaultLogger");
-    runner.setArguments("-verbose -debug");
+    if (this.debug) {
+      runner.addBuildLogger("org.apache.tools.ant.DefaultLogger");
+      runner.setArguments("-verbose -debug");
+    }
     try {
-      GMAFactoryImpl.setAvailable(true);
+      if (this.debug) {
+        String _absolutePath = f.getAbsolutePath();
+        String _plus = ("  --> Generate the EMF Code using the ant file : " + _absolutePath);
+        InputOutput.<String>println(_plus);
+      }
       runner.run(monitor);
       this.refreshWorkspace();
     } catch (final Throwable _t) {
@@ -277,8 +291,6 @@ public class GenerateDevStructure {
       } else {
         throw Exceptions.sneakyThrow(_t);
       }
-    } finally {
-      GMAFactoryImpl.setAvailable(false);
     }
   }
   
