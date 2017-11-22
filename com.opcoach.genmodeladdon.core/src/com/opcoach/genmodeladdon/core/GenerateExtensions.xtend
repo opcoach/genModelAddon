@@ -75,7 +75,7 @@ package class GenerateExtensions {
 
 	// Used only for debug
 	 def printExtension(IPluginExtension ext) {
-		println("<extension point=\"" + ext.point + "\">")
+		 println("<extension point=\"" + ext.point + "\">")
 		for (elt : ext.children) {
 			if (elt instanceof IPluginElement) {
 				val ipe = elt as IPluginElement
@@ -185,7 +185,7 @@ package class GenerateExtensions {
 		factoryElement.setAttribute(CLASS_ATTR, classname)
 
 		updatedExtension.add(factoryElement)
-		fModel.getPluginBase().add(updatedExtension);
+		fModel.getPluginBase().add(updatedExtension)
 
 	}
 

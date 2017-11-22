@@ -1,12 +1,19 @@
 package com.opcoach.genmodeladdon.core
 
+import org.eclipse.core.resources.IFile
 import org.eclipse.core.resources.IProject
 import org.eclipse.core.resources.ResourcesPlugin
+import org.eclipse.core.runtime.IStatus
+import org.eclipse.core.runtime.Path
+import org.eclipse.core.runtime.Platform
+import org.eclipse.core.runtime.QualifiedName
+import org.eclipse.core.runtime.Status
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel
 import org.eclipse.emf.common.util.URI
+import org.osgi.framework.FrameworkUtil
 
 /** A class to provide some generation common methods */
-class GenerateCommon {
+class GenerateCommon implements GMAConstants {
 
 	/** Extract the project name from the genmodel resource */
 	def static String getProjectName(GenModel gm) {
@@ -18,94 +25,87 @@ class GenerateCommon {
 		val rootUri = URI.createURI(ResourcesPlugin.workspace.root.locationURI.toString)
 		val lastSegOfRootUri = rootUri.lastSegment
 		val genModelUriStr = genModelUri.toString
-		
-		if (genModelUriStr.startsWith("platform:/resource/"))
-		{
+
+		if (genModelUriStr.startsWith("platform:/resource/")) {
 			// For this URI, project name is just after resource/
 			val s = genModelUriStr.replace("platform:/resource/", "")
-			val lastSlash = s.indexOf("/");
-			return s.substring(0, lastSlash);
-			
+			val lastSlash = s.indexOf("/")
+			return s.substring(0, lastSlash)
+
 		}
 		// Search for this segment in the genModelUri
 		val segments = genModelUri.segmentsList
 		val lastIndex = segments.lastIndexOf(lastSegOfRootUri)
-		return segments.get(lastIndex+1)
-		
-	/* 	val gmUriStr = genModelUri.toString()
-		val s1 = genModelUri.toPlatformString(false)
-		val s2 = genModelUri.toPlatformString(true)
-		val s3 = genModelUri.toFileString
-		val dev = genModelUri.device
-		val devPath = genModelUri.devicePath
-		val lastSeg = genModelUri.lastSegment
-		val seg = genModelUri.resolve(rootUri)
-		
-		for (sg : genModelUri.segments)
-		   println("Segment : " + sg)
+		return segments.get(lastIndex + 1)
 
-		println("\n" + s1 + "\n" + s2 + "\n" + s3)
-
-		if (genModelUri.isPlatformResource) {
-			val p = gmUriStr.replaceFirst("platform:/resource/", "");
-
-			val pos = p.indexOf("/");
-			return p.substring(0, pos);
-		} else if (genModelUri.isFile) {
-			val root = ResourcesPlugin.workspace.root
-			val wsloc = root.locationURI
-			val p = gmUriStr.replaceFirst(wsloc.toString + File.separator, "")
-			val pos = p.indexOf("/");
-			return p.substring(0, pos);
-		} else if (genModelUri.isHierarchical) {
-			val root = ResourcesPlugin.workspace.root
-			val wsloc = root.locationURI
-			val p = gmUriStr.replaceFirst(wsloc.toString + File.separator, "")
-			val pos = p.indexOf("/");
-			return p.substring(0, pos);
-
-		}
-		// Unknown ?? 
-		return null
-		
-		*/
 	}
 
 	/** Find the project from a genmodel */
 	def static IProject getProject(GenModel gm) {
 		val projectName = getProjectName(gm)
-		ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+		ResourcesPlugin.getWorkspace().getRoot().getProject(projectName)
+	}
+
+	/** Find the IFile from a genmodel */
+	def static IFile getModelFile(GenModel gm) {
+
+		if (gm.eResource !== null) {
+			val genModelUri = gm.eResource.URI
+			val p = new Path(genModelUri.toString.replaceFirst("platform:/resource", ""))
+			val ws = ResourcesPlugin.workspace.root
+			return ws.getFile(p)
+		}
+		return null
+	}
+
+	def static String getProperty(IFile f, QualifiedName qn) {
+		var String result = null
+		try {
+			result = f.getPersistentProperty(qn)
+		} catch (Exception e) {
+			// There is no property file... no value.
+		}
+		return result
+	}
+
+	def static setProperty(IFile f, QualifiedName qn, String value) {
+		try {
+			f.setPersistentProperty(qn, value)
+		} catch (Exception e) {
+			val bndl = FrameworkUtil.getBundle(GenerateCommon)
+			val logger = Platform.getLog(bndl);
+			logger.log(new Status(IStatus.WARNING, PLUGIN_ID, "Unable to store the property : " + qn, e))
+		}
 	}
 
 	/** Find the model name from the genmodel */
 	def static getModelName(GenModel gm) {
 		val uri = gm.eResource.URI
-		val s = uri.toString;
-		var pos = s.lastIndexOf("/");
-		var modelName = s.substring(pos + 1);
-		pos = modelName.indexOf(".genmodel");
-		modelName = modelName.substring(0, pos);
-		return modelName
+		val s = uri.toString
+		var pos = s.lastIndexOf("/")
+		var modelName = s.substring(pos + 1)
+		pos = modelName.indexOf(".genmodel")
+		modelName.substring(0, pos)
 	}
 
 	/** Find the model directory in its project */
 	def static getModelPath(GenModel gm) {
 		val uri = gm.eResource.URI
 		val projectName = gm.getProject.name
-		
+
 		return getModelPathFromStringURI(projectName, uri.toString)
 
 	}
-	
-		/** Find the model directory in its project */
+
+	/** Find the model directory in its project */
 	def static getModelPathFromStringURI(String projectName, String uri) {
-		
+
 		val pathPos = uri.lastIndexOf(projectName) + projectName.length + 1
-		val lastSlashPos = uri.lastIndexOf("/");
-		
-		var modelDir = "." 
-		if (pathPos < lastSlashPos) 
-		    modelDir =  uri.substring(pathPos, lastSlashPos)
+		val lastSlashPos = uri.lastIndexOf("/")
+
+		var modelDir = "."
+		if (pathPos < lastSlashPos)
+			modelDir = uri.substring(pathPos, lastSlashPos)
 
 		// Path is between projectName and model Name ! 
 		return modelDir

@@ -1,16 +1,29 @@
 package com.opcoach.genmodeladdon.core;
 
+import com.opcoach.genmodeladdon.core.GMAConstants;
 import java.util.List;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.ILog;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.QualifiedName;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 
 /**
  * A class to provide some generation common methods
  */
 @SuppressWarnings("all")
-public class GenerateCommon {
+public class GenerateCommon implements GMAConstants {
   /**
    * Extract the project name from the genmodel resource
    */
@@ -46,16 +59,65 @@ public class GenerateCommon {
   }
   
   /**
+   * Find the IFile from a genmodel
+   */
+  public static IFile getModelFile(final GenModel gm) {
+    Resource _eResource = gm.eResource();
+    boolean _tripleNotEquals = (_eResource != null);
+    if (_tripleNotEquals) {
+      final URI genModelUri = gm.eResource().getURI();
+      String _replaceFirst = genModelUri.toString().replaceFirst("platform:/resource", "");
+      final Path p = new Path(_replaceFirst);
+      final IWorkspaceRoot ws = ResourcesPlugin.getWorkspace().getRoot();
+      return ws.getFile(p);
+    }
+    return null;
+  }
+  
+  public static String getProperty(final IFile f, final QualifiedName qn) {
+    String result = null;
+    try {
+      result = f.getPersistentProperty(qn);
+    } catch (final Throwable _t) {
+      if (_t instanceof Exception) {
+        final Exception e = (Exception)_t;
+      } else {
+        throw Exceptions.sneakyThrow(_t);
+      }
+    }
+    return result;
+  }
+  
+  public static void setProperty(final IFile f, final QualifiedName qn, final String value) {
+    try {
+      f.setPersistentProperty(qn, value);
+    } catch (final Throwable _t) {
+      if (_t instanceof Exception) {
+        final Exception e = (Exception)_t;
+        final Bundle bndl = FrameworkUtil.getBundle(GenerateCommon.class);
+        final ILog logger = Platform.getLog(bndl);
+        Status _status = new Status(IStatus.WARNING, GMAConstants.PLUGIN_ID, ("Unable to store the property : " + qn), e);
+        logger.log(_status);
+      } else {
+        throw Exceptions.sneakyThrow(_t);
+      }
+    }
+  }
+  
+  /**
    * Find the model name from the genmodel
    */
   public static String getModelName(final GenModel gm) {
-    final URI uri = gm.eResource().getURI();
-    final String s = uri.toString();
-    int pos = s.lastIndexOf("/");
-    String modelName = s.substring((pos + 1));
-    pos = modelName.indexOf(".genmodel");
-    modelName = modelName.substring(0, pos);
-    return modelName;
+    String _xblockexpression = null;
+    {
+      final URI uri = gm.eResource().getURI();
+      final String s = uri.toString();
+      int pos = s.lastIndexOf("/");
+      String modelName = s.substring((pos + 1));
+      pos = modelName.indexOf(".genmodel");
+      _xblockexpression = modelName.substring(0, pos);
+    }
+    return _xblockexpression;
   }
   
   /**

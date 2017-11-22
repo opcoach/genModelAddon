@@ -2,14 +2,11 @@ package com.opcoach.genmodeladdon.core.test;
 
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.common.util.URI;
 import org.junit.Test;
 
-import com.opcoach.genmodeladdon.core.EMFPatternExtractor;
 import com.opcoach.genmodeladdon.core.GenerateCommon;
 
 public class TestGenerateCommon extends GenModelAddonTestCase
@@ -71,7 +68,7 @@ public class TestGenerateCommon extends GenModelAddonTestCase
 		assertEquals("Model Path for this project must be 'model'", "model", s);
 	}
 	
-	
+/*	
 	@Test
 	public void testCreateSourceDirectory()
 	{
@@ -80,7 +77,7 @@ public class TestGenerateCommon extends GenModelAddonTestCase
 		assertNotNull("SourceDirectory must not be null", f);
 
 	}
-	
+	*/
 	
 
 }

@@ -1,23 +1,12 @@
 package com.opcoach.genmodeladdon.ui.dialog;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.ILog;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.QualifiedName;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -27,26 +16,13 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.osgi.framework.FrameworkUtil;
 
-public class DerivedSourceParametersDialog extends Dialog
+import com.opcoach.genmodeladdon.Util;
+import com.opcoach.genmodeladdon.core.GMAConstants;
+import com.opcoach.genmodeladdon.core.GenerateCommon;
+
+public class DerivedSourceParametersDialog extends Dialog implements GMAConstants
 {
-	// Define the properties constants to retrieve values in dialog.
-	private static final String PLUGIN_ID = "com.opcoach.genmodeladdon.ui";
-	private static final QualifiedName PROP_INTERFACE_PATTERN = new QualifiedName(PLUGIN_ID, "interfacePattern");
-	private static final QualifiedName PROP_CLASS_PATTERN = new QualifiedName(PLUGIN_ID, "classPattern");
-	private static final QualifiedName PROP_SRCDIR = new QualifiedName(PLUGIN_ID, "srcDir");
-
-	// Constants for the default name patterns and directories
-	private static final String ADVISED_GEN_INTERFACE_PATTERN = "M{0}";
-	private static final String ADVISED_GEN_CLASS_IMPL_PATTERN = "M{0}Impl";
-	private static final String ADVISED_DEV_INTERFACE_PATTERN = "{0}";
-	private static final String ADVISED_DEV_CLASS_IMPL_PATTERN = "{0}Impl";
-	private static final String ADVISED_GEN_SRC_DIR = "src-gen";
-	
-	private static final String DEFAULT_SRC_DEV = "src";
-	private static final String DEFAULT_DEV_INTERFACE_PATTERN = "{0}";
-	private static final String DEFAULT_DEV_CLASS_IMPL_PATTERN = "{0}Impl";
 
 	private Text genInterfacePattern;
 	private Text genClassPattern;
@@ -62,6 +38,9 @@ public class DerivedSourceParametersDialog extends Dialog
 	private Button btnRestoreCurrentValues;
 	private Button btnAdvisedValues;
 	
+	// Add a button to generated EMF code after GMA generation
+	private Button btnGenerateEMFModelCode;
+	
 	// Initial values in gen model in case of reverse change
 	private String genClassPatternInitial;
 	private String genInterfacePatternInitial;
@@ -71,6 +50,9 @@ public class DerivedSourceParametersDialog extends Dialog
 	// Remember of preivous values in case of restore
 	private String previousDevInterfacePattern;
 	private String previousDevClassPattern;
+	
+	// Should generated EMF code after 
+	private boolean generateEMFCode = true;
 
 
 	/**
@@ -99,7 +81,7 @@ public class DerivedSourceParametersDialog extends Dialog
 	protected Control createDialogArea(Composite parent)
 	{
 		Composite container = (Composite) super.createDialogArea(parent);
-
+		
 		Group grpParametersSetIn = new Group(container, SWT.NONE);
 		grpParametersSetIn.setLayout(new GridLayout(2, false));
 		grpParametersSetIn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -222,6 +204,25 @@ public class DerivedSourceParametersDialog extends Dialog
 				.setToolTipText("This value will be used to generate the dev source structure. {0} is the name of the EClass. \nA good idea here is to keep the default names when the 'M' prefix has been added for the generated classes. \nExample : {0}Impl  for the EClass 'Car' will generate the 'CarImpl' class extending the MCarImpl class and implementing the MCar interface. ");
 		devClassPattern.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
+		// Add the group for EMF code generation
+		Group grpEmfCodeGen = new Group(container, SWT.NONE);
+		grpEmfCodeGen.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		grpEmfCodeGen.setText("EMF Code Generation");
+		grpEmfCodeGen.setLayout(new GridLayout(1, false));
+		
+		btnGenerateEMFModelCode = new Button(grpEmfCodeGen, SWT.CHECK);
+		btnGenerateEMFModelCode.setSelection(generateEMFCode);
+		btnGenerateEMFModelCode.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
+		btnGenerateEMFModelCode.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				generateEMFCode = btnGenerateEMFModelCode.getSelection();	
+			}
+		});
+		btnGenerateEMFModelCode.setText("Also generate EMF model code (recommmanded)");
+		btnGenerateEMFModelCode.setToolTipText("Will automatically generate the EMF model code");
+
 		updateValues();
 		
 		container.pack();
@@ -249,10 +250,18 @@ public class DerivedSourceParametersDialog extends Dialog
 
 	private IFile getGenModelFile()
 	{
-		URI genModelUri = genModel.eResource().getURI();
-		IPath p = new Path(genModelUri.toString().replaceFirst("platform:/resource", ""));
-		IWorkspaceRoot ws = ResourcesPlugin.getWorkspace().getRoot();
-		return ws.getFile(p);
+		return GenerateCommon.getModelFile(genModel);
+	}
+	
+	/**
+	 * Returns the default value if the string is null or empty.
+	 * @param v
+	 * @param dv
+	 * @return
+	 */
+	private String nullOrDefault(String v, String dv)
+	{
+		return  ((v == null) || v.isEmpty()) ? dv : v;
 	}
 
 	private void updateValues()
@@ -260,13 +269,11 @@ public class DerivedSourceParametersDialog extends Dialog
 
 		// Set the default values depending on values found in genmodel and in
 		// properties.
-		String cp = genModel.getClassNamePattern() == null ? DEFAULT_DEV_CLASS_IMPL_PATTERN : genModel
-				.getClassNamePattern();
+		String cp = nullOrDefault(genModel.getClassNamePattern(), DEFAULT_DEV_CLASS_IMPL_PATTERN);
 		genClassPattern.setText(cp);
 		genClassPatternInitial = cp;
 
-		String ip = genModel.getInterfaceNamePattern() == null ? DEFAULT_DEV_INTERFACE_PATTERN : genModel
-				.getInterfaceNamePattern();
+		String ip = nullOrDefault(genModel.getInterfaceNamePattern(),DEFAULT_DEV_INTERFACE_PATTERN);
 		genInterfacePattern.setText(ip);
 		genInterfacePatternInitial = ip;
 
@@ -278,9 +285,13 @@ public class DerivedSourceParametersDialog extends Dialog
 
 		// Try to restore the previous properties if they exist.
 		IFile f = getGenModelFile();
-		String cpProp = getProperty(f, PROP_CLASS_PATTERN);
-		String ipProp = getProperty(f, PROP_INTERFACE_PATTERN);
-		String srcProp = getProperty(f, PROP_SRCDIR);
+		String cpProp = GenerateCommon.getProperty(f, GenerateCommon.PROP_CLASS_PATTERN);
+		String ipProp = GenerateCommon.getProperty(f, GenerateCommon.PROP_INTERFACE_PATTERN);
+		String srcProp = GenerateCommon.getProperty(f, GenerateCommon.PROP_SRCDIR);
+		String genEmfStr = GenerateCommon.getProperty(f, GenerateCommon.PROP_GENEMFCODE);
+		boolean genEmf = true;
+		if (genEmfStr != null)
+			genEmf = Boolean.getBoolean(genEmfStr);
 
 		if (cp.equals(DEFAULT_DEV_CLASS_IMPL_PATTERN))
 			devClassPattern.setText(cp + "Ext");
@@ -295,6 +306,8 @@ public class DerivedSourceParametersDialog extends Dialog
 		previousDevInterfacePattern = devInterfacePattern.getText();
 		
 		devSourceDir.setText(srcProp != null ? srcProp : DEFAULT_SRC_DEV);
+		
+		btnGenerateEMFModelCode.setSelection(genEmf);
 	}
 
 	/**
@@ -310,14 +323,6 @@ public class DerivedSourceParametersDialog extends Dialog
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 	}
 
-	/**
-	 * Return the initial size of the dialog.
-	 */
-	@Override
-	protected Point getInitialSize()
-	{
-		return new Point(450, 400);
-	}
 
 	public String getDevInterfacePattern()
 	{
@@ -333,6 +338,11 @@ public class DerivedSourceParametersDialog extends Dialog
 	{
 		return srcDir;
 	}
+	
+	public boolean getGenerateEMFModelCode()
+	{
+		return generateEMFCode;
+	}
 
 	@Override
 	protected void okPressed()
@@ -343,45 +353,27 @@ public class DerivedSourceParametersDialog extends Dialog
 			genModel.setClassNamePattern(genClassPattern.getText());
 			genModel.setInterfaceNamePattern(genInterfacePattern.getText());
 			genModel.setModelDirectory("/" + genModel.getModelPluginID() + "/" + genSourceDir.getText());
+			Util.saveGenModel(genModel, getShell());
 		}
 		
 
-		// Remember of entered values
+		// Remember of entered values in resource properties
 		classPattern = devClassPattern.getText();
 		interfacePattern = devInterfacePattern.getText();
 		srcDir = devSourceDir.getText();
 
 		// Store this values in properties...
 		IFile f = getGenModelFile();
-		setProperty(f, PROP_SRCDIR, srcDir);
-		setProperty(f, PROP_CLASS_PATTERN, classPattern);
-		setProperty(f, PROP_INTERFACE_PATTERN, interfacePattern);
+		GenerateCommon.setProperty(f, GenerateCommon.PROP_SRCDIR, srcDir);
+		GenerateCommon.setProperty(f, GenerateCommon.PROP_CLASS_PATTERN, classPattern);
+		GenerateCommon.setProperty(f, GenerateCommon.PROP_INTERFACE_PATTERN, interfacePattern);
+		GenerateCommon.setProperty(f, GenerateCommon.PROP_GENEMFCODE, Boolean.toString(generateEMFCode));
+		GenerateCommon.setProperty(f, GenerateCommon.PROP_GMA, Boolean.toString(true));
 
 		super.okPressed();
 	}
 
-	private String getProperty(IFile f, QualifiedName qn)
-	{
-		String result = null;
-		try
-		{
-			result = f.getPersistentProperty(qn);
-		} catch (Exception e)
-		{
-			result = null;
-		}
-		return result;
-	}
 
-	private void setProperty(IFile f, QualifiedName qn, String value)
-	{
-		try
-		{
-			f.setPersistentProperty(qn, value);
-		} catch (Exception e)
-		{
-			ILog logger = Platform.getLog(FrameworkUtil.getBundle(this.getClass()));
-			logger.log(new Status(IStatus.WARNING, PLUGIN_ID, "Unable to store the property : " + qn, e));
-		}
-	}
+
+
 }

@@ -17,12 +17,13 @@ import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -30,6 +31,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.osgi.framework.Bundle;
@@ -46,11 +48,13 @@ public class ConfirmFileSelectionDialog extends MessageDialog
 
 	private static final String IMG_CHECKBOX_SELECTED = "icons/checkbox_selected.gif";
 	private static final String IMG_CHECKBOX_UNSELECTED = "icons/checkbox_unselected.gif";
+	
+	private static final Color tooltipFileBg = new Color(Display.getDefault(), 251, 215, 150); // #FBD796
 
 	public ConfirmFileSelectionDialog(Shell parentShell, Map<String, Object> filesNotGenerated, String pRelativeDir)
 	{
 		super(parentShell, "Overriding existing file(s)", null,
-				"Some files already exist.\nSelect the files you want to override.\nA tooltip will display the content of the file if it is kept for generation",
+				"Some files already exist.\nSelect the files you want to override.\nDrag over the files to display the generated content if it is selected in the list",
 				MessageDialog.CONFIRM, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
 		filesNotYetGenerated = filesNotGenerated;
 		relativeDir = pRelativeDir + File.separator;
@@ -79,7 +83,7 @@ public class ConfirmFileSelectionDialog extends MessageDialog
 		tableParent.setAlwaysShowScrollBars(false);
 
 		// sort elements
-		tv.setSorter(new ViewerSorter()
+		tv.setComparator(new ViewerComparator()
 			{
 				@Override
 				public int compare(Viewer viewer, Object e1, Object e2)
@@ -118,6 +122,12 @@ public class ConfirmFileSelectionDialog extends MessageDialog
 				{
 					return "This content will be generated: \n-----------------------------------\n"
 							+ filesNotYetGenerated.get(element);
+				}
+				
+				@Override
+				public Color getToolTipBackgroundColor(Object object)
+				{
+					return tooltipFileBg;
 				}
 			});
 		ColumnViewerToolTipSupport.enableFor(tv, ToolTip.NO_RECREATE);

@@ -12,24 +12,19 @@ import org.eclipse.core.resources.IResource
 import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.CoreException
 import org.eclipse.core.runtime.IProgressMonitor
-import org.eclipse.core.runtime.IStatus
 import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.core.runtime.Path
 import org.eclipse.core.runtime.Platform
-import org.eclipse.core.runtime.Status
 import org.eclipse.emf.codegen.ecore.genmodel.GenClass
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel
 import org.eclipse.emf.codegen.ecore.genmodel.GenPackage
 import org.eclipse.emf.ecore.EClass
-import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.jdt.core.IClasspathEntry
 import org.eclipse.jdt.core.IJavaProject
 import org.eclipse.jdt.core.JavaCore
-import org.osgi.framework.FrameworkUtil
 
 /** This class is used to proceed the different steps to generate the development structure
  * A method is defined for each step :
- * setGenModelTemplates : will set the dynamic templates and import the Class.javajet if not preset
  * generateDevStructure : generate the development structure
  * generateAntFile : generate the ant file to generate the code (usefull for automatic builder)
  * generateGenModelCode : generate the EMF code using templates (calls the ant file)
@@ -46,6 +41,8 @@ class GenerateDevStructure {
 	String projectName
 	GenModel genModel
 	var copyright = ""
+	
+	boolean debug = false   // Initialized with argument -gmaDebug
 	
 	public Map<String, Object> filesNotGenerated = new HashMap
 	
@@ -64,6 +61,12 @@ class GenerateDevStructure {
 	 * @param srcDir : the source directory (relative path) in project
 	 */
 	new(GenModel gm, String cPattern, String iPattern, String srcDir) {
+		
+		if (Platform.applicationArgs.contains(GMAConstants.PARAM_DEBUG_MODE))
+		{
+		  debug = true
+	    }
+		  
 		genModel = gm
 		if (gm.copyrightText !== null)
 			copyright = computeCopyrightComment.toString
@@ -78,7 +81,7 @@ class GenerateDevStructure {
 		project.open(null)
 		var status = "closed"
 		if (project.isOpen) status = "closed"
-		println("Project " + projectName + " is " + status  + " when creating devStructure for " + modelName)
+		// println("Project " + projectName + " is " + status  + " when creating devStructure for " + modelName)
 		
 
 		// Reset the files not generated... (they are kept to ask if they must override existing files)
@@ -122,8 +125,8 @@ class GenerateDevStructure {
 		val f2 = new File(interfaceAbsolutePath)
 		if(!f2.exists) f.mkdirs
 
-		println("Generate classes in    : " + srcAbsolutePath)
-		println("Generate interfaces in : " + interfaceAbsolutePath)
+	//	println("Generate classes in    : " + srcAbsolutePath)
+	//	println("Generate interfaces in : " + interfaceAbsolutePath)
 
 		for (c : gp.genClasses.filter[!isDynamic]) {
 			if (!c.isInterface)
@@ -143,12 +146,12 @@ class GenerateDevStructure {
 		val packageClassName = gp.qualifiedPackageInterfaceName
 		
 		factories.put(gp.getEcorePackage.nsURI, factoryClassName)
-		println("Added this factory in list : " + factoryClassName)
+		//println("Added this factory in list : " + factoryClassName)
 		packages.put(gp.getEcorePackage.nsURI, packageClassName)
 
 		// Iterate on subpackages 
 		for (sp : gp.subGenPackages)
-			sp.generateDevStructure()
+			sp.generateDevStructure
 	}
 
 	/** add the srcDir as a source directory in the java project, if it is not yet added */
@@ -172,69 +175,20 @@ class GenerateDevStructure {
 				val srcEntry = JavaCore::newSourceEntry(path)
 				val newClassPath = new ArrayList<IClasspathEntry>(jvp.rawClasspath)
 				newClassPath.add(srcEntry)
-				jvp.setRawClasspath(newClassPath, new NullProgressMonitor);
+				jvp.setRawClasspath(newClassPath, new NullProgressMonitor)
 			}
 		}
 
 	}
 
 	/**
-	 * This method checks if the genModel has a dynamic templates property and a
-	 * template directory set to projectName/templates
-	 * It also copies the ClassJava.jet from the core project.
-	 * it returns the a String containing the changes that has been done on genmodel.
+	 * This method initializes the genModel with convenient values
 	 */
-	def public String setGenModelTemplates(GenModel gm, boolean forceSave) {
-		val changes = new StringBuffer();
-
-		if (!gm.isDynamicTemplates()) {
-			gm.setDynamicTemplates(true);
-			changes.append("The dynamic template property must be set to true");
-		}
-
-		gm.importOrganizing = true;
-
-		val expectedTemplateDir = "/" + projectName + "/templates";
-		val currentTemplateDir = gm.getTemplateDirectory();
-		if (!expectedTemplateDir.equals(currentTemplateDir)) {
-			gm.setTemplateDirectory(expectedTemplateDir);
-			if ((currentTemplateDir !== null) && (currentTemplateDir.length() > 0)) {
-				changes.append("\nThe  template directory must be changed :  \n");
-				changes.append("\n   Previous value was : " + currentTemplateDir);
-				changes.append("\n   New value is       : " + expectedTemplateDir);
-
-			} else {
-				changes.append("The template directory has been set to : " + expectedTemplateDir);
-			}
-		}
-
-		// Extract EMF templates to modify the way to inherit from ancestor
-		val classJavajet = project.getFile(expectedTemplateDir + "/model/Class.javajet")
-		if (!classJavajet.exists) {
-			val extractor = new EMFPatternExtractor(project, classPattern, interfacePattern)
-			extractor.run
-			refreshWorkspace
-			changes.append("\nThe Class.javajet has been installed")
-		}
-
-		// Inform user of changes and save the file.
-		if ((changes.length() > 0) && forceSave) {
-			val Map<Object, Object> opt = new HashMap
-			opt.put(Resource.OPTION_SAVE_ONLY_IF_CHANGED, Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER)
-			opt.put(Resource.OPTION_LINE_DELIMITER, Resource.OPTION_LINE_DELIMITER_UNSPECIFIED)
-			try {
-				gm.eResource().save(opt)
-			} catch (IOException e) {
-				val bundle = FrameworkUtil.getBundle(this.getClass())
-				val logger = Platform.getLog(bundle)
-				logger.log(new Status(IStatus.WARNING, bundle.getSymbolicName(),
-					"Unable to save the genModel in : " + gm.eResource(), e))
-			}
-
-		}
-
-		return changes.toString;
-
+	def public void initializeGenModelConvenientProperties() {
+		
+		// By default organize imports in genmodel
+		genModel.importOrganizing = true
+		
 	}
 
 	/** Generate the ant file and return it (or null.  */
@@ -244,20 +198,20 @@ class GenerateDevStructure {
 	
 	/** Generate the ant file and return it (or null.  */
 	def generateAntFile(String antFilename) {
-		println("Generate the ant file : " + antFilename);
+		// println("Generate the ant file : " + antFilename)
 		refreshWorkspace
-		val gen = new GenerateAntFileForCodeGeneration();
+		val gen = new GenerateAntFileForCodeGeneration()
 		try {
-			val antFile = gen.generateAntFile(modelDir, modelName, project, antFilename);
+			val antFile = gen.generateAntFile(modelDir, modelName, project, antFilename)
 			project.refreshLocal(1, null)
 			return antFile
 
 		} catch (IOException e) {
-			e.printStackTrace;
+			e.printStackTrace
 		} catch (CoreException e) {
-			e.printStackTrace;
+			e.printStackTrace
 		}
-		return null;
+		return null
 	}
 	
 
@@ -265,33 +219,36 @@ class GenerateDevStructure {
 	 * @param f : the ant file to be called */
 	def void generateGenModelCode(File f, IProgressMonitor monitor) {
 
-		println("Generate the EMF Code using the ant file : " +  f.absolutePath);
-
+        
 		val runner = new AntRunner
-		runner.setBuildFileLocation(f.absolutePath);
+		runner.setBuildFileLocation(f.absolutePath)
 	
-	    // Uncomment the 2 following lines to display the traces when running 
-	    // the EMF code generation ! 
-	   /* 	runner.addBuildLogger("org.apache.tools.ant.DefaultLogger");
-		runner.arguments = "-verbose -debug"
-		*/
-		// Bundle b = FrameworkUtil.getBundle(GenModelAddonTestCase.class);
-		// runner.setCustomClasspath(new URL[] { b.getEntry("ant_tasks/importer.ecore.tasks.jar")});
+	    // Add traces during ant generation if debug mode (-gmaDebug) 
+	    if (debug)
+	    {
+	      	runner.addBuildLogger("org.apache.tools.ant.DefaultLogger");
+		    runner.arguments = "-verbose -debug"
+		}
+		
 		try {
-			runner.run(monitor);
+			if (debug)
+			   println("  --> Generate the EMF Code using the ant file : " +  f.absolutePath);
+			
+			runner.run(monitor)
 			refreshWorkspace
 
 		} catch (CoreException e) {
-			e.printStackTrace;
+			e.printStackTrace
 		}
+		
 
 	}
 	
 	// Generate or update extensions...
 	def generateExtensions()
 	{
-		val gfoe = new GenerateExtensions(project);
-		gfoe.generateOrUpdateExtensions(factories, packages);
+		val gfoe = new GenerateExtensions(project)
+		gfoe.generateOrUpdateExtensions(factories, packages)
 		
 	}
 	
@@ -299,22 +256,22 @@ class GenerateDevStructure {
 	// This method do the global process in the right order 
 	def generateAll(String antFilename)
 	{
-		// Install the templates
-		setGenModelTemplates(genModel, true);
+		// set some genModel convenient properties.
+		initializeGenModelConvenientProperties()
 
 		// Generate the dev structure...
-		generateDevStructure(true);
+		generateDevStructure(true)
 
 		// Generate the ant file to generate emf code
-		val antFile = generateAntFile(antFilename);
+		val antFile = generateAntFile(antFilename)
 
 		// Once dev structure is generated and ant file too, can call it !
-		generateGenModelCode(antFile, new NullProgressMonitor);
+		generateGenModelCode(antFile, new NullProgressMonitor)
 
 		
 		// Must generate or update extensions in plugin.xml file
 		// BUT AFTER THE EMF CODE GENERATION !!
-		generateExtensions();
+		generateExtensions
 		
 		refreshWorkspace
 	
@@ -322,10 +279,15 @@ class GenerateDevStructure {
 
 	def refreshWorkspace() {
 		try {
-			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
+			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null)
+			//println("Waiting for refresh ")
+			Thread.sleep(1000);  // Wait for refresh (important)
+
 		} catch (CoreException e) {
 			e.printStackTrace
 		}
+		
+		
 	}
 
 	def generateOverriddenFactoryInterface(GenPackage gp, String path) {

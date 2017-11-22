@@ -23,7 +23,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
-import com.opcoach.genmodeladdon.Util;
 import com.opcoach.genmodeladdon.core.GenerateDevStructure;
 import com.opcoach.genmodeladdon.ui.dialog.ConfirmFileSelectionDialog;
 import com.opcoach.genmodeladdon.ui.dialog.DerivedSourceParametersDialog;
@@ -48,18 +47,13 @@ public class GeneratedDerivedSourceFolder extends GenerateParentHandler
 			String ip = dial.getDevInterfacePattern();
 			String cp = dial.getDevClassPattern();
 			String src = dial.getSrcDir();
+			boolean generateEMFModelCode = dial.getGenerateEMFModelCode();
 
 			final GenerateDevStructure gds = new GenerateDevStructure(gm, cp, ip, src);
 
-			// Check the genModel dynamic templates.
-			String changes = gds.setGenModelTemplates(gm, false);
-			if (changes.length() > 0)
-			{
-				if (!confirmSaveGenModelTemplates(gm, changes))
-					return;
-			}
+			// set some genModel convenient properties.
+			gds.initializeGenModelConvenientProperties();
 						
-
 			// Try to generate to check the files that could be
 			// overridden
 			gds.generateDevStructure(false);
@@ -125,9 +119,7 @@ public class GeneratedDerivedSourceFolder extends GenerateParentHandler
 				}
 				
 				// Generate the next step : ant file and EMF code
-				if (MessageDialog.openConfirm(parentShell, "Confirm next step", 
-						"The EMF code must be regenerated to take this generation code into account. \n"
-						+ " Do you want to do it ? (you will have to do it by hand anyway). "))
+				if (generateEMFModelCode)
 				{
 					// Generate the ant file and call it with the ant Runner
 					// Generate the ant file to generate emf code
@@ -164,31 +156,6 @@ public class GeneratedDerivedSourceFolder extends GenerateParentHandler
 
 		}
 	}
-
-	
-	/**
-	 * This method checks if the genModel has a dynamic templates property and a
-	 * template directory set to projectName/templates
-	 */
-	private boolean confirmSaveGenModelTemplates(GenModel gm, String changes)
-	{
-		boolean result = false;
-
-		// Inform user of changes and save the file.
-		if (changes.length() > 0)
-		{
-			if (result = MessageDialog.openConfirm(parentShell, "Your genModel file must be updated",
-					"Do you confirm the following changes on your gen model : \n\n" + changes))
-			{
-				Util.saveGenModel(gm, parentShell);
-			}
-
-		}
-
-		return result;
-
-	}
-
 
 	
 

@@ -96,7 +96,7 @@ public class WorkspaceConfigurator implements ProjectConstants
 				root = initWorkspace();
 				initGenModel(PROJECT_GENMODEL, PROJECT_ANT_FILE);
 				initGenModel(FANNOISE_GENMODEL, FANOISE_ANT_FILE);
-				
+
 			} catch (Exception ex)
 			{
 				ex.printStackTrace();
@@ -107,7 +107,7 @@ public class WorkspaceConfigurator implements ProjectConstants
 		return sampleProject;
 	}
 
-	public void initGenModel(String genModelName, String antFilename) throws IOException
+	public void initGenModel(String genModelName, String antFilename) throws IOException, InterruptedException
 	{
 		// Read the genModel
 		GenModel gm = readSampleGenModel(root, genModelName);
@@ -131,7 +131,7 @@ public class WorkspaceConfigurator implements ProjectConstants
 		
 		// Do all in the right order ! 
 		gen.generateAll(antFilename);
-
+		
 	}
 
 	public GenModel getGenModel(String name)

@@ -37,8 +37,8 @@ class GenerateAntFileForCodeGeneration {
 
 	def File getAntFile(IProject proj, String antFileName) {
 		val location = proj.getLocation()
-		val srcAbsolutePath = location.toOSString() + File.separator + antFileName;
-		val f = new File(srcAbsolutePath);
+		val srcAbsolutePath = location.toOSString() + File.separator + antFileName
+		val f = new File(srcAbsolutePath)
 		return f;
 	}
 
@@ -48,17 +48,17 @@ class GenerateAntFileForCodeGeneration {
 	}
 
 	def generateAntFile(String modelDir, String modelName, IProject proj, String antFileName) throws IOException, CoreException {
-		val f = getAntFile(proj, antFileName);
+		val f = getAntFile(proj, antFileName)
 
 		if (!f.exists)
-			f.createNewFile;
-		val fw = new FileWriter(f);
-		fw.write(generateAntFileContent(modelDir, modelName).toString);
-		fw.flush;
-		fw.close;
+			f.createNewFile
+		val fw = new FileWriter(f)
+		fw.write(generateAntFileContent(modelDir, modelName).toString)
+		fw.flush
+		fw.close
 
 		// Add a refresh
-		proj.refreshLocal(IResource.DEPTH_ONE, null);
+		proj.refreshLocal(IResource.DEPTH_ONE, null)
 
 		return f
 
