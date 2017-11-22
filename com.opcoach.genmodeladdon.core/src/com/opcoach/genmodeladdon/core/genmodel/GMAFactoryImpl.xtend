@@ -5,34 +5,43 @@ import org.eclipse.emf.codegen.ecore.genmodel.GenFeature
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel
 import org.eclipse.emf.codegen.ecore.genmodel.impl.GenModelFactoryImpl
 
+/** This factory overrides the default GenModel Factory, but it is must be setAvailable to use it
+ * else, it will create the default GenModel Objects.
+ */
 class GMAFactoryImpl extends GenModelFactoryImpl {
 
+	static boolean isAvailable = false
+
+	def static setAvailable(boolean avail) {
+		isAvailable = avail
+	}
+
 	override GenFeature createGenFeature() {
-		new GMAGenFeatureImpl
+		if(isAvailable) new GMAGenFeatureImpl else super.createGenFeature
 	}
 
 	override GenClass createGenClass() {
-		new GMAGenClassImpl
+		if(isAvailable) new GMAGenClassImpl else super.createGenClass
 	}
 
 	override GenModel createGenModel() {
-		new GMAGenModelImpl
+		if(isAvailable) new GMAGenModelImpl else super.createGenModel
 	}
 
 	override createGenOperation() {
-		new GMAGenOperationImpl
+		if(isAvailable) new GMAGenOperationImpl else super.createGenOperation
 	}
 
 	override createGenPackage() {
-		new GMAGenPackageImpl
+		if(isAvailable) new GMAGenPackageImpl else super.createGenPackage
 	}
 
 	override createGenParameter() {
-		new GMAGenParameterImpl
+		if(isAvailable) new GMAGenParameterImpl else super.createGenParameter
 	}
 
 	override createGenTypeParameter() {
-		new GMAGenTypeParameterImpl
+		if(isAvailable) new GMAGenTypeParameterImpl else super.createGenTypeParameter
 	}
 
 }

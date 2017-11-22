@@ -23,7 +23,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
-import com.opcoach.genmodeladdon.Util;
 import com.opcoach.genmodeladdon.core.GenerateDevStructure;
 import com.opcoach.genmodeladdon.ui.dialog.ConfirmFileSelectionDialog;
 import com.opcoach.genmodeladdon.ui.dialog.DerivedSourceParametersDialog;
@@ -48,6 +47,7 @@ public class GeneratedDerivedSourceFolder extends GenerateParentHandler
 			String ip = dial.getDevInterfacePattern();
 			String cp = dial.getDevClassPattern();
 			String src = dial.getSrcDir();
+			boolean generateEMFModelCode = dial.getGenerateEMFModelCode();
 
 			final GenerateDevStructure gds = new GenerateDevStructure(gm, cp, ip, src);
 
@@ -119,9 +119,7 @@ public class GeneratedDerivedSourceFolder extends GenerateParentHandler
 				}
 				
 				// Generate the next step : ant file and EMF code
-				if (MessageDialog.openConfirm(parentShell, "Confirm next step", 
-						"The EMF code must be regenerated to take this generation code into account. \n"
-						+ " Do you want to do it ? (you will have to do it by hand anyway). "))
+				if (generateEMFModelCode)
 				{
 					// Generate the ant file and call it with the ant Runner
 					// Generate the ant file to generate emf code

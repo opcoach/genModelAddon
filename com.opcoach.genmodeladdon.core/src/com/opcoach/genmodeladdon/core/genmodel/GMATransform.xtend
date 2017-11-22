@@ -10,6 +10,7 @@ import org.eclipse.emf.codegen.ecore.genmodel.GenBase
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel
 import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EPackage
+import org.eclipse.emf.ecore.EcorePackage
 
 /** This class computes the new names for generated classes according to pattern name matching */
 class GMATransform implements GMAConstants {
@@ -53,7 +54,7 @@ class GMATransform implements GMAConstants {
 
 // Set the value in the consumer if not null
 	private def initValue(String v, Consumer<String> consumer) {
-		if (v !== null)
+		if ((v !== null) && v.length > 0)
 			consumer.accept(v)
 	}
 
@@ -87,23 +88,32 @@ class GMATransform implements GMAConstants {
 	}
 
 	def void computeNames(EPackage p) {
-		for (c : p.getEClassifiers()) {
-			if ((c instanceof EClass) && !c.name.endsWith("Package")) {
-				val devIntName = MessageFormat.format(devInterfaceNamePattern, c.name)
-				val genIntName = MessageFormat.format(genInterfaceNamePattern, c.name)
-				// System.out.println("Put : " + genIntName + "," + devIntName);
-				devNames.put(genIntName, devIntName)
+		// Do not compute names for emf2002Ecore
+		if (!EcorePackage::eNS_URI.equals(p.nsURI)) {
+			for (c : p.getEClassifiers()) {
+				if ((c instanceof EClass) && !c.name.endsWith("Package")) {
+					val devIntName = MessageFormat.format(devInterfaceNamePattern, c.name)
+					val genIntName = MessageFormat.format(genInterfaceNamePattern, c.name)
+					// System.out.println("Put : " + genIntName + "," + devIntName);
+					if (genIntName.length() == 0)
+						println("Found an empty string for key for this devName " + devIntName)
+					println("Put : " + genIntName + "," + devIntName);
 
-				val genClassName = MessageFormat.format(genClassNamePattern, c.name)
-				val devClassName = MessageFormat.format(devClassNamePattern, c.name)
-				// System.out.println("Put : " + genClassName + "," + devClassName);
-				devNames.put(genClassName, devClassName)
+					devNames.put(genIntName, devIntName)
+
+					val genClassName = MessageFormat.format(genClassNamePattern, c.name)
+					val devClassName = MessageFormat.format(devClassNamePattern, c.name)
+					if (genClassName.length() == 0)
+						println("Found an empty string for key for this devName " + devClassNamePattern)
+					println("Put : " + genClassName + "," + devClassName);
+					devNames.put(genClassName, devClassName)
+				}
 			}
+			for (EPackage childPackage : p.getESubpackages())
+				computeNames(childPackage)
 		}
-		for (EPackage childPackage : p.getESubpackages())
-			computeNames(childPackage)
-	}
 
+	}
 
 	/**
 	 * Replace the development name (a key in the map) as many times as necessary. 
@@ -121,31 +131,35 @@ class GMATransform implements GMAConstants {
 			val key = entry.key
 			val value = entry.value
 
-			var s = 0
-			while (res.indexOf(key, s) != -1) {
-			    s = res.indexOf(key,s)
-				val e = s + key.length
-				// Must change the string only if it is a real single word : 
-				// of if it is at the beginning or at the end of the string.
-				val startIsOk = (s == 0) || !Character.isLetterOrDigit(res.charAt(s - 1))
-				val endIsOk = (e == res.length) || !Character.isLetterOrDigit(res.charAt(e))
+			if (key.length == 0)
+				println("Found an empty key for this value :  " + value)
+			else {
 
-				if (startIsOk && endIsOk)
-					res = res.replace(s, e, value)
-					
-			    // Must continue so search after the end...
-		        s = e
+				var s = 0
+				while (res.indexOf(key, s) != -1) {
+					s = res.indexOf(key, s)
+					val e = s + key.length
+					// Must change the string only if it is a real single word : 
+					// of if it is at the beginning or at the end of the string.
+					val startIsOk = (s == 0) || !Character.isLetterOrDigit(res.charAt(s - 1))
+					val endIsOk = (e == res.length) || !Character.isLetterOrDigit(res.charAt(e))
+
+					if (startIsOk && endIsOk)
+						res = res.replace(s, e, value)
+
+					// Must continue so search after the end...
+					s = e
+				}
 			}
 
 		} // end for entry
-		
 		return res.toString
 	}
-	
+
 	def static void main(String[] args) {
-		println("pour . " + Character.isLetterOrDigit('.') )
-		println("pour < " + Character.isLetterOrDigit('<') )
-		println("pour > " + Character.isLetterOrDigit('>') )
+		println("pour . " + Character.isLetterOrDigit('.'))
+		println("pour < " + Character.isLetterOrDigit('<'))
+		println("pour > " + Character.isLetterOrDigit('>'))
 	}
 
 	/** Transform a String with default computed names with the new names */

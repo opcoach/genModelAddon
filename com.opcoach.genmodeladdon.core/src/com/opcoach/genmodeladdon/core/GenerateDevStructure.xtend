@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.EClass
 import org.eclipse.jdt.core.IClasspathEntry
 import org.eclipse.jdt.core.IJavaProject
 import org.eclipse.jdt.core.JavaCore
+import com.opcoach.genmodeladdon.core.genmodel.GMAFactoryImpl
 
 /** This class is used to proceed the different steps to generate the development structure
  * A method is defined for each step :
@@ -210,23 +211,28 @@ class GenerateDevStructure {
 	 * @param f : the ant file to be called */
 	def void generateGenModelCode(File f, IProgressMonitor monitor) {
 
-
+        
 		val runner = new AntRunner
 		runner.setBuildFileLocation(f.absolutePath)
 	
 	    // Uncomment the 2 following lines to display the traces when running 
 	    // the EMF code generation ! 
-	   	//runner.addBuildLogger("org.apache.tools.ant.DefaultLogger");
-		//runner.arguments = "-verbose -debug"
+	   	runner.addBuildLogger("org.apache.tools.ant.DefaultLogger");
+		runner.arguments = "-verbose -debug"
+		
 		
 		try {
 			// println("  --> Generate the EMF Code using the ant file : " +  f.absolutePath);
 			
+			GMAFactoryImpl.setAvailable(true)
 			runner.run(monitor)
 			refreshWorkspace
 
 		} catch (CoreException e) {
 			e.printStackTrace
+		}
+		finally{
+						GMAFactoryImpl.setAvailable(false)
 		}
 
 	}

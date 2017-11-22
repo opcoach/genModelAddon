@@ -3,6 +3,7 @@ package com.opcoach.genmodeladdon.core;
 import com.opcoach.genmodeladdon.core.GenerateAntFileForCodeGeneration;
 import com.opcoach.genmodeladdon.core.GenerateCommon;
 import com.opcoach.genmodeladdon.core.GenerateExtensions;
+import com.opcoach.genmodeladdon.core.genmodel.GMAFactoryImpl;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -263,7 +264,10 @@ public class GenerateDevStructure {
   public void generateGenModelCode(final File f, final IProgressMonitor monitor) {
     final AntRunner runner = new AntRunner();
     runner.setBuildFileLocation(f.getAbsolutePath());
+    runner.addBuildLogger("org.apache.tools.ant.DefaultLogger");
+    runner.setArguments("-verbose -debug");
     try {
+      GMAFactoryImpl.setAvailable(true);
       runner.run(monitor);
       this.refreshWorkspace();
     } catch (final Throwable _t) {
@@ -273,6 +277,8 @@ public class GenerateDevStructure {
       } else {
         throw Exceptions.sneakyThrow(_t);
       }
+    } finally {
+      GMAFactoryImpl.setAvailable(false);
     }
   }
   

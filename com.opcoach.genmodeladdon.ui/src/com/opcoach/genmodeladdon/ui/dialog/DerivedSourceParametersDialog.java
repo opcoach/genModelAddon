@@ -7,7 +7,6 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -18,6 +17,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.opcoach.genmodeladdon.Util;
 import com.opcoach.genmodeladdon.core.GMAConstants;
 import com.opcoach.genmodeladdon.core.GenerateCommon;
 
@@ -38,6 +38,9 @@ public class DerivedSourceParametersDialog extends Dialog implements GMAConstant
 	private Button btnRestoreCurrentValues;
 	private Button btnAdvisedValues;
 	
+	// Add a button to generated EMF code after GMA generation
+	private Button btnGenerateEMFModelCode;
+	
 	// Initial values in gen model in case of reverse change
 	private String genClassPatternInitial;
 	private String genInterfacePatternInitial;
@@ -47,6 +50,9 @@ public class DerivedSourceParametersDialog extends Dialog implements GMAConstant
 	// Remember of preivous values in case of restore
 	private String previousDevInterfacePattern;
 	private String previousDevClassPattern;
+	
+	// Should generated EMF code after 
+	private boolean generateEMFCode = true;
 
 
 	/**
@@ -75,7 +81,7 @@ public class DerivedSourceParametersDialog extends Dialog implements GMAConstant
 	protected Control createDialogArea(Composite parent)
 	{
 		Composite container = (Composite) super.createDialogArea(parent);
-
+		
 		Group grpParametersSetIn = new Group(container, SWT.NONE);
 		grpParametersSetIn.setLayout(new GridLayout(2, false));
 		grpParametersSetIn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -198,6 +204,25 @@ public class DerivedSourceParametersDialog extends Dialog implements GMAConstant
 				.setToolTipText("This value will be used to generate the dev source structure. {0} is the name of the EClass. \nA good idea here is to keep the default names when the 'M' prefix has been added for the generated classes. \nExample : {0}Impl  for the EClass 'Car' will generate the 'CarImpl' class extending the MCarImpl class and implementing the MCar interface. ");
 		devClassPattern.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
+		// Add the group for EMF code generation
+		Group grpEmfCodeGen = new Group(container, SWT.NONE);
+		grpEmfCodeGen.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		grpEmfCodeGen.setText("EMF Code Generation");
+		grpEmfCodeGen.setLayout(new GridLayout(1, false));
+		
+		btnGenerateEMFModelCode = new Button(grpEmfCodeGen, SWT.CHECK);
+		btnGenerateEMFModelCode.setSelection(generateEMFCode);
+		btnGenerateEMFModelCode.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
+		btnGenerateEMFModelCode.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				generateEMFCode = btnGenerateEMFModelCode.getSelection();	
+			}
+		});
+		btnGenerateEMFModelCode.setText("Also generate EMF model code (recommmanded)");
+		btnGenerateEMFModelCode.setToolTipText("Will automatically generate the EMF model code");
+
 		updateValues();
 		
 		container.pack();
@@ -227,19 +252,28 @@ public class DerivedSourceParametersDialog extends Dialog implements GMAConstant
 	{
 		return GenerateCommon.getModelFile(genModel);
 	}
+	
+	/**
+	 * Returns the default value if the string is null or empty.
+	 * @param v
+	 * @param dv
+	 * @return
+	 */
+	private String nullOrDefault(String v, String dv)
+	{
+		return  ((v == null) || v.isEmpty()) ? dv : v;
+	}
 
 	private void updateValues()
 	{
 
 		// Set the default values depending on values found in genmodel and in
 		// properties.
-		String cp = genModel.getClassNamePattern() == null ? DEFAULT_DEV_CLASS_IMPL_PATTERN : genModel
-				.getClassNamePattern();
+		String cp = nullOrDefault(genModel.getClassNamePattern(), DEFAULT_DEV_CLASS_IMPL_PATTERN);
 		genClassPattern.setText(cp);
 		genClassPatternInitial = cp;
 
-		String ip = genModel.getInterfaceNamePattern() == null ? DEFAULT_DEV_INTERFACE_PATTERN : genModel
-				.getInterfaceNamePattern();
+		String ip = nullOrDefault(genModel.getInterfaceNamePattern(),DEFAULT_DEV_INTERFACE_PATTERN);
 		genInterfacePattern.setText(ip);
 		genInterfacePatternInitial = ip;
 
@@ -283,14 +317,6 @@ public class DerivedSourceParametersDialog extends Dialog implements GMAConstant
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 	}
 
-	/**
-	 * Return the initial size of the dialog.
-	 */
-	@Override
-	protected Point getInitialSize()
-	{
-		return new Point(450, 400);
-	}
 
 	public String getDevInterfacePattern()
 	{
@@ -306,6 +332,11 @@ public class DerivedSourceParametersDialog extends Dialog implements GMAConstant
 	{
 		return srcDir;
 	}
+	
+	public boolean getGenerateEMFModelCode()
+	{
+		return generateEMFCode;
+	}
 
 	@Override
 	protected void okPressed()
@@ -316,6 +347,7 @@ public class DerivedSourceParametersDialog extends Dialog implements GMAConstant
 			genModel.setClassNamePattern(genClassPattern.getText());
 			genModel.setInterfaceNamePattern(genInterfacePattern.getText());
 			genModel.setModelDirectory("/" + genModel.getModelPluginID() + "/" + genSourceDir.getText());
+			Util.saveGenModel(genModel, getShell());
 		}
 		
 
@@ -332,6 +364,8 @@ public class DerivedSourceParametersDialog extends Dialog implements GMAConstant
 
 		super.okPressed();
 	}
+
+
 
 
 }

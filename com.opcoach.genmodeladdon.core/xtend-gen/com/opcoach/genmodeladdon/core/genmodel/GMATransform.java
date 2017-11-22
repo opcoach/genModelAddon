@@ -16,6 +16,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.xtext.xbase.lib.InputOutput;
 
 /**
@@ -57,7 +58,7 @@ public class GMATransform implements GMAConstants {
   }
   
   private void initValue(final String v, final Consumer<String> consumer) {
-    if ((v != null)) {
+    if (((v != null) && (v.length() > 0))) {
       consumer.accept(v);
     }
   }
@@ -114,20 +115,36 @@ public class GMATransform implements GMAConstants {
   }
   
   public void computeNames(final EPackage p) {
-    EList<EClassifier> _eClassifiers = p.getEClassifiers();
-    for (final EClassifier c : _eClassifiers) {
-      if (((c instanceof EClass) && (!c.getName().endsWith("Package")))) {
-        final String devIntName = MessageFormat.format(this.devInterfaceNamePattern, c.getName());
-        final String genIntName = MessageFormat.format(this.genInterfaceNamePattern, c.getName());
-        this.devNames.put(genIntName, devIntName);
-        final String genClassName = MessageFormat.format(this.genClassNamePattern, c.getName());
-        final String devClassName = MessageFormat.format(this.devClassNamePattern, c.getName());
-        this.devNames.put(genClassName, devClassName);
+    boolean _equals = EcorePackage.eNS_URI.equals(p.getNsURI());
+    boolean _not = (!_equals);
+    if (_not) {
+      EList<EClassifier> _eClassifiers = p.getEClassifiers();
+      for (final EClassifier c : _eClassifiers) {
+        if (((c instanceof EClass) && (!c.getName().endsWith("Package")))) {
+          final String devIntName = MessageFormat.format(this.devInterfaceNamePattern, c.getName());
+          final String genIntName = MessageFormat.format(this.genInterfaceNamePattern, c.getName());
+          int _length = genIntName.length();
+          boolean _equals_1 = (_length == 0);
+          if (_equals_1) {
+            InputOutput.<String>println(("Found an empty string for key for this devName " + devIntName));
+          }
+          InputOutput.<String>println(((("Put : " + genIntName) + ",") + devIntName));
+          this.devNames.put(genIntName, devIntName);
+          final String genClassName = MessageFormat.format(this.genClassNamePattern, c.getName());
+          final String devClassName = MessageFormat.format(this.devClassNamePattern, c.getName());
+          int _length_1 = genClassName.length();
+          boolean _equals_2 = (_length_1 == 0);
+          if (_equals_2) {
+            InputOutput.<String>println(("Found an empty string for key for this devName " + this.devClassNamePattern));
+          }
+          InputOutput.<String>println(((("Put : " + genClassName) + ",") + devClassName));
+          this.devNames.put(genClassName, devClassName);
+        }
       }
-    }
-    EList<EPackage> _eSubpackages = p.getESubpackages();
-    for (final EPackage childPackage : _eSubpackages) {
-      this.computeNames(childPackage);
+      EList<EPackage> _eSubpackages = p.getESubpackages();
+      for (final EPackage childPackage : _eSubpackages) {
+        this.computeNames(childPackage);
+      }
     }
   }
   
@@ -146,18 +163,24 @@ public class GMATransform implements GMAConstants {
       {
         final String key = entry.getKey();
         final String value = entry.getValue();
-        int s = 0;
-        while ((res.indexOf(key, s) != (-1))) {
-          {
-            s = res.indexOf(key, s);
-            int _length = key.length();
-            final int e = (s + _length);
-            final boolean startIsOk = ((s == 0) || (!Character.isLetterOrDigit(res.charAt((s - 1)))));
-            final boolean endIsOk = ((e == res.length()) || (!Character.isLetterOrDigit(res.charAt(e))));
-            if ((startIsOk && endIsOk)) {
-              res = res.replace(s, e, value);
+        int _length = key.length();
+        boolean _equals = (_length == 0);
+        if (_equals) {
+          InputOutput.<String>println(("Found an empty key for this value :  " + value));
+        } else {
+          int s = 0;
+          while ((res.indexOf(key, s) != (-1))) {
+            {
+              s = res.indexOf(key, s);
+              int _length_1 = key.length();
+              final int e = (s + _length_1);
+              final boolean startIsOk = ((s == 0) || (!Character.isLetterOrDigit(res.charAt((s - 1)))));
+              final boolean endIsOk = ((e == res.length()) || (!Character.isLetterOrDigit(res.charAt(e))));
+              if ((startIsOk && endIsOk)) {
+                res = res.replace(s, e, value);
+              }
+              s = e;
             }
-            s = e;
           }
         }
       }
