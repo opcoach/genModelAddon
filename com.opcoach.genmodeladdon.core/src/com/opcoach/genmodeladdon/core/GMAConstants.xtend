@@ -10,6 +10,10 @@ interface GMAConstants {
 	public static val PROP_INTERFACE_PATTERN = new QualifiedName(PLUGIN_ID, "interfacePattern");
 	public static val PROP_CLASS_PATTERN = new QualifiedName(PLUGIN_ID, "classPattern");
 	public static val PROP_SRCDIR = new QualifiedName(PLUGIN_ID, "srcDir");
+	
+	// Store the EMF generate property after dev code generation
+	public static val PROP_GENEMFCODE = new QualifiedName(PLUGIN_ID, "generateEMFCodeAfter");
+	
 	// The property set on the project to mark that genModelAddon is used (this is used in the GMAFactoryImpl)
 	public static val PROP_GMA = new QualifiedName(PLUGIN_ID, "genModelAddon");
 	

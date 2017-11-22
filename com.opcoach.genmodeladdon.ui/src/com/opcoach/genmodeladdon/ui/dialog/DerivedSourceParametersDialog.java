@@ -288,6 +288,10 @@ public class DerivedSourceParametersDialog extends Dialog implements GMAConstant
 		String cpProp = GenerateCommon.getProperty(f, GenerateCommon.PROP_CLASS_PATTERN);
 		String ipProp = GenerateCommon.getProperty(f, GenerateCommon.PROP_INTERFACE_PATTERN);
 		String srcProp = GenerateCommon.getProperty(f, GenerateCommon.PROP_SRCDIR);
+		String genEmfStr = GenerateCommon.getProperty(f, GenerateCommon.PROP_GENEMFCODE);
+		boolean genEmf = true;
+		if (genEmfStr != null)
+			genEmf = Boolean.getBoolean(genEmfStr);
 
 		if (cp.equals(DEFAULT_DEV_CLASS_IMPL_PATTERN))
 			devClassPattern.setText(cp + "Ext");
@@ -302,6 +306,8 @@ public class DerivedSourceParametersDialog extends Dialog implements GMAConstant
 		previousDevInterfacePattern = devInterfacePattern.getText();
 		
 		devSourceDir.setText(srcProp != null ? srcProp : DEFAULT_SRC_DEV);
+		
+		btnGenerateEMFModelCode.setSelection(genEmf);
 	}
 
 	/**
@@ -351,7 +357,7 @@ public class DerivedSourceParametersDialog extends Dialog implements GMAConstant
 		}
 		
 
-		// Remember of entered values
+		// Remember of entered values in resource properties
 		classPattern = devClassPattern.getText();
 		interfacePattern = devInterfacePattern.getText();
 		srcDir = devSourceDir.getText();
@@ -361,6 +367,8 @@ public class DerivedSourceParametersDialog extends Dialog implements GMAConstant
 		GenerateCommon.setProperty(f, GenerateCommon.PROP_SRCDIR, srcDir);
 		GenerateCommon.setProperty(f, GenerateCommon.PROP_CLASS_PATTERN, classPattern);
 		GenerateCommon.setProperty(f, GenerateCommon.PROP_INTERFACE_PATTERN, interfacePattern);
+		GenerateCommon.setProperty(f, GenerateCommon.PROP_GENEMFCODE, Boolean.toString(generateEMFCode));
+		GenerateCommon.setProperty(f, GenerateCommon.PROP_GMA, Boolean.toString(true));
 
 		super.okPressed();
 	}
