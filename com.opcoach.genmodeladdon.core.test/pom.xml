@@ -7,13 +7,11 @@
 	<parent>
 		<groupId>com.opcoach.genmodeladdon</groupId>
 		<artifactId>com.opcoach.genmodeladdon.parent</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
+		<version>2.0.0-SNAPSHOT</version>
 	</parent>
 
 	<groupId>com.opcoach.genmodeladdon</groupId>
 	<artifactId>com.opcoach.genmodeladdon.core.test</artifactId>
-	<version>1.6.4-SNAPSHOT</version>
 	<packaging>eclipse-test-plugin</packaging>
 
 	<properties>
