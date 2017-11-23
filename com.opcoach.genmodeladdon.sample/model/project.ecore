@@ -27,6 +27,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="subTasks" upperBound="-1"
         eType="#//Task" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="responsable" eType="#//Person"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="kijs" eType="#//IntToDoubleMap"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Company">
     <eStructuralFeatures xsi:type="ecore:EReference" name="projects" upperBound="-1"
@@ -71,6 +72,10 @@
     <eLiterals name="Documentation" literal="Documentation"/>
     <eLiterals name="Code" value="1" literal="Code"/>
     <eLiterals name="Test" value="2" literal="Test"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IntToDoubleMap" instanceClassName="java.util.Map$Entry">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDoubleObject"/>
   </eClassifiers>
   <eSubpackages name="documentation" nsURI="http://www.opcoach.com/project/documentation/1.0"
       nsPrefix="doc">

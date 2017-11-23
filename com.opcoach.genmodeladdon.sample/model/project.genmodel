@@ -37,6 +37,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute project.ecore#//Task/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference project.ecore#//Task/subTasks"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference project.ecore#//Task/responsable"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference project.ecore#//Task/kijs"/>
     </genClasses>
     <genClasses ecoreClass="project.ecore#//Company">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference project.ecore#//Company/projects"/>
@@ -56,6 +57,10 @@
     <genClasses image="false" ecoreClass="project.ecore#//ClassAsInterface">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute project.ecore#//ClassAsInterface/name"/>
       <genOperations ecoreOperation="project.ecore#//ClassAsInterface/operationListener"/>
+    </genClasses>
+    <genClasses ecoreClass="project.ecore#//IntToDoubleMap">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute project.ecore#//IntToDoubleMap/key"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute project.ecore#//IntToDoubleMap/value"/>
     </genClasses>
     <nestedGenPackages prefix="Documentation" basePackage="com.opcoach.project" disposableProviderFactory="true"
         ecorePackage="project.ecore#//documentation">
