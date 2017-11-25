@@ -66,9 +66,9 @@ public class GenModelAddonTestCase implements ProjectConstants
 
 		return sampleProject;
 	}
-
+	
 	/**
-	 * This method checks if the specified content is in the file
+	 * This method checks if a string occures in a File.
 	 * 
 	 * @param path
 	 *            the path expressed relative to project :
@@ -77,7 +77,7 @@ public class GenModelAddonTestCase implements ProjectConstants
 	 *            a string like : "ProjectImpl extends MProjectImpl"
 	 * @return
 	 */
-	void assertFileContains(String path, String content)
+	boolean isStringPresentInFile(String path, String content)
 	{
 		boolean found = false;
 		BufferedReader fr = null;
@@ -113,10 +113,49 @@ public class GenModelAddonTestCase implements ProjectConstants
 			}
 		}
 
+		return found;
+
+	}
+
+
+	/**
+	 * This method checks if the specified content is in the file
+	 * 
+	 * @param path
+	 *            the path expressed relative to project :
+	 *            "src/impl/ProjectImpl.java" for instance
+	 * @param content
+	 *            a string like : "ProjectImpl extends MProjectImpl"
+	 * @return
+	 */
+	void assertFileContains(String path, String content)
+	{
+		boolean found = isStringPresentInFile(path, content);
+
 		if (!found)
 			fail("The file '" + path + "' should contain the string '" + content + "' but it was not found.");
 
 	}
+	
+	/**
+	 * This method checks if the specified content is not present in the file
+	 * 
+	 * @param path
+	 *            the path expressed relative to project :
+	 *            "src/impl/ProjectImpl.java" for instance
+	 * @param content
+	 *            a string like : "ProjectImpl extends MProjectImpl"
+	 * @return
+	 */
+	void assertFileDoesNotContain(String path, String content)
+	{
+		boolean found = isStringPresentInFile(path, content);
+
+		if (found)
+			fail("The file '" + path + "' should not contain the string '" + content + "' but it was found.");
+
+	}
+
 
 	/**
 	 * This method checks a file exists

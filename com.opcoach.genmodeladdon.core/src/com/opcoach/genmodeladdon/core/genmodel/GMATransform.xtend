@@ -9,6 +9,7 @@ import java.util.function.Consumer
 import org.eclipse.emf.codegen.ecore.genmodel.GenBase
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel
 import org.eclipse.emf.ecore.EClass
+import org.eclipse.emf.ecore.EClassifier
 import org.eclipse.emf.ecore.EPackage
 import org.eclipse.emf.ecore.EcorePackage
 
@@ -87,11 +88,13 @@ class GMATransform implements GMAConstants {
 		isInit = false
 	}
 
+
+
 	def void computeNames(EPackage p) {
 		// Do not compute names for emf2002Ecore
 		if (!EcorePackage::eNS_URI.equals(p.nsURI)) {
 			for (c : p.getEClassifiers()) {
-				if ((c instanceof EClass) && !c.name.endsWith("Package")) {
+				if ((c instanceof EClass) && !c.name.endsWith("Package") && !GenerateCommon.isMapType(c)) {
 					val devIntName = MessageFormat.format(devInterfaceNamePattern, c.name)
 					val genIntName = MessageFormat.format(genInterfaceNamePattern, c.name)
 					// println("Put : " + genIntName + "," + devIntName);

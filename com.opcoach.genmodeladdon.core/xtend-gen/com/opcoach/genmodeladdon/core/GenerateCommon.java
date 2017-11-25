@@ -12,8 +12,10 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.codegen.ecore.genmodel.GenClass;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.osgi.framework.Bundle;
@@ -143,5 +145,14 @@ public class GenerateCommon implements GMAConstants {
       modelDir = uri.substring(pathPos, lastSlashPos);
     }
     return modelDir;
+  }
+  
+  public static boolean isMapType(final EClassifier c) {
+    final String name = c.getInstanceClassName();
+    return ("java.util.Map.Entry".equals(name) || "java.util.Map$Entry".equals(name));
+  }
+  
+  public static boolean isMapType(final GenClass c) {
+    return GenerateCommon.isMapType(c.getEcoreClass());
   }
 }

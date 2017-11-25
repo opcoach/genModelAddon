@@ -128,7 +128,7 @@ class GenerateDevStructure {
 	//	println("Generate classes in    : " + srcAbsolutePath)
 	//	println("Generate interfaces in : " + interfaceAbsolutePath)
 
-		for (c : gp.genClasses.filter[!isDynamic]) {
+		for (c : gp.genClasses.filter[!isDynamic].filter[p | !GenerateCommon.isMapType(p)]) {
 			if (!c.isInterface)
 				generateOverriddenClass(c, srcAbsolutePath) // Can still generate abstract classes
 			generateOverriddenInterface(c, interfaceAbsolutePath)
@@ -153,6 +153,8 @@ class GenerateDevStructure {
 		for (sp : gp.subGenPackages)
 			sp.generateDevStructure
 	}
+	
+	
 
 	/** add the srcDir as a source directory in the java project, if it is not yet added */
 	def private setFolderAsSourceFolder(IProject proj, String srcDir) {
@@ -385,7 +387,7 @@ class GenerateDevStructure {
 			*/
 			«gp.computeFactoryInterfaceName» eINSTANCE = «gp.computeFactoryClassName».init();
 						
-			«FOR gc : gp.genClasses.filter[!isDynamic].filter[!isAbstract]»
+			«FOR gc : gp.genClasses.filter[!isDynamic].filter[!isAbstract].filter[p | !GenerateCommon.isMapType(p)]»
 				«gc.generateFactoryDef»
 			«ENDFOR»
 		}
@@ -425,7 +427,7 @@ class GenerateDevStructure {
 		
 		import org.eclipse.emf.ecore.plugin.EcorePlugin;
 		
-		«FOR gc : gp.genClasses.filter[!isDynamic].filter[!isAbstract]»
+		«FOR gc : gp.genClasses.filter[!isDynamic].filter[!isAbstract].filter[p | !GenerateCommon.isMapType(p)]»
 			import «gp.computePackageNameForInterfaces».«gc.computeInterfaceFilename»;
 		«ENDFOR»
 		import «gp.computePackageNameForInterfaces».«gp.computeFactoryInterfaceName»;
@@ -449,7 +451,7 @@ class GenerateDevStructure {
 				return new «gp.computeFactoryClassName»(); 
 				 }
 			
-			«FOR gc : gp.genClasses.filter[!isDynamic].filter[!isAbstract]»
+			«FOR gc : gp.genClasses.filter[!isDynamic].filter[!isAbstract].filter[p | !GenerateCommon.isMapType(p)]»
 				«gc.generateCreateMethod»
 			«ENDFOR»
 		}

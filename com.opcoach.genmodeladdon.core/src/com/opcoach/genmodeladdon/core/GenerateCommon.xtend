@@ -8,8 +8,10 @@ import org.eclipse.core.runtime.Path
 import org.eclipse.core.runtime.Platform
 import org.eclipse.core.runtime.QualifiedName
 import org.eclipse.core.runtime.Status
+import org.eclipse.emf.codegen.ecore.genmodel.GenClass
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel
 import org.eclipse.emf.common.util.URI
+import org.eclipse.emf.ecore.EClassifier
 import org.osgi.framework.FrameworkUtil
 
 /** A class to provide some generation common methods */
@@ -109,5 +111,17 @@ class GenerateCommon implements GMAConstants {
 
 		// Path is between projectName and model Name ! 
 		return modelDir
+	}
+	
+	
+	def static isMapType(EClassifier c) {
+		// See :  GenBaseImpl::isJavaUtilMapEntry(String name)
+		val name = c.instanceClassName
+		return "java.util.Map.Entry".equals(name) || "java.util.Map$Entry".equals(name)
+	}
+	
+	def static isMapType(GenClass c) {
+		// See :  GenBaseImpl::isJavaUtilMapEntry(String name)
+		isMapType(c.ecoreClass)
 	}
 }

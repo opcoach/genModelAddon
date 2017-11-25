@@ -119,7 +119,7 @@ public class GMATransform implements GMAConstants {
     if (_not) {
       EList<EClassifier> _eClassifiers = p.getEClassifiers();
       for (final EClassifier c : _eClassifiers) {
-        if (((c instanceof EClass) && (!c.getName().endsWith("Package")))) {
+        if ((((c instanceof EClass) && (!c.getName().endsWith("Package"))) && (!GenerateCommon.isMapType(c)))) {
           final String devIntName = MessageFormat.format(this.devInterfaceNamePattern, c.getName());
           final String genIntName = MessageFormat.format(this.genInterfaceNamePattern, c.getName());
           this.devNames.put(genIntName, devIntName);

@@ -1,6 +1,14 @@
 package com.opcoach.genmodeladdon.core.test;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import org.eclipse.emf.codegen.ecore.genmodel.GenClass;
+import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
+import org.eclipse.emf.ecore.EClass;
 import org.junit.Test;
+
+import com.opcoach.genmodeladdon.core.GenerateCommon;
 
 public class TestInterfaceGeneration extends GenModelAddonTestCase
 {
@@ -243,6 +251,32 @@ public class TestInterfaceGeneration extends GenModelAddonTestCase
 		assertFileContains("src-gen/com/opcoach/project/impl/MPersonImpl.java", "setType((TypePerson)newValue);");
 		assertFileContains("src-gen/com/opcoach/project/impl/MProjectImpl.java", "setType((TypeProject)newValue);");
 	}
+	
+	
+	// -----------------------------------------------------------------------
+	// ------------------- Tests for issue #66 / https://github.com/opcoach/genModelAddon/issues/66
+	// -----------------------------------------------------------------------
+	@Test
+	public void classWithMapInstanceNameMustNotBeGenerated()
+	{
+		GenModel gm = getGenModel(PROJECT_GENMODEL);
+		// Check EClass IntToDoubleMap exists. 
+		GenClass gc = findGenClass(gm, "IntToDoubleMap");
+		EClass c = (gc == null) ? null : gc.getEcoreClass();
+		
+		assertNotNull("The EClass IntToDoubleMap is present in test model", c);
+		assertTrue("The IntToDoubleMap instance type name must be java.util.Map$Entry", GenerateCommon.isMapType(c));
+		
+		// Now the file for this class must not be generated...
+		assertFileNotExists("src/com/opcoach/project/IntToDoubleMap.java");
+		assertFileNotExists("src/com/opcoach/project/impl/IntToDoubleMapImpl.java");
+		
+		// Check that factory generated file does not contain the IntToDoubleMap class
+		assertFileDoesNotContain("src/com/opcoach/project/ProjectFactory.java", "IntToDoubleMap");
+		assertFileDoesNotContain("src/com/opcoach/project/impl/ProjectFactoryImpl.java", "IntToDoubleMap");
+
+	}
+
 	
 
 

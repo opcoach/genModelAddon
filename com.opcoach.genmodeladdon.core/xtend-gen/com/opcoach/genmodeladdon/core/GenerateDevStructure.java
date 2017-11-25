@@ -164,7 +164,11 @@ public class GenerateDevStructure {
       boolean _isDynamic = it.isDynamic();
       return Boolean.valueOf((!_isDynamic));
     };
-    Iterable<GenClass> _filter = IterableExtensions.<GenClass>filter(gp.getGenClasses(), _function);
+    final Function1<GenClass, Boolean> _function_1 = (GenClass p) -> {
+      boolean _isMapType = GenerateCommon.isMapType(p);
+      return Boolean.valueOf((!_isMapType));
+    };
+    Iterable<GenClass> _filter = IterableExtensions.<GenClass>filter(IterableExtensions.<GenClass>filter(gp.getGenClasses(), _function), _function_1);
     for (final GenClass c : _filter) {
       {
         boolean _isInterface = c.isInterface();
@@ -553,7 +557,11 @@ public class GenerateDevStructure {
         boolean _isAbstract = it.isAbstract();
         return Boolean.valueOf((!_isAbstract));
       };
-      Iterable<GenClass> _filter = IterableExtensions.<GenClass>filter(IterableExtensions.<GenClass>filter(gp.getGenClasses(), _function), _function_1);
+      final Function1<GenClass, Boolean> _function_2 = (GenClass p) -> {
+        boolean _isMapType = GenerateCommon.isMapType(p);
+        return Boolean.valueOf((!_isMapType));
+      };
+      Iterable<GenClass> _filter = IterableExtensions.<GenClass>filter(IterableExtensions.<GenClass>filter(IterableExtensions.<GenClass>filter(gp.getGenClasses(), _function), _function_1), _function_2);
       for(final GenClass gc : _filter) {
         _builder.append("\t");
         CharSequence _generateFactoryDef = this.generateFactoryDef(gc);
@@ -659,7 +667,11 @@ public class GenerateDevStructure {
         boolean _isAbstract = it.isAbstract();
         return Boolean.valueOf((!_isAbstract));
       };
-      Iterable<GenClass> _filter = IterableExtensions.<GenClass>filter(IterableExtensions.<GenClass>filter(gp.getGenClasses(), _function), _function_1);
+      final Function1<GenClass, Boolean> _function_2 = (GenClass p) -> {
+        boolean _isMapType = GenerateCommon.isMapType(p);
+        return Boolean.valueOf((!_isMapType));
+      };
+      Iterable<GenClass> _filter = IterableExtensions.<GenClass>filter(IterableExtensions.<GenClass>filter(IterableExtensions.<GenClass>filter(gp.getGenClasses(), _function), _function_1), _function_2);
       for(final GenClass gc : _filter) {
         _builder.append("import ");
         String _computePackageNameForInterfaces = this.computePackageNameForInterfaces(gp);
@@ -750,15 +762,19 @@ public class GenerateDevStructure {
     _builder.append("\t");
     _builder.newLine();
     {
-      final Function1<GenClass, Boolean> _function_2 = (GenClass it) -> {
+      final Function1<GenClass, Boolean> _function_3 = (GenClass it) -> {
         boolean _isDynamic = it.isDynamic();
         return Boolean.valueOf((!_isDynamic));
       };
-      final Function1<GenClass, Boolean> _function_3 = (GenClass it) -> {
+      final Function1<GenClass, Boolean> _function_4 = (GenClass it) -> {
         boolean _isAbstract = it.isAbstract();
         return Boolean.valueOf((!_isAbstract));
       };
-      Iterable<GenClass> _filter_1 = IterableExtensions.<GenClass>filter(IterableExtensions.<GenClass>filter(gp.getGenClasses(), _function_2), _function_3);
+      final Function1<GenClass, Boolean> _function_5 = (GenClass p) -> {
+        boolean _isMapType = GenerateCommon.isMapType(p);
+        return Boolean.valueOf((!_isMapType));
+      };
+      Iterable<GenClass> _filter_1 = IterableExtensions.<GenClass>filter(IterableExtensions.<GenClass>filter(IterableExtensions.<GenClass>filter(gp.getGenClasses(), _function_3), _function_4), _function_5);
       for(final GenClass gc_1 : _filter_1) {
         _builder.append("\t");
         CharSequence _generateCreateMethod = this.generateCreateMethod(gc_1);
