@@ -10,7 +10,6 @@
 		<version>2.0.0-SNAPSHOT</version>
 	</parent>
 
-	<groupId>com.opcoach.genmodeladdon</groupId>
 	<artifactId>com.opcoach.genmodeladdon.core.test</artifactId>
 	<packaging>eclipse-test-plugin</packaging>
 

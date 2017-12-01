@@ -11,10 +11,8 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-	<groupId>com.opcoach.genmodeladdon</groupId>
 	<artifactId>com.opcoach.genmodeladdon.repository</artifactId>
 	<packaging>eclipse-repository</packaging>
-
-
+	
 
 </project>
