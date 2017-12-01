@@ -379,7 +379,7 @@ class GenerateDevStructure {
 		import «gp.computePackageNameForClasses».«gp.computeFactoryClassName»;
 		
 		/** This factory  overrides the generated factory and returns the new generated interfaces */
-		public interface «gp.computeFactoryInterfaceName» extends «gp.computeGeneratedFactoryInterfaceName» 
+		public interface «gp.computeFactoryInterfaceName» extends «gp.factoryInterfaceName» 
 		{
 			
 			/** Specialize the eINSTANCE initialization with the new interface type 
@@ -400,7 +400,7 @@ class GenerateDevStructure {
 		/** This package interface extends  the generated package interface 
 		    It is necessary because its name is used in the EMF generated code) 
 		*/
-		public interface «gp.computePackageInterfaceName» extends «gp.computeGeneratedPackageInterfaceName» 
+		public interface «gp.computePackageInterfaceName» extends «gp.packageInterfaceName» 
 		{
 			
 		}
@@ -434,14 +434,14 @@ class GenerateDevStructure {
 		
 		
 		// This factory  overrides the generated factory and returns the new generated interfaces
-		public class «gp.computeFactoryClassName» extends «gp.computeGeneratedFactoryClassName» implements «gp.
+		public class «gp.computeFactoryClassName» extends «gp.factoryClassName» implements «gp.
 			computeFactoryInterfaceName»
 		{
 			
 			public static «gp.computeFactoryInterfaceName» init() {
 				
 				try {
-					Object fact = «gp.computeGeneratedFactoryClassName».init();
+					Object fact = «gp.factoryClassName».init();
 					if ((fact != null) && (fact instanceof «gp.computeFactoryInterfaceName»))
 							return («gp.computeFactoryInterfaceName») fact;
 					}
@@ -485,7 +485,7 @@ class GenerateDevStructure {
 
 	/** Compute the class name to be generated */
 	def computeClassname(GenClass gc) {
-		gc.computeClassFilename() + gc.ecoreClass.computeGenericTypes
+		gc.computeClassFilename + gc.ecoreClass.computeGenericTypes
 	}
 
 	/** Compute the interface name to be generated */
@@ -541,62 +541,16 @@ class GenerateDevStructure {
 
 	/** Compute the generated class name depending on classpattern. */
 	def computeGeneratedClassName(GenClass c) {
-
-		// Get the class pattern defined in genmodel (if none, this is {0}Impl)
-		val classPattern = c.genPackage.genModel.classNamePattern
-
-		if (classPattern !== null)
-			classPattern.replace("{0}", c.ecoreClass.name) + c.ecoreClass.computeGenericTypes
-		else
-			c.ecoreClass.name + "Impl" + c.ecoreClass.computeGenericTypes
+		
+		c.className + c.ecoreClass.computeGenericTypes
 	}
 
 	/** Compute the generated interface name depending on interfacePattern. */
 	def computeGeneratedInterfaceName(GenClass c) {
 
-		// Get the class pattern defined in genmodel (if none, this is {0}Impl)
-		val interfaceNamePattern = c.genPackage.genModel.interfaceNamePattern
-
-		if (interfaceNamePattern !== null)
-			interfaceNamePattern.replace("{0}", c.ecoreClass.name) + c.ecoreClass.computeGenericTypes
-		else
-			c.ecoreClass.name + c.ecoreClass.computeGenericTypes
+		c.interfaceName + c.ecoreClass.computeGenericTypes
+		
 	}
 
-	/** Compute the generated factory class name depending on classpattern. */
-	def computeGeneratedFactoryClassName(GenPackage gp) {
-
-		// Get the class pattern defined in genmodel (if none, this is {0}Impl)
-		val classPattern = gp.genModel.classNamePattern
-
-		if (classPattern !== null)
-			classPattern.replace("{0}", gp.prefix + "Factory")
-		else
-			gp.prefix + "FactoryImpl"
-	}
-
-	/** Compute the generated factory interface name depending on interface. */
-	def computeGeneratedFactoryInterfaceName(GenPackage gp) {
-
-		// Get the class pattern defined in genmodel (if none, this is {0}Impl)
-		val interfacePattern = gp.genModel.interfaceNamePattern
-
-		if (interfacePattern !== null)
-			interfacePattern.replace("{0}", gp.prefix + "Factory")
-		else
-			gp.prefix + "Factory"
-	}
-
-	/** Compute the generated package interface name depending on interface. */
-	def computeGeneratedPackageInterfaceName(GenPackage gp) {
-
-		// Get the class pattern defined in genmodel (if none, this is {0}Impl)
-		val interfacePattern = gp.genModel.interfaceNamePattern
-
-		if (interfacePattern !== null)
-			interfacePattern.replace("{0}", gp.prefix + "Package")
-		else
-			gp.prefix + "Package"
-	}
 
 }

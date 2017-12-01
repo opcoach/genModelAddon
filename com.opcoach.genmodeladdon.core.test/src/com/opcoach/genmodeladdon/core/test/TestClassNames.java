@@ -32,9 +32,9 @@ public class TestClassNames extends GenModelAddonTestCase
 		assertEquals("The dev factory class  name must be FanNoiseFactoryImpl", "FanNoiseFactoryImpl",
 				gen.computeFactoryClassName(gp));
 		assertEquals("The gen factory interface  name must be MFanNoiseFactory", "MFanNoiseFactory",
-				gen.computeGeneratedFactoryInterfaceName(gp));
+				gp.getFactoryInterfaceName());
 		assertEquals("The gen factory class  name must be MFanNoiseFactoryImpl", "MFanNoiseFactoryImpl",
-				gen.computeGeneratedFactoryClassName(gp));
+				gp.getFactoryClassName());
 	}
 	
 	
@@ -58,9 +58,9 @@ public class TestClassNames extends GenModelAddonTestCase
 		assertEquals("The dev factory class  name must be ProjectFactoryImpl", "ProjectFactoryImpl",
 				gen.computeFactoryClassName(gp));
 		assertEquals("The gen factory interface  name must be MProjectFactory", "MProjectFactory",
-				gen.computeGeneratedFactoryInterfaceName(gp));
+				gp.getFactoryInterfaceName());
 		assertEquals("The gen factory class  name must be MProjectFactoryImpl", "MProjectFactoryImpl",
-				gen.computeGeneratedFactoryClassName(gp));
+				gp.getFactoryClassName());
 	}
 
 }

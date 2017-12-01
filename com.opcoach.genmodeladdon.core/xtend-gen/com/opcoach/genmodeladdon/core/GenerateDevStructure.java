@@ -521,8 +521,8 @@ public class GenerateDevStructure {
     String _computeFactoryInterfaceName = this.computeFactoryInterfaceName(gp);
     _builder.append(_computeFactoryInterfaceName);
     _builder.append(" extends ");
-    String _computeGeneratedFactoryInterfaceName = this.computeGeneratedFactoryInterfaceName(gp);
-    _builder.append(_computeGeneratedFactoryInterfaceName);
+    String _factoryInterfaceName = gp.getFactoryInterfaceName();
+    _builder.append(_factoryInterfaceName);
     _builder.append(" ");
     _builder.newLineIfNotEmpty();
     _builder.append("{");
@@ -596,8 +596,8 @@ public class GenerateDevStructure {
     String _computePackageInterfaceName = this.computePackageInterfaceName(gp);
     _builder.append(_computePackageInterfaceName);
     _builder.append(" extends ");
-    String _computeGeneratedPackageInterfaceName = this.computeGeneratedPackageInterfaceName(gp);
-    _builder.append(_computeGeneratedPackageInterfaceName);
+    String _packageInterfaceName = gp.getPackageInterfaceName();
+    _builder.append(_packageInterfaceName);
     _builder.append(" ");
     _builder.newLineIfNotEmpty();
     _builder.append("{");
@@ -699,8 +699,8 @@ public class GenerateDevStructure {
     String _computeFactoryClassName = this.computeFactoryClassName(gp);
     _builder.append(_computeFactoryClassName);
     _builder.append(" extends ");
-    String _computeGeneratedFactoryClassName = this.computeGeneratedFactoryClassName(gp);
-    _builder.append(_computeGeneratedFactoryClassName);
+    String _factoryClassName = gp.getFactoryClassName();
+    _builder.append(_factoryClassName);
     _builder.append(" implements ");
     String _computeFactoryInterfaceName_1 = this.computeFactoryInterfaceName(gp);
     _builder.append(_computeFactoryInterfaceName_1);
@@ -722,8 +722,8 @@ public class GenerateDevStructure {
     _builder.newLine();
     _builder.append("\t\t\t");
     _builder.append("Object fact = ");
-    String _computeGeneratedFactoryClassName_1 = this.computeGeneratedFactoryClassName(gp);
-    _builder.append(_computeGeneratedFactoryClassName_1, "\t\t\t");
+    String _factoryClassName_1 = gp.getFactoryClassName();
+    _builder.append(_factoryClassName_1, "\t\t\t");
     _builder.append(".init();");
     _builder.newLineIfNotEmpty();
     _builder.append("\t\t\t");
@@ -979,107 +979,17 @@ public class GenerateDevStructure {
    * Compute the generated class name depending on classpattern.
    */
   public String computeGeneratedClassName(final GenClass c) {
-    String _xblockexpression = null;
-    {
-      final String classPattern = c.getGenPackage().getGenModel().getClassNamePattern();
-      String _xifexpression = null;
-      if ((classPattern != null)) {
-        String _replace = classPattern.replace("{0}", c.getEcoreClass().getName());
-        Object _computeGenericTypes = this.computeGenericTypes(c.getEcoreClass());
-        _xifexpression = (_replace + _computeGenericTypes);
-      } else {
-        String _name = c.getEcoreClass().getName();
-        String _plus = (_name + "Impl");
-        Object _computeGenericTypes_1 = this.computeGenericTypes(c.getEcoreClass());
-        _xifexpression = (_plus + _computeGenericTypes_1);
-      }
-      _xblockexpression = _xifexpression;
-    }
-    return _xblockexpression;
+    String _className = c.getClassName();
+    Object _computeGenericTypes = this.computeGenericTypes(c.getEcoreClass());
+    return (_className + _computeGenericTypes);
   }
   
   /**
    * Compute the generated interface name depending on interfacePattern.
    */
   public String computeGeneratedInterfaceName(final GenClass c) {
-    String _xblockexpression = null;
-    {
-      final String interfaceNamePattern = c.getGenPackage().getGenModel().getInterfaceNamePattern();
-      String _xifexpression = null;
-      if ((interfaceNamePattern != null)) {
-        String _replace = interfaceNamePattern.replace("{0}", c.getEcoreClass().getName());
-        Object _computeGenericTypes = this.computeGenericTypes(c.getEcoreClass());
-        _xifexpression = (_replace + _computeGenericTypes);
-      } else {
-        String _name = c.getEcoreClass().getName();
-        Object _computeGenericTypes_1 = this.computeGenericTypes(c.getEcoreClass());
-        _xifexpression = (_name + _computeGenericTypes_1);
-      }
-      _xblockexpression = _xifexpression;
-    }
-    return _xblockexpression;
-  }
-  
-  /**
-   * Compute the generated factory class name depending on classpattern.
-   */
-  public String computeGeneratedFactoryClassName(final GenPackage gp) {
-    String _xblockexpression = null;
-    {
-      final String classPattern = gp.getGenModel().getClassNamePattern();
-      String _xifexpression = null;
-      if ((classPattern != null)) {
-        String _prefix = gp.getPrefix();
-        String _plus = (_prefix + "Factory");
-        _xifexpression = classPattern.replace("{0}", _plus);
-      } else {
-        String _prefix_1 = gp.getPrefix();
-        _xifexpression = (_prefix_1 + "FactoryImpl");
-      }
-      _xblockexpression = _xifexpression;
-    }
-    return _xblockexpression;
-  }
-  
-  /**
-   * Compute the generated factory interface name depending on interface.
-   */
-  public String computeGeneratedFactoryInterfaceName(final GenPackage gp) {
-    String _xblockexpression = null;
-    {
-      final String interfacePattern = gp.getGenModel().getInterfaceNamePattern();
-      String _xifexpression = null;
-      if ((interfacePattern != null)) {
-        String _prefix = gp.getPrefix();
-        String _plus = (_prefix + "Factory");
-        _xifexpression = interfacePattern.replace("{0}", _plus);
-      } else {
-        String _prefix_1 = gp.getPrefix();
-        _xifexpression = (_prefix_1 + "Factory");
-      }
-      _xblockexpression = _xifexpression;
-    }
-    return _xblockexpression;
-  }
-  
-  /**
-   * Compute the generated package interface name depending on interface.
-   */
-  public String computeGeneratedPackageInterfaceName(final GenPackage gp) {
-    String _xblockexpression = null;
-    {
-      final String interfacePattern = gp.getGenModel().getInterfaceNamePattern();
-      String _xifexpression = null;
-      if ((interfacePattern != null)) {
-        String _prefix = gp.getPrefix();
-        String _plus = (_prefix + "Package");
-        _xifexpression = interfacePattern.replace("{0}", _plus);
-      } else {
-        String _prefix_1 = gp.getPrefix();
-        _xifexpression = (_prefix_1 + "Package");
-      }
-      _xblockexpression = _xifexpression;
-    }
-    return _xblockexpression;
+    String _interfaceName = c.getInterfaceName();
+    Object _computeGenericTypes = this.computeGenericTypes(c.getEcoreClass());
+    return (_interfaceName + _computeGenericTypes);
   }
 }
