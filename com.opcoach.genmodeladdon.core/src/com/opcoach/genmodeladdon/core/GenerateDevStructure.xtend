@@ -283,7 +283,7 @@ class GenerateDevStructure {
 		try {
 			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null)
 			//println("Waiting for refresh ")
-			Thread.sleep(1000);  // Wait for refresh (important)
+			Thread.sleep(2000);  // Wait for refresh (important). MUST NOT BE LESS THAN 2 seconds for tycho build
 
 		} catch (CoreException e) {
 			e.printStackTrace
@@ -387,9 +387,6 @@ class GenerateDevStructure {
 			*/
 			«gp.computeFactoryInterfaceName» eINSTANCE = «gp.computeFactoryClassName».init();
 						
-			«FOR gc : gp.genClasses.filter[!isDynamic].filter[!isAbstract].filter[p | !GenerateCommon.isMapType(p)]»
-				«gc.generateFactoryDef»
-			«ENDFOR»
 		}
 	'''
 
@@ -427,13 +424,10 @@ class GenerateDevStructure {
 		
 		import org.eclipse.emf.ecore.plugin.EcorePlugin;
 		
-		«FOR gc : gp.genClasses.filter[!isDynamic].filter[!isAbstract].filter[p | !GenerateCommon.isMapType(p)]»
-			import «gp.computePackageNameForInterfaces».«gc.computeInterfaceFilename»;
-		«ENDFOR»
 		import «gp.computePackageNameForInterfaces».«gp.computeFactoryInterfaceName»;
 		
 		
-		// This factory  overrides the generated factory and returns the new generated interfaces
+		// This factory  renames the generated factory interface to use it as an overriden factory
 		public class «gp.computeFactoryClassName» extends «gp.factoryClassName» implements «gp.
 			computeFactoryInterfaceName»
 		{
@@ -451,19 +445,11 @@ class GenerateDevStructure {
 				return new «gp.computeFactoryClassName»(); 
 				 }
 			
-			«FOR gc : gp.genClasses.filter[!isDynamic].filter[!isAbstract].filter[p | !GenerateCommon.isMapType(p)]»
-				«gc.generateCreateMethod»
-			«ENDFOR»
+		
 		}
 	'''
 
-	private def generateCreateMethod(GenClass gc) '''
-		public «gc.computeInterfaceName.extractGenericTypes»«gc.computeInterfaceName» create«gc.ecoreClass.name»()
-		{
-			«gc.computeInterfaceName» result = new «gc.computeClassname»();
-			return result;
-		}
-	'''
+
 	
 	def computeCopyrightComment() '''
 	«IF genModel.copyrightText !== null && genModel.copyrightText.length > 0»

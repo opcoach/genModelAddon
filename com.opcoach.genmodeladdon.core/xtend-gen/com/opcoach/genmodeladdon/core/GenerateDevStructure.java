@@ -317,7 +317,7 @@ public class GenerateDevStructure {
     try {
       try {
         ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
-        Thread.sleep(1000);
+        Thread.sleep(2000);
       } catch (final Throwable _t) {
         if (_t instanceof CoreException) {
           final CoreException e = (CoreException)_t;
@@ -548,27 +548,6 @@ public class GenerateDevStructure {
     _builder.newLineIfNotEmpty();
     _builder.append("\t\t\t\t");
     _builder.newLine();
-    {
-      final Function1<GenClass, Boolean> _function = (GenClass it) -> {
-        boolean _isDynamic = it.isDynamic();
-        return Boolean.valueOf((!_isDynamic));
-      };
-      final Function1<GenClass, Boolean> _function_1 = (GenClass it) -> {
-        boolean _isAbstract = it.isAbstract();
-        return Boolean.valueOf((!_isAbstract));
-      };
-      final Function1<GenClass, Boolean> _function_2 = (GenClass p) -> {
-        boolean _isMapType = GenerateCommon.isMapType(p);
-        return Boolean.valueOf((!_isMapType));
-      };
-      Iterable<GenClass> _filter = IterableExtensions.<GenClass>filter(IterableExtensions.<GenClass>filter(IterableExtensions.<GenClass>filter(gp.getGenClasses(), _function), _function_1), _function_2);
-      for(final GenClass gc : _filter) {
-        _builder.append("\t");
-        CharSequence _generateFactoryDef = this.generateFactoryDef(gc);
-        _builder.append(_generateFactoryDef, "\t");
-        _builder.newLineIfNotEmpty();
-      }
-    }
     _builder.append("}");
     _builder.newLine();
     return _builder;
@@ -658,34 +637,9 @@ public class GenerateDevStructure {
     _builder.append("import org.eclipse.emf.ecore.plugin.EcorePlugin;");
     _builder.newLine();
     _builder.newLine();
-    {
-      final Function1<GenClass, Boolean> _function = (GenClass it) -> {
-        boolean _isDynamic = it.isDynamic();
-        return Boolean.valueOf((!_isDynamic));
-      };
-      final Function1<GenClass, Boolean> _function_1 = (GenClass it) -> {
-        boolean _isAbstract = it.isAbstract();
-        return Boolean.valueOf((!_isAbstract));
-      };
-      final Function1<GenClass, Boolean> _function_2 = (GenClass p) -> {
-        boolean _isMapType = GenerateCommon.isMapType(p);
-        return Boolean.valueOf((!_isMapType));
-      };
-      Iterable<GenClass> _filter = IterableExtensions.<GenClass>filter(IterableExtensions.<GenClass>filter(IterableExtensions.<GenClass>filter(gp.getGenClasses(), _function), _function_1), _function_2);
-      for(final GenClass gc : _filter) {
-        _builder.append("import ");
-        String _computePackageNameForInterfaces = this.computePackageNameForInterfaces(gp);
-        _builder.append(_computePackageNameForInterfaces);
-        _builder.append(".");
-        String _computeInterfaceFilename = this.computeInterfaceFilename(gc);
-        _builder.append(_computeInterfaceFilename);
-        _builder.append(";");
-        _builder.newLineIfNotEmpty();
-      }
-    }
     _builder.append("import ");
-    String _computePackageNameForInterfaces_1 = this.computePackageNameForInterfaces(gp);
-    _builder.append(_computePackageNameForInterfaces_1);
+    String _computePackageNameForInterfaces = this.computePackageNameForInterfaces(gp);
+    _builder.append(_computePackageNameForInterfaces);
     _builder.append(".");
     String _computeFactoryInterfaceName = this.computeFactoryInterfaceName(gp);
     _builder.append(_computeFactoryInterfaceName);
@@ -693,7 +647,7 @@ public class GenerateDevStructure {
     _builder.newLineIfNotEmpty();
     _builder.newLine();
     _builder.newLine();
-    _builder.append("// This factory  overrides the generated factory and returns the new generated interfaces");
+    _builder.append("// This factory  renames the generated factory interface to use it as an overriden factory");
     _builder.newLine();
     _builder.append("public class ");
     String _computeFactoryClassName = this.computeFactoryClassName(gp);
@@ -761,56 +715,6 @@ public class GenerateDevStructure {
     _builder.newLine();
     _builder.append("\t");
     _builder.newLine();
-    {
-      final Function1<GenClass, Boolean> _function_3 = (GenClass it) -> {
-        boolean _isDynamic = it.isDynamic();
-        return Boolean.valueOf((!_isDynamic));
-      };
-      final Function1<GenClass, Boolean> _function_4 = (GenClass it) -> {
-        boolean _isAbstract = it.isAbstract();
-        return Boolean.valueOf((!_isAbstract));
-      };
-      final Function1<GenClass, Boolean> _function_5 = (GenClass p) -> {
-        boolean _isMapType = GenerateCommon.isMapType(p);
-        return Boolean.valueOf((!_isMapType));
-      };
-      Iterable<GenClass> _filter_1 = IterableExtensions.<GenClass>filter(IterableExtensions.<GenClass>filter(IterableExtensions.<GenClass>filter(gp.getGenClasses(), _function_3), _function_4), _function_5);
-      for(final GenClass gc_1 : _filter_1) {
-        _builder.append("\t");
-        CharSequence _generateCreateMethod = this.generateCreateMethod(gc_1);
-        _builder.append(_generateCreateMethod, "\t");
-        _builder.newLineIfNotEmpty();
-      }
-    }
-    _builder.append("}");
-    _builder.newLine();
-    return _builder;
-  }
-  
-  private CharSequence generateCreateMethod(final GenClass gc) {
-    StringConcatenation _builder = new StringConcatenation();
-    _builder.append("public ");
-    String _extractGenericTypes = this.extractGenericTypes(this.computeInterfaceName(gc));
-    _builder.append(_extractGenericTypes);
-    String _computeInterfaceName = this.computeInterfaceName(gc);
-    _builder.append(_computeInterfaceName);
-    _builder.append(" create");
-    String _name = gc.getEcoreClass().getName();
-    _builder.append(_name);
-    _builder.append("()");
-    _builder.newLineIfNotEmpty();
-    _builder.append("{");
-    _builder.newLine();
-    _builder.append("\t");
-    String _computeInterfaceName_1 = this.computeInterfaceName(gc);
-    _builder.append(_computeInterfaceName_1, "\t");
-    _builder.append(" result = new ");
-    String _computeClassname = this.computeClassname(gc);
-    _builder.append(_computeClassname, "\t");
-    _builder.append("();");
-    _builder.newLineIfNotEmpty();
-    _builder.append("\t");
-    _builder.append("return result;");
     _builder.newLine();
     _builder.append("}");
     _builder.newLine();

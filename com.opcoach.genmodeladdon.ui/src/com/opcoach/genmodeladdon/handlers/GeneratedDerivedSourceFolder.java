@@ -152,6 +152,9 @@ public class GeneratedDerivedSourceFolder extends GenerateParentHandler
 					}
 					
 				}
+				
+				// Must generate and update extensions
+				gds.generateExtensions();
 			}
 
 		}

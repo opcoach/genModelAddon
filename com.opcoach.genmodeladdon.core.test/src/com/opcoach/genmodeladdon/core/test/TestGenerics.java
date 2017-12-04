@@ -82,19 +82,19 @@ public class TestGenerics extends GenModelAddonTestCase
 	}
 
 	@Test
-	public void theDevFactoryInterfaceMustReturnGenericFolder()
+	public void theEMfGeneratedFactoryInterfaceMustReturnGenericFolder()
 	{
-		assertFileContains("src/com/opcoach/project/ProjectFactory.java",
-				"public <T> Folder<T> createFolder()");
+		assertFileContains("src-gen/com/opcoach/project/MProjectFactory.java",
+				"<T> Folder<T> createFolder()");
 	}
 
 	@Test
-	public void theDevFactoryClassMustReturnGenericFolder()
+	public void theEMfGeneratedFactoryClassMustReturnGenericFolder()
 	{
-		assertFileContains("src/com/opcoach/project/impl/ProjectFactoryImpl.java",
+		assertFileContains("src-gen/com/opcoach/project/impl/MProjectFactoryImpl.java",
 				"public <T> Folder<T> createFolder()");
-		assertFileContains("src/com/opcoach/project/impl/ProjectFactoryImpl.java",
-				"Folder<T> result = new FolderImpl<T>()");
+		assertFileContains("src-gen/com/opcoach/project/impl/MProjectFactoryImpl.java",
+				"FolderImpl<T> folder = new FolderImpl<T>();");
 	}
 	
 	@Test

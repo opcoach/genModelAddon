@@ -172,31 +172,31 @@ public class TestInterfaceGeneration extends GenModelAddonTestCase
 	}
 
 	@Test
-	public void theProjectFactoryMustCreatePerson()
+	public void theEMFGeneratedProjectFactoryMustCreatePerson()
 	{
-		assertFileContains("src/com/opcoach/project/ProjectFactory.java", "public Person createPerson();");
-		assertFileContains("src/com/opcoach/project/impl/ProjectFactoryImpl.java", "new PersonImpl();");
+		assertFileContains("src-gen/com/opcoach/project/MProjectFactory.java", "Person createPerson();");
+		assertFileContains("src-gen/com/opcoach/project/impl/MProjectFactoryImpl.java", "new PersonImpl();");
 	}
 
 	@Test
-	public void theProjectFactoryMustCreateProject()
+	public void theEMFGenereatedProjectFactoryMustCreateProject()
 	{
-		assertFileContains("src/com/opcoach/project/ProjectFactory.java", "public Project createProject()");
-		assertFileContains("src/com/opcoach/project/impl/ProjectFactoryImpl.java", "new ProjectImpl();");
+		assertFileContains("src-gen/com/opcoach/project/MProjectFactory.java", "Project createProject()");
+		assertFileContains("src-gen/com/opcoach/project/impl/MProjectFactoryImpl.java", "new ProjectImpl();");
 	}
 
 	@Test
-	public void theProjectFactoryMustCreateTask()
+	public void theEMFGenereatedProjectFactoryMustCreateTask()
 	{
-		assertFileContains("src/com/opcoach/project/ProjectFactory.java", "public Task createTask();");
-		assertFileContains("src/com/opcoach/project/impl/ProjectFactoryImpl.java", "new TaskImpl();");
+		assertFileContains("src-gen/com/opcoach/project/MProjectFactory.java", "Task createTask();");
+		assertFileContains("src-gen/com/opcoach/project/impl/MProjectFactoryImpl.java", "new TaskImpl();");
 	}
 
 	@Test
-	public void theProjectFactoryMustCreateCompany()
+	public void theEMFGeneratedProjectFactoryMustCreateCompany()
 	{
-		assertFileContains("src/com/opcoach/project/ProjectFactory.java", "public Company createCompany();");
-		assertFileContains("src/com/opcoach/project/impl/ProjectFactoryImpl.java", "new CompanyImpl();");
+		assertFileContains("src-gen/com/opcoach/project/MProjectFactory.java", "Company createCompany();");
+		assertFileContains("src-gen/com/opcoach/project/impl/MProjectFactoryImpl.java", "new CompanyImpl();");
 	}
 
 	@Test
