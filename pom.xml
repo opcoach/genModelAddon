@@ -20,7 +20,7 @@
 		<repository>
 			<id>eclipse.xtend</id>
 			<layout>p2</layout>
-			<url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</url>
+			<url>http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.13.0</url>
 		</repository>
 
 	</repositories>

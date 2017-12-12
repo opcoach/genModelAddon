@@ -38,7 +38,7 @@
   <setupTask
       xsi:type="setup:VariableTask"
       name="eclipse.target.platform"
-      defaultValue="Mars"
+      defaultValue="Oxygen"
       storageURI="scope://Workspace"/>
   <setupTask
       xsi:type="setup.p2:P2Task">
@@ -48,8 +48,7 @@
   <setupTask
       xsi:type="setup.p2:P2Task">
     <requirement
-        name="org.eclipse.xtext.sdk.feature.group"
-        versionRange="[2.9.2.v201603040440,2.9.2.v201603040440]"/>
+        name="org.eclipse.xtext.sdk.feature.group"/>
     <requirement
         name="org.eclipse.emf.sdk.feature.group"/>
     <repository
@@ -93,6 +92,11 @@
       <sourceLocator
           rootFolder="${git.clone.location}"
           locateNestedProjects="true"/>
+      <repositoryList
+          name="Oxygen">
+        <repository
+            url="http://download.eclipse.org/releases/oxygen"/>
+      </repositoryList>
       <repositoryList
           name="Mars">
         <repository
