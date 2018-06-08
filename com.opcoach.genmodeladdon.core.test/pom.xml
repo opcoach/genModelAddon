@@ -54,6 +54,7 @@
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-surefire-plugin</artifactId>
+				<version>1.2.0</version>
 				<configuration>
 					<testFailureIgnore>false</testFailureIgnore>
 					<!-- <debugPort>8000</debugPort> -->
