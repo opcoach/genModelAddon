@@ -1,0 +1,34 @@
+target "genModelAddon Photon"
+
+with source requirements 
+
+
+location "http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.14.0/" {
+  org.eclipse.xtext.sdk.feature.group
+  org.eclipse.xtend.sdk.feature.group
+  org.eclipse.xtext.xbase.feature.group
+}
+
+location "http://download.eclipse.org/releases/photon" {
+	
+	org.eclipse.rcp.feature.group
+	org.eclipse.ant.core
+	org.apache.commons.io
+	org.eclipse.pde.feature.group
+	org.eclipse.emf.ant
+	org.eclipse.emf.sdk.feature.group
+	org.eclipse.emf.codegen.ecore.feature.group
+	org.eclipse.emf.importer.ecore 
+	org.eclipse.emf.importer 
+	org.eclipse.ant.launching
+	org.eclipse.core.runtime
+
+	org.junit
+	org.eclipse.jdt.junit.runtime
+	
+}
+
+
+
+
+

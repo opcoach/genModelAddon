@@ -7,24 +7,10 @@
 	<version>2.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-
 	<properties>
 		<tycho-version>1.2.0</tycho-version>
 	</properties>
 
-	<repositories>
-		<repository>
-			<id>oxygen</id>
-			<layout>p2</layout>
-			<url>http://download.eclipse.org/releases/photon</url>
-		</repository>
-		<repository>
-			<id>eclipse.xtend</id>
-			<layout>p2</layout>
-			<url>http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.14.0</url>
-		</repository>
-
-	</repositories>
 
 	<build>
 		<plugins>
@@ -49,6 +35,13 @@
 				<configuration>
 					<!-- <dependency-resolution> <optionalDependencies>ignore</optionalDependencies> 
 						</dependency-resolution> -->
+						<target>
+						<artifact>
+							<groupId>com.opcoach.genmodeladdon</groupId>
+							<artifactId>com.opcoach.genmodeladdon.tp</artifactId>
+							<version>4.8.1-SNAPSHOT</version>
+						</artifact>
+					</target>
 					<environments>
 
 						<environment>
@@ -72,6 +65,7 @@
 
 	<!-- the modules that should be built together -->
 	<modules>
+		<module>build/com.opcoach.genmodeladdon.tp</module>
 		<module>com.opcoach.genmodeladdon.core</module>
 		<module>com.opcoach.genmodeladdon.sample</module>
 		<module>com.opcoach.genmodeladdon.ui</module>
