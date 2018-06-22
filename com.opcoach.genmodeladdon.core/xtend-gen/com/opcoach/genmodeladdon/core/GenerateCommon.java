@@ -82,7 +82,6 @@ public class GenerateCommon implements GMAConstants {
       result = f.getPersistentProperty(qn);
     } catch (final Throwable _t) {
       if (_t instanceof Exception) {
-        final Exception e = (Exception)_t;
       } else {
         throw Exceptions.sneakyThrow(_t);
       }

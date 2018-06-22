@@ -147,6 +147,8 @@ package class GenerateExtensions {
 		for (entry : factories.entrySet)
 			generateOrUpdateExtension(FACTORY_OVERRIDE, entry.key, FACTORY_ELT, entry.value)
 
+		fModel.save   // Fix #72
+		
 		for (entry : packages.entrySet)
 			generateOrUpdateExtension(EMF_GENERATED_PACKAGE, entry.key, PACKAGE_ELT, entry.value)
 

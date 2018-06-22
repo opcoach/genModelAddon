@@ -174,6 +174,7 @@ class GenerateExtensions {
     for (final Map.Entry<String, String> entry : _entrySet) {
       this.generateOrUpdateExtension(GenerateExtensions.FACTORY_OVERRIDE, entry.getKey(), GenerateExtensions.FACTORY_ELT, entry.getValue());
     }
+    this.fModel.save();
     Set<Map.Entry<String, String>> _entrySet_1 = packages.entrySet();
     for (final Map.Entry<String, String> entry_1 : _entrySet_1) {
       this.generateOrUpdateExtension(GenerateExtensions.EMF_GENERATED_PACKAGE, entry_1.getKey(), GenerateExtensions.PACKAGE_ELT, entry_1.getValue());
