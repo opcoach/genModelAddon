@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="genModelAddon Photon" sequenceNumber="1528482042">
+<target name="genModelAddon Photon" sequenceNumber="1529704810">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.xtext.sdk.feature.group" version="2.14.0.v20180523-0937"/>
@@ -23,6 +23,7 @@
       <unit id="org.eclipse.core.runtime" version="3.14.0.v20180417-0825"/>
       <unit id="org.junit" version="4.12.0.v201504281640"/>
       <unit id="org.eclipse.jdt.junit.runtime" version="3.4.700.v20171124-1029"/>
+      <unit id="org.eclipse.sdk.feature.group" version="4.8.0.v20180531-1055"/>
       <repository location="http://download.eclipse.org/releases/photon"/>
     </location>
   </locations>

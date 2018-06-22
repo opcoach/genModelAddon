@@ -25,6 +25,7 @@ location "http://download.eclipse.org/releases/photon" {
 
 	org.junit
 	org.eclipse.jdt.junit.runtime
+	org.eclipse.sdk.feature.group
 	
 }
 
