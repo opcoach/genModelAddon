@@ -110,5 +110,27 @@ public class TestGenerics extends GenModelAddonTestCase
 				"public class StoreImpl<T,U> extends MStoreImpl<T,U> implements Store<T,U>");
 	}
 
+	@Test
+	public void theDevProjectFolderMustBeGenericAndExtendProject()
+	{
+		assertFileContains("src/com/opcoach/project/ProjectFolder.java",
+				"public interface ProjectFolder<T extends Project> extends MProjectFolder<T extends Project>");
+	}
+
+	@Test
+	public void theDevProjectFolderImplMustBeGenericAndExtendProject()
+	{
+		assertFileContains("src/com/opcoach/project/impl/ProjectFolderImpl.java",
+				"public class ProjectFolderImpl<T extends Project> extends MProjectFolderImpl<T extends Project> implements ProjectFolder<T extends Project>");
+	}
+
+	@Test
+	public void theGenProjectFolderImplMustBeGenericAndExtendProject()
+	{
+		assertFileContains("src-gen/com/opcoach/project/impl/MProjectFolderImpl.java",
+				"public class MProjectFolderImpl<T extends Project> extends MinimalEObjectImpl.Container implements ProjectFolder<T>");
+	}
+
+
 
 }

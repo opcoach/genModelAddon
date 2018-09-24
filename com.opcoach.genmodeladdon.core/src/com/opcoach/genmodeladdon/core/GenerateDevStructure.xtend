@@ -486,6 +486,14 @@ class GenerateDevStructure {
 		for (pt : c.ETypeParameters)
 		{
 			sb.append(sep).append(pt.name)
+			var sep2 = ""
+			var prefix = " extends "
+			for (gb : pt.EBounds)
+			{
+			    sb.append(sep2).append(prefix).append(gb.EClassifier.name)
+			    sep2 = ","
+			    prefix = ""
+			}
 			sep = ","
 		}
 		sb.append(">")

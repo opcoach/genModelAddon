@@ -62,6 +62,10 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute project.ecore#//IntToDoubleMap/key"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute project.ecore#//IntToDoubleMap/value"/>
     </genClasses>
+    <genClasses ecoreClass="project.ecore#//ProjectFolder">
+      <genTypeParameters ecoreTypeParameter="project.ecore#//ProjectFolder/T"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute project.ecore#//ProjectFolder/name"/>
+    </genClasses>
     <nestedGenPackages prefix="Documentation" basePackage="com.opcoach.project" disposableProviderFactory="true"
         ecorePackage="project.ecore#//documentation">
       <genClasses ecoreClass="project.ecore#//documentation/DocumentationProject"/>

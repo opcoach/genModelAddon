@@ -29,6 +29,7 @@ import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.codegen.ecore.genmodel.GenPackage;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.ETypeParameter;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
@@ -783,6 +784,16 @@ public class GenerateDevStructure {
     for (final ETypeParameter pt : _eTypeParameters) {
       {
         sb.append(sep).append(pt.getName());
+        String sep2 = "";
+        String prefix = " extends ";
+        EList<EGenericType> _eBounds = pt.getEBounds();
+        for (final EGenericType gb : _eBounds) {
+          {
+            sb.append(sep2).append(prefix).append(gb.getEClassifier().getName());
+            sep2 = ",";
+            prefix = "";
+          }
+        }
         sep = ",";
       }
     }
