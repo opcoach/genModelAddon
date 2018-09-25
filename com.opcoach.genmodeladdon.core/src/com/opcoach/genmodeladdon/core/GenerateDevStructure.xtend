@@ -4,8 +4,10 @@ import java.io.File
 import java.io.FileWriter
 import java.io.IOException
 import java.util.ArrayList
+import java.util.Collections
 import java.util.HashMap
 import java.util.Map
+import java.util.stream.Collectors
 import org.eclipse.ant.core.AntRunner
 import org.eclipse.core.resources.IProject
 import org.eclipse.core.resources.IResource
@@ -41,19 +43,18 @@ class GenerateDevStructure {
 	String projectName
 	GenModel genModel
 	var copyright = ""
-	
-	boolean debug = false   // Initialized with argument -gmaDebug
-	
+
+	boolean debug = false // Initialized with argument -gmaDebug
 	public Map<String, Object> filesNotGenerated = new HashMap
-	
+
 	String modelName
 	String modelDir
-	
+
 	// Maps to store for each modelUri the package and factory class names
 	// To manage the extensions for override factory and generated package
 	// Key is Uri and value is class name
-	 Map<String, String> factories = new HashMap
-	 Map<String, String> packages = new HashMap
+	Map<String, String> factories = new HashMap
+	Map<String, String> packages = new HashMap
 
 	/** Build the generator with 4 parameters
 	 * @param cpattern : the class name pattern used for generation ({0}Impl for instance)
@@ -61,12 +62,11 @@ class GenerateDevStructure {
 	 * @param srcDir : the source directory (relative path) in project
 	 */
 	new(GenModel gm, String cPattern, String iPattern, String srcDir) {
-		
-		if (Platform.applicationArgs.contains(GMAConstants.PARAM_DEBUG_MODE))
-		{
-		  debug = true
-	    }
-		  
+
+		if (Platform.applicationArgs.contains(GMAConstants.PARAM_DEBUG_MODE)) {
+			debug = true
+		}
+
 		genModel = gm
 		if (gm.copyrightText !== null)
 			copyright = computeCopyrightComment.toString
@@ -77,13 +77,11 @@ class GenerateDevStructure {
 		projectName = project.name
 		modelName = GenerateCommon.getModelName(gm)
 		modelDir = GenerateCommon.getModelPath(gm)
-		
+
 		project.open(null)
 		var status = "closed"
-		if (project.isOpen) status = "closed"
+		if(project.isOpen) status = "closed"
 		// println("Project " + projectName + " is " + status  + " when creating devStructure for " + modelName)
-		
-
 		// Reset the files not generated... (they are kept to ask if they must override existing files)
 		filesNotGenerated.clear
 	}
@@ -99,10 +97,9 @@ class GenerateDevStructure {
 			p.generateDevStructure()
 
 		}
-		
+
 		project.refreshLocal(IResource.DEPTH_INFINITE, null)
-		
-		
+
 	}
 
 	def void generateDevStructure(GenPackage gp) {
@@ -125,10 +122,9 @@ class GenerateDevStructure {
 		val f2 = new File(interfaceAbsolutePath)
 		if(!f2.exists) f.mkdirs
 
-	//	println("Generate classes in    : " + srcAbsolutePath)
-	//	println("Generate interfaces in : " + interfaceAbsolutePath)
-
-		for (c : gp.genClasses.filter[!isDynamic].filter[p | !GenerateCommon.isMapType(p)]) {
+		// println("Generate classes in    : " + srcAbsolutePath)
+		// println("Generate interfaces in : " + interfaceAbsolutePath)
+		for (c : gp.genClasses.filter[!isDynamic].filter[p|!GenerateCommon.isMapType(p)]) {
 			if (!c.isInterface)
 				generateOverriddenClass(c, srcAbsolutePath) // Can still generate abstract classes
 			generateOverriddenInterface(c, interfaceAbsolutePath)
@@ -142,19 +138,17 @@ class GenerateDevStructure {
 		gp.generateOverriddenPackageInterface(interfaceAbsolutePath)
 
 		// remember of factory and package classes for this uri. 
-	    val factoryClassName = gp.computePackageNameForClasses + "." + gp.computeFactoryClassName
+		val factoryClassName = gp.computePackageNameForClasses + "." + gp.computeFactoryClassName
 		val packageClassName = gp.qualifiedPackageInterfaceName
-		
+
 		factories.put(gp.getEcorePackage.nsURI, factoryClassName)
-		//println("Added this factory in list : " + factoryClassName)
+		// println("Added this factory in list : " + factoryClassName)
 		packages.put(gp.getEcorePackage.nsURI, packageClassName)
 
 		// Iterate on subpackages 
 		for (sp : gp.subGenPackages)
 			sp.generateDevStructure
 	}
-	
-	
 
 	/** add the srcDir as a source directory in the java project, if it is not yet added */
 	def private setFolderAsSourceFolder(IProject proj, String srcDir) {
@@ -186,18 +180,18 @@ class GenerateDevStructure {
 	/**
 	 * This method initializes the genModel with convenient values
 	 */
-	def public void initializeGenModelConvenientProperties() {
-		
+	def void initializeGenModelConvenientProperties() {
+
 		// By default organize imports in genmodel
 		genModel.importOrganizing = true
-		
+
 	}
 
 	/** Generate the ant file and return it (or null.  */
 	def generateAntFile() {
 		generateAntFile(GenerateAntFileForCodeGeneration.ANT_FILENAME)
 	}
-	
+
 	/** Generate the ant file and return it (or null.  */
 	def generateAntFile(String antFilename) {
 		// println("Generate the ant file : " + antFilename)
@@ -215,49 +209,42 @@ class GenerateDevStructure {
 		}
 		return null
 	}
-	
 
 	/** generate the source code using the ant generated task 
 	 * @param f : the ant file to be called */
 	def void generateGenModelCode(File f, IProgressMonitor monitor) {
 
-        
 		val runner = new AntRunner
 		runner.setBuildFileLocation(f.absolutePath)
-	
-	    // Add traces during ant generation if debug mode (-gmaDebug) 
-	    if (debug)
-	    {
-	      	runner.addBuildLogger("org.apache.tools.ant.DefaultLogger");
-		    runner.arguments = "-verbose -debug"
+
+		// Add traces during ant generation if debug mode (-gmaDebug) 
+		if (debug) {
+			runner.addBuildLogger("org.apache.tools.ant.DefaultLogger");
+			runner.arguments = "-verbose -debug"
 		}
-		
+
 		try {
 			if (debug)
-			   println("  --> Generate the EMF Code using the ant file : " +  f.absolutePath);
-			
+				println("  --> Generate the EMF Code using the ant file : " + f.absolutePath);
+
 			runner.run(monitor)
 			refreshWorkspace
 
 		} catch (CoreException e) {
 			e.printStackTrace
 		}
-		
 
 	}
-	
+
 	// Generate or update extensions...
-	def generateExtensions()
-	{
+	def generateExtensions() {
 		val gfoe = new GenerateExtensions(project)
 		gfoe.generateOrUpdateExtensions(factories, packages)
-		
+
 	}
-	
-	
+
 	// This method do the global process in the right order 
-	def generateAll(String antFilename)
-	{
+	def generateAll(String antFilename) {
 		// set some genModel convenient properties.
 		initializeGenModelConvenientProperties()
 
@@ -270,26 +257,23 @@ class GenerateDevStructure {
 		// Once dev structure is generated and ant file too, can call it !
 		generateGenModelCode(antFile, new NullProgressMonitor)
 
-		
 		// Must generate or update extensions in plugin.xml file
 		// BUT AFTER THE EMF CODE GENERATION !!
 		generateExtensions
-		
+
 		refreshWorkspace
-	
+
 	}
 
 	def refreshWorkspace() {
 		try {
 			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null)
-			//println("Waiting for refresh ")
-			Thread.sleep(2000);  // Wait for refresh (important). MUST NOT BE LESS THAN 2 seconds for tycho build
-
+			// println("Waiting for refresh ")
+			Thread.sleep(2000); // Wait for refresh (important). MUST NOT BE LESS THAN 2 seconds for tycho build
 		} catch (CoreException e) {
 			e.printStackTrace
 		}
-		
-		
+
 	}
 
 	def generateOverriddenFactoryInterface(GenPackage gp, String path) {
@@ -348,20 +332,40 @@ class GenerateDevStructure {
 		package «gc.genPackage.computePackageNameForClasses»;
 		
 		import «gc.genPackage.computePackageNameForInterfaces».«gc.computeInterfaceFilename»;
+		«FOR name : gc.computeClassname.usedGenericInterfaceNames»
+		import «gc.genPackage.computePackageNameForInterfaces».«name»;
+		«ENDFOR»
 		
 		// This class overrides the generated class and will be instantiated by factory
-		public class «gc.computeClassname» extends «gc.computeGeneratedClassName()» implements «gc.computeInterfaceName»
+		public class «gc.computeClassname» extends «gc.computeGeneratedClassName(false)» implements «gc.computeInterfaceName(false)»
 		{
 		
 		}
 	'''
+	
+	/** return the list of interface names found in a generic class name
+	 * for 'Project' -> returns empty array. 
+	 * for 'Project<T> -> returns empty array
+	 * for 'ProjectFolder<T extends Project> returns Project
+	 * for 'ProjectFolder<T extends Project1 & Project2> returns { "Project1", "Project2"}
+	 */
+	def String[] getUsedGenericInterfaceNames(String name)
+	{
+		val pos = name.indexOf(" extends ")
+		if (pos == -1)
+		   return Collections.emptyList
+		   
+		// There are some types
+		val afterExtends = name.substring(pos + " extends ".length).replace('>','')
+		afterExtends.split("&").stream.map([trim]).collect( Collectors.toList())
+	}
 
 	def generateInterfaceContent(GenClass gc) '''
 		«copyright»
 		package «gc.genPackage.computePackageNameForInterfaces»;
 		
 		// This interface overrides the generated interface and will be returned by factory
-		public interface «gc.computeInterfaceName» extends «gc.computeGeneratedInterfaceName()»
+		public interface «gc.computeInterfaceName» extends «gc.computeGeneratedInterfaceName»
 		{
 			// You can write additional methods using an empty default java 8 notation 
 			// because the generated implemented class extends this interface and is not abstract
@@ -406,7 +410,7 @@ class GenerateDevStructure {
 	def generateFactoryDef(GenClass gc) '''
 		public «gc.computeInterfaceName.extractGenericTypes»«gc.computeInterfaceName» create«gc.ecoreClass.name»();
 	'''
-	
+
 	/** This method extracts the generic types found at the end of a class name, like Folder<T> or Folder<T,U>
 	 * it returns <T> or <T,U> if the interfaceName is Folder<T> or Folder<T,U>
 	 * it returns an empty string if there is no generics
@@ -414,8 +418,9 @@ class GenerateDevStructure {
 	def extractGenericTypes(String s) {
 		val pos = s.indexOf('<');
 		if (pos > 0)
-		  s.substring(pos) + " " 
-		  else ""
+			s.substring(pos) + " "
+		else
+			""
 	}
 
 	def generateClassFactoryContent(GenPackage gp) '''
@@ -449,24 +454,22 @@ class GenerateDevStructure {
 		}
 	'''
 
-
-	
 	def computeCopyrightComment() '''
-	«IF genModel.copyrightText !== null && genModel.copyrightText.length > 0»
-/**
-  * «genModel.copyrightText»
-*/
-«ELSE»«ENDIF»
+		«IF genModel.copyrightText !== null && genModel.copyrightText.length > 0»
+		/**
+			 * «genModel.copyrightText»
+		*/
+		«ELSE»«ENDIF»
 	'''
 
 	/** Compute the class name to be generated */
 	def computeClassFilename(GenClass gc) {
-		classPattern.replace("{0}", gc.ecoreClass.name) 
+		classPattern.replace("{0}", gc.ecoreClass.name)
 	}
 
 	/** Compute the interface name to be generated */
 	def computeInterfaceFilename(GenClass gc) {
-		interfacePattern.replace("{0}", gc.ecoreClass.name) 
+		interfacePattern.replace("{0}", gc.ecoreClass.name)
 	}
 
 	/** Compute the class name to be generated */
@@ -474,25 +477,31 @@ class GenerateDevStructure {
 		gc.computeClassFilename + gc.ecoreClass.computeGenericTypes
 	}
 
-	/** Compute the interface name to be generated */
 	def computeInterfaceName(GenClass gc) {
-		gc.computeInterfaceFilename + gc.ecoreClass.computeGenericTypes
+		computeInterfaceName(gc, true) // Call with the addExtend in generation.
 	}
-	
+
+	/** Compute the interface name to be generated */
+	def computeInterfaceName(GenClass gc, boolean addExtend) {
+		gc.computeInterfaceFilename + gc.ecoreClass.computeGenericTypes(addExtend)
+	}
+
 	def computeGenericTypes(EClass c) {
-		if (c.ETypeParameters.isEmpty) return ""
+		c.computeGenericTypes(true)
+	}
+
+	def computeGenericTypes(EClass c, boolean addExtends) {
+		if(c.ETypeParameters.isEmpty) return ""
 		var sb = new StringBuffer("<")
-		var  sep = ""
-		for (pt : c.ETypeParameters)
-		{
+		var sep = ""
+		for (pt : c.ETypeParameters) {
 			sb.append(sep).append(pt.name)
-			var sep2 = ""
-			var prefix = " extends "
-			for (gb : pt.EBounds)
-			{
-			    sb.append(sep2).append(prefix).append(gb.EClassifier.name)
-			    sep2 = ","
-			    prefix = ""
+			if (addExtends) {
+				var prefix = " extends "
+				for (gb : pt.EBounds) {
+					sb.append(prefix).append(gb.EClassifier.name)
+					prefix = " & "
+				}
 			}
 			sep = ","
 		}
@@ -516,7 +525,7 @@ class GenerateDevStructure {
 	}
 
 	/** Compute the package name for class */
-	 def computePackageNameForClasses(GenPackage gp) {
+	def computePackageNameForClasses(GenPackage gp) {
 		val basePackage = if(gp.basePackage === null) "" else gp.basePackage + "."
 		val packSuffix = if(gp.classPackageSuffix === null) "" else "." + gp.classPackageSuffix
 		basePackage + gp.packageName + packSuffix
@@ -534,17 +543,19 @@ class GenerateDevStructure {
 	}
 
 	/** Compute the generated class name depending on classpattern. */
-	def computeGeneratedClassName(GenClass c) {
-		
-		c.className + c.ecoreClass.computeGenericTypes
+	def computeGeneratedClassName(GenClass gc, boolean addExtend) {
+		gc.className + gc.ecoreClass.computeGenericTypes(addExtend)
+	}
+
+	def computeGeneratedClassName(GenClass gc) {
+		computeGeneratedClassName(gc, true)
 	}
 
 	/** Compute the generated interface name depending on interfacePattern. */
 	def computeGeneratedInterfaceName(GenClass c) {
 
-		c.interfaceName + c.ecoreClass.computeGenericTypes
-		
-	}
+		c.interfaceName + c.ecoreClass.computeGenericTypes(false)
 
+	}
 
 }

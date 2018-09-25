@@ -114,14 +114,14 @@ public class TestGenerics extends GenModelAddonTestCase
 	public void theDevProjectFolderMustBeGenericAndExtendProject()
 	{
 		assertFileContains("src/com/opcoach/project/ProjectFolder.java",
-				"public interface ProjectFolder<T extends Project> extends MProjectFolder<T extends Project>");
+				"public interface ProjectFolder<T extends Project> extends MProjectFolder<T>");
 	}
 
 	@Test
 	public void theDevProjectFolderImplMustBeGenericAndExtendProject()
 	{
 		assertFileContains("src/com/opcoach/project/impl/ProjectFolderImpl.java",
-				"public class ProjectFolderImpl<T extends Project> extends MProjectFolderImpl<T extends Project> implements ProjectFolder<T extends Project>");
+				"public class ProjectFolderImpl<T extends Project> extends MProjectFolderImpl<T> implements ProjectFolder<T>");
 	}
 
 	@Test

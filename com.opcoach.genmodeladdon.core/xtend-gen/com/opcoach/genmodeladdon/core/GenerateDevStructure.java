@@ -9,9 +9,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import org.eclipse.ant.core.AntRunner;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -434,6 +437,18 @@ public class GenerateDevStructure {
     _builder.append(_computeInterfaceFilename);
     _builder.append(";");
     _builder.newLineIfNotEmpty();
+    {
+      String[] _usedGenericInterfaceNames = this.getUsedGenericInterfaceNames(this.computeClassname(gc));
+      for(final String name : _usedGenericInterfaceNames) {
+        _builder.append("import ");
+        String _computePackageNameForInterfaces_1 = this.computePackageNameForInterfaces(gc.getGenPackage());
+        _builder.append(_computePackageNameForInterfaces_1);
+        _builder.append(".");
+        _builder.append(name);
+        _builder.append(";");
+        _builder.newLineIfNotEmpty();
+      }
+    }
     _builder.newLine();
     _builder.append("// This class overrides the generated class and will be instantiated by factory");
     _builder.newLine();
@@ -441,10 +456,10 @@ public class GenerateDevStructure {
     String _computeClassname = this.computeClassname(gc);
     _builder.append(_computeClassname);
     _builder.append(" extends ");
-    String _computeGeneratedClassName = this.computeGeneratedClassName(gc);
+    String _computeGeneratedClassName = this.computeGeneratedClassName(gc, false);
     _builder.append(_computeGeneratedClassName);
     _builder.append(" implements ");
-    String _computeInterfaceName = this.computeInterfaceName(gc);
+    String _computeInterfaceName = this.computeInterfaceName(gc, false);
     _builder.append(_computeInterfaceName);
     _builder.newLineIfNotEmpty();
     _builder.append("{");
@@ -453,6 +468,31 @@ public class GenerateDevStructure {
     _builder.append("}");
     _builder.newLine();
     return _builder;
+  }
+  
+  /**
+   * return the list of interface names found in a generic class name
+   * for 'Project' -> returns empty array.
+   * for 'Project<T> -> returns empty array
+   * for 'ProjectFolder<T extends Project> returns Project
+   * for 'ProjectFolder<T extends Project1 & Project2> returns { "Project1", "Project2"}
+   */
+  public String[] getUsedGenericInterfaceNames(final String name) {
+    List<String> _xblockexpression = null;
+    {
+      final int pos = name.indexOf(" extends ");
+      if ((pos == (-1))) {
+        return ((String[])Conversions.unwrapArray(Collections.<String>emptyList(), String.class));
+      }
+      int _length = " extends ".length();
+      int _plus = (pos + _length);
+      final String afterExtends = name.substring(_plus).replace(">", "");
+      final Function<String, String> _function = (String it) -> {
+        return it.trim();
+      };
+      _xblockexpression = ((List<String>)Conversions.doWrapArray(afterExtends.split("&"))).stream().<String>map(_function).collect(Collectors.<String>toList());
+    }
+    return ((String[])Conversions.unwrapArray(_xblockexpression, String.class));
   }
   
   public CharSequence generateInterfaceContent(final GenClass gc) {
@@ -728,10 +768,10 @@ public class GenerateDevStructure {
       if (((this.genModel.getCopyrightText() != null) && (this.genModel.getCopyrightText().length() > 0))) {
         _builder.append("/**");
         _builder.newLine();
-        _builder.append("  ");
+        _builder.append("\t ");
         _builder.append("* ");
         String _copyrightText = this.genModel.getCopyrightText();
-        _builder.append(_copyrightText, "  ");
+        _builder.append(_copyrightText, "\t ");
         _builder.newLineIfNotEmpty();
         _builder.append("*/");
         _builder.newLine();
@@ -764,16 +804,24 @@ public class GenerateDevStructure {
     return (_computeClassFilename + _computeGenericTypes);
   }
   
+  public String computeInterfaceName(final GenClass gc) {
+    return this.computeInterfaceName(gc, true);
+  }
+  
   /**
    * Compute the interface name to be generated
    */
-  public String computeInterfaceName(final GenClass gc) {
+  public String computeInterfaceName(final GenClass gc, final boolean addExtend) {
     String _computeInterfaceFilename = this.computeInterfaceFilename(gc);
-    Object _computeGenericTypes = this.computeGenericTypes(gc.getEcoreClass());
+    Object _computeGenericTypes = this.computeGenericTypes(gc.getEcoreClass(), addExtend);
     return (_computeInterfaceFilename + _computeGenericTypes);
   }
   
   public Object computeGenericTypes(final EClass c) {
+    return this.computeGenericTypes(c, true);
+  }
+  
+  public Object computeGenericTypes(final EClass c, final boolean addExtends) {
     boolean _isEmpty = c.getETypeParameters().isEmpty();
     if (_isEmpty) {
       return "";
@@ -784,14 +832,14 @@ public class GenerateDevStructure {
     for (final ETypeParameter pt : _eTypeParameters) {
       {
         sb.append(sep).append(pt.getName());
-        String sep2 = "";
-        String prefix = " extends ";
-        EList<EGenericType> _eBounds = pt.getEBounds();
-        for (final EGenericType gb : _eBounds) {
-          {
-            sb.append(sep2).append(prefix).append(gb.getEClassifier().getName());
-            sep2 = ",";
-            prefix = "";
+        if (addExtends) {
+          String prefix = " extends ";
+          EList<EGenericType> _eBounds = pt.getEBounds();
+          for (final EGenericType gb : _eBounds) {
+            {
+              sb.append(prefix).append(gb.getEClassifier().getName());
+              prefix = " & ";
+            }
           }
         }
         sep = ",";
@@ -893,10 +941,14 @@ public class GenerateDevStructure {
   /**
    * Compute the generated class name depending on classpattern.
    */
-  public String computeGeneratedClassName(final GenClass c) {
-    String _className = c.getClassName();
-    Object _computeGenericTypes = this.computeGenericTypes(c.getEcoreClass());
+  public String computeGeneratedClassName(final GenClass gc, final boolean addExtend) {
+    String _className = gc.getClassName();
+    Object _computeGenericTypes = this.computeGenericTypes(gc.getEcoreClass(), addExtend);
     return (_className + _computeGenericTypes);
+  }
+  
+  public String computeGeneratedClassName(final GenClass gc) {
+    return this.computeGeneratedClassName(gc, true);
   }
   
   /**
@@ -904,7 +956,7 @@ public class GenerateDevStructure {
    */
   public String computeGeneratedInterfaceName(final GenClass c) {
     String _interfaceName = c.getInterfaceName();
-    Object _computeGenericTypes = this.computeGenericTypes(c.getEcoreClass());
+    Object _computeGenericTypes = this.computeGenericTypes(c.getEcoreClass(), false);
     return (_interfaceName + _computeGenericTypes);
   }
 }
