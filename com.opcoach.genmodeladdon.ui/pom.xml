@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>com.opcoach.genmodeladdon</groupId>
 		<artifactId>com.opcoach.genmodeladdon.parent</artifactId>
-		<version>2.0.0-SNAPSHOT</version>
+		<version>2.1.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>com.opcoach.genmodeladdon.ui</artifactId>
