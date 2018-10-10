@@ -265,6 +265,18 @@ class GenerateDevStructure {
 
 	}
 
+	def setClassPattern(String cp) {
+		classPattern = cp
+	}
+
+	def getClassPattern() { classPattern }
+
+	def setInterfacePattern(String ip) {
+		interfacePattern = ip
+	}
+
+	def getInterfacePattern() { interfacePattern }
+
 	def refreshWorkspace() {
 		try {
 			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null)
@@ -333,7 +345,7 @@ class GenerateDevStructure {
 		
 		import «gc.genPackage.computePackageNameForInterfaces».«gc.computeInterfaceFilename»;
 		«FOR name : gc.computeClassname.usedGenericInterfaceNames»
-		import «gc.genPackage.computePackageNameForInterfaces».«name»;
+			import «gc.genPackage.computePackageNameForInterfaces».«name»;
 		«ENDFOR»
 		
 		// This class overrides the generated class and will be instantiated by factory
@@ -342,22 +354,21 @@ class GenerateDevStructure {
 		
 		}
 	'''
-	
+
 	/** return the list of interface names found in a generic class name
 	 * for 'Project' -> returns empty array. 
 	 * for 'Project<T> -> returns empty array
 	 * for 'ProjectFolder<T extends Project> returns Project
 	 * for 'ProjectFolder<T extends Project1 & Project2> returns { "Project1", "Project2"}
 	 */
-	def String[] getUsedGenericInterfaceNames(String name)
-	{
+	def String[] getUsedGenericInterfaceNames(String name) {
 		val pos = name.indexOf(" extends ")
 		if (pos == -1)
-		   return Collections.emptyList
-		   
+			return Collections.emptyList
+
 		// There are some types
-		val afterExtends = name.substring(pos + " extends ".length).replace('>','')
-		afterExtends.split("&").stream.map([trim]).collect( Collectors.toList())
+		val afterExtends = name.substring(pos + " extends ".length).replace('>', '')
+		afterExtends.split("&").stream.map([trim]).collect(Collectors.toList())
 	}
 
 	def generateInterfaceContent(GenClass gc) '''
@@ -456,9 +467,9 @@ class GenerateDevStructure {
 
 	def computeCopyrightComment() '''
 		«IF genModel.copyrightText !== null && genModel.copyrightText.length > 0»
-		/**
-			 * «genModel.copyrightText»
-		*/
+			/**
+				 * «genModel.copyrightText»
+			*/
 		«ELSE»«ENDIF»
 	'''
 
@@ -511,7 +522,7 @@ class GenerateDevStructure {
 
 	/** Compute the factory interface name to be generated */
 	def computeFactoryInterfaceName(GenPackage gp) {
-		gp.prefix + "Factory"
+		gp.prefix + interfacePattern.replace("{0}", "Factory")
 	}
 
 	/** Compute the factory interface name to be generated */

@@ -317,6 +317,22 @@ public class GenerateDevStructure {
     this.refreshWorkspace();
   }
   
+  public String setClassPattern(final String cp) {
+    return this.classPattern = cp;
+  }
+  
+  public String getClassPattern() {
+    return this.classPattern;
+  }
+  
+  public String setInterfacePattern(final String ip) {
+    return this.interfacePattern = ip;
+  }
+  
+  public String getInterfacePattern() {
+    return this.interfacePattern;
+  }
+  
   public void refreshWorkspace() {
     try {
       try {
@@ -854,7 +870,8 @@ public class GenerateDevStructure {
    */
   public String computeFactoryInterfaceName(final GenPackage gp) {
     String _prefix = gp.getPrefix();
-    return (_prefix + "Factory");
+    String _replace = this.interfacePattern.replace("{0}", "Factory");
+    return (_prefix + _replace);
   }
   
   /**

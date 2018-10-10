@@ -66,7 +66,6 @@ public class TestClassNames extends GenModelAddonTestCase
 	@Test
 	public void testUsedGenericInterfaces()
 	{
-		GenModel gm = getGenModel(PROJECT_GENMODEL);
 		GenerateDevStructure gen = getGenDevStructure(PROJECT_GENMODEL);
 
 		// Test that for a class name interfaces used in the generic part are
@@ -76,20 +75,52 @@ public class TestClassNames extends GenModelAddonTestCase
 		assertEquals("'Project' has no generic used interfaces", gen.getUsedGenericInterfaceNames("Project").length, 0);
 
 		// For 'Project<T> must return also an empty list
-		assertEquals("'Project<T>' has no generic used interfaces", gen.getUsedGenericInterfaceNames("Project<T>").length, 0);
+		assertEquals("'Project<T>' has no generic used interfaces",
+				gen.getUsedGenericInterfaceNames("Project<T>").length, 0);
 
 		// For 'ProjectFolder<T extends Project> must return an array with only
 		// Project
 		String[] result1 = gen.getUsedGenericInterfaceNames("ProjectFolder<T extends Project>");
 		assertEquals("'ProjectFolder<T extends Project>' must have 1 generic interface (Project)", result1.length, 1);
-		assertEquals("'ProjectFolder<T extends Project>' must have 1 generic interface (Project)", result1[0], "Project");
+		assertEquals("'ProjectFolder<T extends Project>' must have 1 generic interface (Project)", result1[0],
+				"Project");
 
 		// For 'ProjectFolder<T extends Project1 & Project2> must return an
 		// array with Project1 and Project2
 		String[] result2 = gen.getUsedGenericInterfaceNames("ProjectFolder<T extends Project1 & Project2>");
-		assertEquals("'ProjectFolder<T extends Project1 & Project2>' must have 2 generic interfaces (Project1, Project2)", result2.length, 2);
-		assertEquals("'ProjectFolder<T extends Project1 & Project2>' must have 2 generic interfaces (Project1, Project2)", result2[0], "Project1");
-		assertEquals("'ProjectFolder<T extends Project1 & Project2>' must have 2 generic interfaces (Project1, Project2)", result2[1], "Project2");
+		assertEquals(
+				"'ProjectFolder<T extends Project1 & Project2>' must have 2 generic interfaces (Project1, Project2)",
+				result2.length, 2);
+		assertEquals(
+				"'ProjectFolder<T extends Project1 & Project2>' must have 2 generic interfaces (Project1, Project2)",
+				result2[0], "Project1");
+		assertEquals(
+				"'ProjectFolder<T extends Project1 & Project2>' must have 2 generic interfaces (Project1, Project2)",
+				result2[1], "Project2");
+
+	}
+
+	/** A test for bug #74 */
+	@Test
+	public void testGenerateFactoryInterfaceNameWithOtherPrefix()
+	{
+		GenModel gm = getGenModel(PROJECT_GENMODEL);
+		GenerateDevStructure gen = getGenDevStructure(PROJECT_GENMODEL);
+		String oldCp = gen.getClassPattern();
+		String oldIp = gen.getInterfacePattern();
+		gen.setClassPattern("{0}DevImpl");
+		gen.setInterfacePattern("{0}DevInterface");
+
+		GenPackage gp = findGenPackage(gm, "project");
+		String iname = gen.computeFactoryInterfaceName(gp);
+		System.out.println("computeFactoryInterfaceName = " + iname);
+		String cname = gen.computeFactoryClassName(gp);
+		System.out.println("computeFactoryClassName = " + cname);
+		assertEquals("Dev FactoryInterfaceName must have correct name", "ProjectFactoryDevInterface", iname);
+		// Reset previous values
+		gen.setClassPattern(oldCp);
+		gen.setInterfacePattern(oldIp);
+		
 
 	}
 
