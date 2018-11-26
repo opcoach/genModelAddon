@@ -1,7 +1,8 @@
-package com.opcoach.genmodeladdon.core.genmodel
+package com.opcoach.genmodeladdon.core.genmodel.impl
 
-import org.eclipse.emf.codegen.ecore.genmodel.impl.GenParameterImpl
+import com.opcoach.genmodeladdon.core.genmodel.GMATransform
 import org.eclipse.emf.codegen.ecore.genmodel.GenClass
+import org.eclipse.emf.codegen.ecore.genmodel.impl.GenParameterImpl
 
 class GMAGenParameterImpl extends GenParameterImpl {
 	

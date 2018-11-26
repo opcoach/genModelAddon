@@ -1,5 +1,6 @@
 package com.opcoach.genmodeladdon.core
 
+import com.opcoach.genmodeladdon.core.genmodel.GMAGenModel
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
@@ -41,7 +42,7 @@ class GenerateDevStructure {
 	IProject project
 
 	String projectName
-	GenModel genModel
+	GMAGenModel gmaGenModel
 	var copyright = ""
 
 	boolean debug = false // Initialized with argument -gmaDebug
@@ -61,13 +62,15 @@ class GenerateDevStructure {
 	 * @param ipattern : the interface name pattern used for generation ({0} for instance)
 	 * @param srcDir : the source directory (relative path) in project
 	 */
-	new(GenModel gm, String cPattern, String iPattern, String srcDir) {
+	new(GMAGenModel gm, String cPattern, String iPattern, String srcDir) {
 
 		if (Platform.applicationArgs.contains(GMAConstants.PARAM_DEBUG_MODE)) {
 			debug = true
 		}
 
-		genModel = gm
+		gmaGenModel = gm
+		gmaGenModel.devClassPattern = cPattern
+		gmaGenModel.devInterfacePattern = iPattern
 		if (gm.copyrightText !== null)
 			copyright = computeCopyrightComment.toString
 		classPattern = cPattern
@@ -86,14 +89,14 @@ class GenerateDevStructure {
 		filesNotGenerated.clear
 	}
 
-	new(GenModel gm) {
+	new(GMAGenModel gm) {
 		this(gm, "{0}ExtImpl", "{0}Ext", "src")
 	}
 
 	/** Generate the file structure. If genFiles is false just compute the files to be generated */
 	def generateDevStructure(boolean genFiles) {
 		generateFiles = genFiles
-		for (p : genModel.genPackages) {
+		for (p : gmaGenModel.genPackages) {
 			p.generateDevStructure()
 
 		}
@@ -183,7 +186,7 @@ class GenerateDevStructure {
 	def void initializeGenModelConvenientProperties() {
 
 		// By default organize imports in genmodel
-		genModel.importOrganizing = true
+		gmaGenModel.importOrganizing = true
 
 	}
 
@@ -466,9 +469,9 @@ class GenerateDevStructure {
 	'''
 
 	def computeCopyrightComment() '''
-		«IF genModel.copyrightText !== null && genModel.copyrightText.length > 0»
+		«IF gmaGenModel.copyrightText !== null && gmaGenModel.copyrightText.length > 0»
 			/**
-				 * «genModel.copyrightText»
+				 * «gmaGenModel.copyrightText»
 			*/
 		«ELSE»«ENDIF»
 	'''

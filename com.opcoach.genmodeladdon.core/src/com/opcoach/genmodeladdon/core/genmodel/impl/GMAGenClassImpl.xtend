@@ -1,7 +1,9 @@
-package com.opcoach.genmodeladdon.core.genmodel
+package com.opcoach.genmodeladdon.core.genmodel.impl
 
-import org.eclipse.emf.codegen.ecore.genmodel.impl.GenClassImpl
+import com.opcoach.genmodeladdon.core.genmodel.GMATransform
 import org.eclipse.emf.codegen.ecore.genmodel.GenFeature
+import org.eclipse.emf.codegen.ecore.genmodel.impl.GenClassImpl
+import org.eclipse.emf.common.util.UniqueEList
 
 class GMAGenClassImpl extends GenClassImpl {
 
@@ -9,9 +11,14 @@ class GMAGenClassImpl extends GenClassImpl {
 		val ext = super.classExtends
 		GMATransform.replaceDevName(this, ext)
 	}
-
-	override getClassImplements() {
-		GMATransform.replaceDevName(this, super.classImplements)
+	
+	override getClassImplementsList() {
+		var result = new UniqueEList<String>
+		 
+		for (String s : super.classImplementsList)
+			result.add(GMATransform.replaceDevName(this, s))
+						
+	    result
 	}
 	
 	override getClassTypeArguments() {

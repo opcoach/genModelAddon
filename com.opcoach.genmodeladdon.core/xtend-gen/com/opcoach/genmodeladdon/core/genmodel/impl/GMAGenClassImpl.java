@@ -1,8 +1,10 @@
-package com.opcoach.genmodeladdon.core.genmodel;
+package com.opcoach.genmodeladdon.core.genmodel.impl;
 
 import com.opcoach.genmodeladdon.core.genmodel.GMATransform;
+import java.util.List;
 import org.eclipse.emf.codegen.ecore.genmodel.GenFeature;
 import org.eclipse.emf.codegen.ecore.genmodel.impl.GenClassImpl;
+import org.eclipse.emf.common.util.UniqueEList;
 
 @SuppressWarnings("all")
 public class GMAGenClassImpl extends GenClassImpl {
@@ -17,8 +19,17 @@ public class GMAGenClassImpl extends GenClassImpl {
   }
   
   @Override
-  public String getClassImplements() {
-    return GMATransform.replaceDevName(this, super.getClassImplements());
+  public List<String> getClassImplementsList() {
+    UniqueEList<String> _xblockexpression = null;
+    {
+      UniqueEList<String> result = new UniqueEList<String>();
+      List<String> _classImplementsList = super.getClassImplementsList();
+      for (final String s : _classImplementsList) {
+        result.add(GMATransform.replaceDevName(this, s));
+      }
+      _xblockexpression = result;
+    }
+    return _xblockexpression;
   }
   
   @Override

@@ -1,5 +1,8 @@
-package com.opcoach.genmodeladdon.core.genmodel;
+package com.opcoach.genmodeladdon.core.genmodel.impl;
 
+import com.google.common.base.Objects;
+import com.opcoach.genmodeladdon.core.GMAConstants;
+import com.opcoach.genmodeladdon.core.genmodel.GMAGenModel;
 import com.opcoach.genmodeladdon.core.genmodel.GMAImportManager;
 import com.opcoach.genmodeladdon.core.genmodel.GMATransform;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
@@ -7,11 +10,17 @@ import org.eclipse.emf.codegen.ecore.genmodel.GenPackage;
 import org.eclipse.emf.codegen.ecore.genmodel.impl.GenModelImpl;
 import org.eclipse.emf.codegen.util.ImportManager;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
-public class GMAGenModelImpl extends GenModelImpl {
+public class GMAGenModelImpl extends GenModelImpl implements GMAGenModel {
   private GMATransform gmaTransform = null;
   
+  private String cPattern = GMAConstants.ADVISED_DEV_CLASS_IMPL_PATTERN;
+  
+  private String iPattern = GMAConstants.ADVISED_DEV_INTERFACE_PATTERN;
+  
+  @Override
   public GMATransform getGMATransform() {
     if ((this.gmaTransform == null)) {
       GMATransform _gMATransform = new GMATransform(this);
@@ -93,5 +102,40 @@ public class GMAGenModelImpl extends GenModelImpl {
         super.setImportManager(delegatedImportManager);
       }
     }
+  }
+  
+  @Override
+  public String getImportedName(final String qualifiedName) {
+    String _xblockexpression = null;
+    {
+      final String pname = super.getImportedName(qualifiedName);
+      final String result = this.getGMATransform().replaceDevName(pname);
+      boolean _notEquals = (!Objects.equal(result, pname));
+      if (_notEquals) {
+        InputOutput.<String>println(((("--->> genModelImportedName convert " + pname) + " into ") + result));
+      }
+      _xblockexpression = result;
+    }
+    return _xblockexpression;
+  }
+  
+  @Override
+  public void setDevClassPattern(final String cpattern) {
+    this.cPattern = cpattern;
+  }
+  
+  @Override
+  public void setDevInterfacePattern(final String ipattern) {
+    this.iPattern = ipattern;
+  }
+  
+  @Override
+  public String getDevClassPattern() {
+    return this.cPattern;
+  }
+  
+  @Override
+  public String getDevInterfacePattern() {
+    return this.iPattern;
   }
 }

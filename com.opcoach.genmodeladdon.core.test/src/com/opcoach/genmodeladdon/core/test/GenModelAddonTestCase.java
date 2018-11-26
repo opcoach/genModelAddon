@@ -20,6 +20,7 @@ import org.eclipse.emf.codegen.ecore.genmodel.GenPackage;
 import org.junit.BeforeClass;
 
 import com.opcoach.genmodeladdon.core.GenerateDevStructure;
+import com.opcoach.genmodeladdon.core.genmodel.GMAGenModel;
 
 /**
  * This class is the base class for all testcase. It provides methods to check
@@ -41,7 +42,7 @@ public class GenModelAddonTestCase implements ProjectConstants
 		 WorkspaceConfigurator.getDefault().getSampleProject();
 	}
 	
-	protected GenModel getGenModel(String name)
+	protected GMAGenModel getGenModel(String name)
 	{
 		return WorkspaceConfigurator.getDefault().getGenModel(name);
 	}

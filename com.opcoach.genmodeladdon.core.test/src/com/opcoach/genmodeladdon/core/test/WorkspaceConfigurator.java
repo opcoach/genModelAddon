@@ -24,6 +24,7 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 
 import com.opcoach.genmodeladdon.core.GenerateDevStructure;
+import com.opcoach.genmodeladdon.core.genmodel.GMAGenModel;
 
 /**
  * This class is used once to initialize the projects : - unzip the sample
@@ -36,15 +37,8 @@ import com.opcoach.genmodeladdon.core.GenerateDevStructure;
 public class WorkspaceConfigurator implements ProjectConstants
 {
 
-	public static final String FANOISE_ANT_FILE = "generateEMFCode_fanoise.xml";
-	public static final String PROJECT_ANT_FILE = "generateEMFCode_project.xml";
-	public static final String PROJECT_ANT2_FILE = "generateEMFCode_project2.xml";
-	public static final String PROJECT_GENMODEL = "/" + DEST_SAMPLE_PROJECT + "/model/project.genmodel";
-	public static final String PROJECT2_GENMODEL = "/" + DEST_SAMPLE_PROJECT + "/model2/project.genmodel";
-	public static final String FANNOISE_GENMODEL = "/" + DEST_SAMPLE_PROJECT + "/model_fannoise/fannoise.genmodel";
-
-	private Map<String, GenModel> gmMap = new HashMap<String, GenModel>();
-	private Map<String, GenerateDevStructure> genMap = new HashMap<String, GenerateDevStructure>();
+	private Map<String, GMAGenModel> gmMap = new HashMap<>();
+	private Map<String, GenerateDevStructure> genMap = new HashMap<>();
 
 	private boolean initDone = false;
 	private static WorkspaceConfigurator instance = null;
@@ -120,7 +114,7 @@ public class WorkspaceConfigurator implements ProjectConstants
 	public void initGenModel(String genModelName, String antFilename, String cPattern, String iPattern, String srcDir) throws IOException, InterruptedException
 	{
 		// Read the genModel
-		GenModel gm = readSampleGenModel(root, genModelName);
+		GMAGenModel gm = readSampleGenModel(root, genModelName);
 		gmMap.put(genModelName, gm);
 
 		// Create the generator.
@@ -144,7 +138,7 @@ public class WorkspaceConfigurator implements ProjectConstants
 		
 	}
 
-	public GenModel getGenModel(String name)
+	public GMAGenModel getGenModel(String name)
 	{
 		return gmMap.get(name);
 	}
@@ -157,7 +151,7 @@ public class WorkspaceConfigurator implements ProjectConstants
 	/**
 	 * Read the sample gen model located in sample project
 	 */
-	private static GenModel readSampleGenModel(IWorkspaceRoot root, String pathToGenModel)
+	private static GMAGenModel readSampleGenModel(IWorkspaceRoot root, String pathToGenModel)
 	{
 		// Read the sample gen model in temporary workspace
 		String path = root.getLocation().toString() + pathToGenModel;
@@ -167,7 +161,7 @@ public class WorkspaceConfigurator implements ProjectConstants
 
 		// Get the resource
 		Resource resource = rset.getResource(URI.createURI("file:/" + path), true);
-		return (GenModel) resource.getContents().get(0);
+		return (GMAGenModel) resource.getContents().get(0);
 
 	}
 

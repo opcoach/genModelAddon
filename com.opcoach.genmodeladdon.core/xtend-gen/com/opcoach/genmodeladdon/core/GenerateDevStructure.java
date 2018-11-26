@@ -4,6 +4,7 @@ import com.opcoach.genmodeladdon.core.GMAConstants;
 import com.opcoach.genmodeladdon.core.GenerateAntFileForCodeGeneration;
 import com.opcoach.genmodeladdon.core.GenerateCommon;
 import com.opcoach.genmodeladdon.core.GenerateExtensions;
+import com.opcoach.genmodeladdon.core.genmodel.GMAGenModel;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -28,7 +29,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.codegen.ecore.genmodel.GenClass;
-import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.codegen.ecore.genmodel.GenPackage;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
@@ -65,7 +65,7 @@ public class GenerateDevStructure {
   
   private String projectName;
   
-  private GenModel genModel;
+  private GMAGenModel gmaGenModel;
   
   private String copyright = "";
   
@@ -87,13 +87,15 @@ public class GenerateDevStructure {
    * @param ipattern : the interface name pattern used for generation ({0} for instance)
    * @param srcDir : the source directory (relative path) in project
    */
-  public GenerateDevStructure(final GenModel gm, final String cPattern, final String iPattern, final String srcDir) {
+  public GenerateDevStructure(final GMAGenModel gm, final String cPattern, final String iPattern, final String srcDir) {
     try {
       boolean _contains = ((List<String>)Conversions.doWrapArray(Platform.getApplicationArgs())).contains(GMAConstants.PARAM_DEBUG_MODE);
       if (_contains) {
         this.debug = true;
       }
-      this.genModel = gm;
+      this.gmaGenModel = gm;
+      this.gmaGenModel.setDevClassPattern(cPattern);
+      this.gmaGenModel.setDevInterfacePattern(iPattern);
       String _copyrightText = gm.getCopyrightText();
       boolean _tripleNotEquals = (_copyrightText != null);
       if (_tripleNotEquals) {
@@ -118,7 +120,7 @@ public class GenerateDevStructure {
     }
   }
   
-  public GenerateDevStructure(final GenModel gm) {
+  public GenerateDevStructure(final GMAGenModel gm) {
     this(gm, "{0}ExtImpl", "{0}Ext", "src");
   }
   
@@ -128,7 +130,7 @@ public class GenerateDevStructure {
   public void generateDevStructure(final boolean genFiles) {
     try {
       this.generateFiles = genFiles;
-      EList<GenPackage> _genPackages = this.genModel.getGenPackages();
+      EList<GenPackage> _genPackages = this.gmaGenModel.getGenPackages();
       for (final GenPackage p : _genPackages) {
         this.generateDevStructure(p);
       }
@@ -239,7 +241,7 @@ public class GenerateDevStructure {
    * This method initializes the genModel with convenient values
    */
   public void initializeGenModelConvenientProperties() {
-    this.genModel.setImportOrganizing(true);
+    this.gmaGenModel.setImportOrganizing(true);
   }
   
   /**
@@ -781,12 +783,12 @@ public class GenerateDevStructure {
   public CharSequence computeCopyrightComment() {
     StringConcatenation _builder = new StringConcatenation();
     {
-      if (((this.genModel.getCopyrightText() != null) && (this.genModel.getCopyrightText().length() > 0))) {
+      if (((this.gmaGenModel.getCopyrightText() != null) && (this.gmaGenModel.getCopyrightText().length() > 0))) {
         _builder.append("/**");
         _builder.newLine();
         _builder.append("\t ");
         _builder.append("* ");
-        String _copyrightText = this.genModel.getCopyrightText();
+        String _copyrightText = this.gmaGenModel.getCopyrightText();
         _builder.append(_copyrightText, "\t ");
         _builder.newLineIfNotEmpty();
         _builder.append("*/");

@@ -1,6 +1,6 @@
 package com.opcoach.genmodeladdon.core.genmodel;
 
-import com.opcoach.genmodeladdon.core.genmodel.GMAGenModelImpl;
+import com.opcoach.genmodeladdon.core.genmodel.GMAGenModel;
 import com.opcoach.genmodeladdon.core.genmodel.GMATransform;
 import java.util.Collection;
 import java.util.List;
@@ -13,9 +13,9 @@ import org.eclipse.emf.codegen.util.ImportManager;
 public class GMAImportManager extends ImportManager {
   private ImportManager dim = null;
   
-  private GMAGenModelImpl gm = null;
+  private GMAGenModel gm = null;
   
-  public GMAImportManager(final ImportManager im, final GMAGenModelImpl pgm, final String compilationUnitPackage) {
+  public GMAImportManager(final ImportManager im, final GMAGenModel pgm, final String compilationUnitPackage) {
     super(compilationUnitPackage);
     this.dim = im;
     this.gm = pgm;

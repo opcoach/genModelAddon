@@ -1,8 +1,9 @@
 package com.opcoach.genmodeladdon.core.genmodel;
 
+import com.google.common.base.Objects;
 import com.opcoach.genmodeladdon.core.GMAConstants;
 import com.opcoach.genmodeladdon.core.GenerateCommon;
-import com.opcoach.genmodeladdon.core.genmodel.GMAGenModelImpl;
+import com.opcoach.genmodeladdon.core.genmodel.GMAGenModel;
 import java.text.MessageFormat;
 import java.util.Map;
 import java.util.Set;
@@ -17,6 +18,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 
 /**
  * This class computes the new names for generated classes according to pattern name matching
@@ -33,27 +35,39 @@ public class GMATransform implements GMAConstants {
   
   private String genClassNamePattern = GMAConstants.ADVISED_GEN_CLASS_IMPL_PATTERN;
   
-  private GenModel gm;
+  private GMAGenModel gm;
   
   private boolean isInit = false;
   
-  public GMATransform(final GenModel gm) {
-    this(gm, true);
-  }
-  
-  private GMATransform(final GenModel gm, final boolean mustInitNames) {
+  public GMATransform(final GMAGenModel gm) {
     this.gm = gm;
-    if (mustInitNames) {
-      this.initNames();
+    String _devInterfacePattern = gm.getDevInterfacePattern();
+    boolean _notEquals = (!Objects.equal(_devInterfacePattern, null));
+    if (_notEquals) {
+      this.devInterfaceNamePattern = gm.getDevInterfacePattern();
+    }
+    String _devClassPattern = gm.getDevClassPattern();
+    boolean _notEquals_1 = (!Objects.equal(_devClassPattern, null));
+    if (_notEquals_1) {
+      this.devClassNamePattern = gm.getDevClassPattern();
+    }
+    String _interfaceNamePattern = gm.getInterfaceNamePattern();
+    boolean _notEquals_2 = (!Objects.equal(_interfaceNamePattern, null));
+    if (_notEquals_2) {
+      this.genInterfaceNamePattern = gm.getInterfaceNamePattern();
+    }
+    String _classNamePattern = gm.getClassNamePattern();
+    boolean _notEquals_3 = (!Objects.equal(_classNamePattern, null));
+    if (_notEquals_3) {
+      this.genClassNamePattern = gm.getClassNamePattern();
     }
   }
   
-  public GMATransform(final GenModel gm, final String devIntNamePattern, final String genIntNamePattern, final String devClassNamePattern, final String genClassNamePattern) {
-    this(gm, false);
-    this.devInterfaceNamePattern = devIntNamePattern;
-    this.genInterfaceNamePattern = genIntNamePattern;
-    this.devClassNamePattern = devClassNamePattern;
-    this.genClassNamePattern = genClassNamePattern;
+  private GMATransform(final GMAGenModel gm, final boolean mustInitNames) {
+    this(gm);
+    if (mustInitNames) {
+      this.initNames();
+    }
   }
   
   private void initValue(final String v, final Consumer<String> consumer) {
@@ -122,9 +136,12 @@ public class GMATransform implements GMAConstants {
         if ((((c instanceof EClass) && (!c.getName().endsWith("Package"))) && (!GenerateCommon.isMapType(c)))) {
           final String devIntName = MessageFormat.format(this.devInterfaceNamePattern, c.getName());
           final String genIntName = MessageFormat.format(this.genInterfaceNamePattern, c.getName());
+          InputOutput.<String>println(
+            (((((("Put : " + genIntName) + ",") + devIntName) + " (used format : ") + this.devInterfaceNamePattern) + ")"));
           this.devNames.put(genIntName, devIntName);
           final String genClassName = MessageFormat.format(this.genClassNamePattern, c.getName());
           final String devClassName = MessageFormat.format(this.devClassNamePattern, c.getName());
+          InputOutput.<String>println(((("Put : " + genClassName) + ",") + devClassName));
           this.devNames.put(genClassName, devClassName);
         }
       }
@@ -177,8 +194,8 @@ public class GMATransform implements GMAConstants {
     {
       final GenModel genModel = base.getGenModel();
       GMATransform dt = null;
-      if ((genModel instanceof GMAGenModelImpl)) {
-        final GMAGenModelImpl gm = ((GMAGenModelImpl) genModel);
+      if ((genModel instanceof GMAGenModel)) {
+        final GMAGenModel gm = ((GMAGenModel) genModel);
         dt = gm.getGMATransform();
       }
       String _xifexpression = null;

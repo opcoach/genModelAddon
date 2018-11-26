@@ -1,12 +1,12 @@
 package com.opcoach.genmodeladdon.core.test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.opcoach.genmodeladdon.core.genmodel.GMAGenModel;
 import com.opcoach.genmodeladdon.core.genmodel.GMATransform;
 
 public class TestGMATransform extends GenModelAddonTestCase
@@ -16,7 +16,7 @@ public class TestGMATransform extends GenModelAddonTestCase
 	class GMATransformStub extends GMATransform
 	{
 
-		public GMATransformStub(GenModel gm)     
+		public GMATransformStub(GMAGenModel gm)     
 		{
 			super(gm);
 			init();
@@ -34,7 +34,7 @@ public class TestGMATransform extends GenModelAddonTestCase
 	public  void setup() throws Exception
 	{
 		// Create the GMATransform with some additionals strings inside
-		GenModel gm = getGenModel(PROJECT_GENMODEL);
+		GMAGenModel gm = getGenModel(PROJECT_GENMODEL);
 
 		gmat = new GMATransformStub(gm);
 	}

@@ -1,14 +1,21 @@
-package com.opcoach.genmodeladdon.core.genmodel
+package com.opcoach.genmodeladdon.core.genmodel.impl
 
+import com.opcoach.genmodeladdon.core.GMAConstants
+import com.opcoach.genmodeladdon.core.genmodel.GMAGenModel
+import com.opcoach.genmodeladdon.core.genmodel.GMAImportManager
+import com.opcoach.genmodeladdon.core.genmodel.GMATransform
+import org.eclipse.emf.codegen.ecore.genmodel.GenPackage
 import org.eclipse.emf.codegen.ecore.genmodel.impl.GenModelImpl
 import org.eclipse.emf.codegen.util.ImportManager
-import org.eclipse.emf.codegen.ecore.genmodel.GenPackage
 
-class GMAGenModelImpl extends GenModelImpl {
+class GMAGenModelImpl extends GenModelImpl implements GMAGenModel {
 
 	GMATransform gmaTransform = null
+	
+	String cPattern = GMAConstants.ADVISED_DEV_CLASS_IMPL_PATTERN
+	String iPattern = GMAConstants.ADVISED_DEV_INTERFACE_PATTERN
 
-	def GMATransform getGMATransform() {
+	override GMATransform getGMATransform() {
 
 		if (gmaTransform === null) {
 			gmaTransform = new GMATransform(this)
@@ -81,5 +88,30 @@ class GMAGenModelImpl extends GenModelImpl {
 		}
 
 	}
+	
+	override getImportedName(String qualifiedName) {
+		val pname = super.getImportedName(qualifiedName)
+		val result = GMATransform.replaceDevName(pname)
+		if (result != pname)
+		println("--->> genModelImportedName convert " + pname + " into " + result)
+		result
+	}
+	
+	override setDevClassPattern(String cpattern) {
+		this.cPattern = cpattern
+	}
+	
+	override setDevInterfacePattern(String ipattern) {
+		this.iPattern = ipattern
+	}
+	
+	override getDevClassPattern() {
+		cPattern
+	}
+	
+	override getDevInterfacePattern() {
+		iPattern
+	}
 
 }
+

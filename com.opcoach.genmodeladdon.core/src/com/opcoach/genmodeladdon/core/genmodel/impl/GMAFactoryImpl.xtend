@@ -1,9 +1,9 @@
-package com.opcoach.genmodeladdon.core.genmodel
+package com.opcoach.genmodeladdon.core.genmodel.impl
 
+import com.opcoach.genmodeladdon.core.genmodel.GMAGenModel
 import org.eclipse.emf.codegen.ecore.genmodel.GenBase
 import org.eclipse.emf.codegen.ecore.genmodel.GenClass
 import org.eclipse.emf.codegen.ecore.genmodel.GenFeature
-import org.eclipse.emf.codegen.ecore.genmodel.GenModel
 import org.eclipse.emf.codegen.ecore.genmodel.impl.GenModelFactoryImpl
 
 /** This factory overrides the default GenModel Factory, but it is must be setAvailable to use it
@@ -28,7 +28,7 @@ class GMAFactoryImpl extends GenModelFactoryImpl {
 		new GMAGenClassImpl
 	}
 
-	override GenModel createGenModel() {
+	override GMAGenModel createGenModel() {
 		new GMAGenModelImpl
 	}
 

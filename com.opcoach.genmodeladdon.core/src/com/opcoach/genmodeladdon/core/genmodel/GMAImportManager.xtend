@@ -1,5 +1,6 @@
 package com.opcoach.genmodeladdon.core.genmodel
 
+import com.opcoach.genmodeladdon.core.genmodel.impl.GMAGenModelImpl
 import java.util.Collection
 import java.util.List
 import org.eclipse.emf.codegen.util.ImportManager
@@ -8,9 +9,9 @@ import org.eclipse.emf.codegen.util.ImportManager
 class GMAImportManager extends ImportManager {
 	
 	ImportManager dim = null   // Delegated Import Manager
-	GMAGenModelImpl gm = null  // Parent GenModel
+	GMAGenModel gm = null  // Parent GenModel
 	
-	new(ImportManager im,  GMAGenModelImpl pgm, String compilationUnitPackage) {
+	new(ImportManager im,  GMAGenModel pgm, String compilationUnitPackage) {
 		super(compilationUnitPackage)
 		dim=im
 		gm = pgm

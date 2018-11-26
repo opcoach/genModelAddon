@@ -7,9 +7,7 @@ import java.util.Map
 import java.util.TreeMap
 import java.util.function.Consumer
 import org.eclipse.emf.codegen.ecore.genmodel.GenBase
-import org.eclipse.emf.codegen.ecore.genmodel.GenModel
 import org.eclipse.emf.ecore.EClass
-import org.eclipse.emf.ecore.EClassifier
 import org.eclipse.emf.ecore.EPackage
 import org.eclipse.emf.ecore.EcorePackage
 
@@ -24,33 +22,29 @@ class GMATransform implements GMAConstants {
 	String devClassNamePattern = ADVISED_DEV_CLASS_IMPL_PATTERN
 	String genClassNamePattern = ADVISED_GEN_CLASS_IMPL_PATTERN
 
-	GenModel gm
+	GMAGenModel gm
 	boolean isInit = false
 
-	new(GenModel gm) {
-		this(gm, true)
+	new(GMAGenModel gm) {
+		this.gm = gm
+		if (gm.devInterfacePattern != null)
+			this.devInterfaceNamePattern = gm.devInterfacePattern
+		if (gm.devClassPattern != null)
+			this.devClassNamePattern = gm.devClassPattern
+		if (gm.interfaceNamePattern != null)
+			this.genInterfaceNamePattern = gm.interfaceNamePattern
+		if (gm.classNamePattern != null)
+			this.genClassNamePattern = gm.classNamePattern
 	}
 
-	private new(GenModel gm, boolean mustInitNames) {
+	private new(GMAGenModel gm, boolean mustInitNames) {
 
-		this.gm = gm
+		this(gm)
 
 		// Try to get the dev interface and class values set in properties
 		if (mustInitNames) {
 			initNames
 		}
-	}
-
-	new(GenModel gm, String devIntNamePattern, String genIntNamePattern, String devClassNamePattern,
-		String genClassNamePattern) {
-
-		this(gm, false)
-
-		this.devInterfaceNamePattern = devIntNamePattern
-		this.genInterfaceNamePattern = genIntNamePattern
-		this.devClassNamePattern = devClassNamePattern
-		this.genClassNamePattern = genClassNamePattern
-
 	}
 
 // Set the value in the consumer if not null
@@ -88,8 +82,6 @@ class GMATransform implements GMAConstants {
 		isInit = false
 	}
 
-
-
 	def void computeNames(EPackage p) {
 		// Do not compute names for emf2002Ecore
 		if (!EcorePackage::eNS_URI.equals(p.nsURI)) {
@@ -97,12 +89,13 @@ class GMATransform implements GMAConstants {
 				if ((c instanceof EClass) && !c.name.endsWith("Package") && !GenerateCommon.isMapType(c)) {
 					val devIntName = MessageFormat.format(devInterfaceNamePattern, c.name)
 					val genIntName = MessageFormat.format(genInterfaceNamePattern, c.name)
-					// println("Put : " + genIntName + "," + devIntName);
+					println(
+						"Put : " + genIntName + "," + devIntName + " (used format : " + devInterfaceNamePattern + ")");
 					devNames.put(genIntName, devIntName)
 
 					val genClassName = MessageFormat.format(genClassNamePattern, c.name)
 					val devClassName = MessageFormat.format(devClassNamePattern, c.name)
-					// println("Put : " + genClassName + "," + devClassName);
+					println("Put : " + genClassName + "," + devClassName);
 					devNames.put(genClassName, devClassName)
 				}
 			}
@@ -153,8 +146,8 @@ class GMATransform implements GMAConstants {
 		// Check it base has a GenModelImpl with its own devtransform
 		val genModel = base.genModel
 		var GMATransform dt = null
-		if (genModel instanceof GMAGenModelImpl) {
-			val gm = genModel as GMAGenModelImpl
+		if (genModel instanceof GMAGenModel) {
+			val gm = genModel as GMAGenModel
 			dt = gm.GMATransform
 		}
 

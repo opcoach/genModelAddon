@@ -1,14 +1,24 @@
-package com.opcoach.genmodeladdon.core.genmodel;
+package com.opcoach.genmodeladdon.core.genmodel.impl;
 
 import com.opcoach.genmodeladdon.core.genmodel.GMATransform;
 import org.eclipse.emf.codegen.ecore.genmodel.GenClass;
-import org.eclipse.emf.codegen.ecore.genmodel.impl.GenParameterImpl;
+import org.eclipse.emf.codegen.ecore.genmodel.impl.GenFeatureImpl;
 
 @SuppressWarnings("all")
-public class GMAGenParameterImpl extends GenParameterImpl {
+public class GMAGenFeatureImpl extends GenFeatureImpl {
   @Override
-  public String getType(final GenClass context) {
-    return GMATransform.replaceDevName(this, super.getType(context));
+  public String getImportedInternalType(final GenClass context) {
+    return GMATransform.replaceDevName(this, super.getImportedInternalType(context));
+  }
+  
+  @Override
+  public String getImportedType(final GenClass context) {
+    return GMATransform.replaceDevName(this, super.getImportedType(context));
+  }
+  
+  @Override
+  public String getListItemType(final GenClass context) {
+    return GMATransform.replaceDevName(this, super.getListItemType(context));
   }
   
   @Override
@@ -22,18 +32,18 @@ public class GMAGenParameterImpl extends GenParameterImpl {
   }
   
   @Override
+  public String getInternalTypeCast() {
+    return GMATransform.replaceDevName(this, super.getInternalTypeCast());
+  }
+  
+  @Override
+  public String getType(final GenClass context) {
+    return GMATransform.replaceDevName(this, super.getType(context));
+  }
+  
+  @Override
   public String getArrayItemType(final GenClass context) {
     return GMATransform.replaceDevName(this, super.getArrayItemType(context));
-  }
-  
-  @Override
-  public String getImportedType(final GenClass context) {
-    return GMATransform.replaceDevName(this, super.getImportedType(context));
-  }
-  
-  @Override
-  public String getImportedInternalType(final GenClass context) {
-    return GMATransform.replaceDevName(this, super.getImportedInternalType(context));
   }
   
   @Override
@@ -42,18 +52,13 @@ public class GMAGenParameterImpl extends GenParameterImpl {
   }
   
   @Override
-  public String getImportedMapValueType(final GenClass context) {
-    return GMATransform.replaceDevName(this, super.getImportedMapValueType(context));
-  }
-  
-  @Override
   public String getImportedMapTemplateArguments(final GenClass context) {
     return GMATransform.replaceDevName(this, super.getImportedMapTemplateArguments(context));
   }
   
   @Override
-  public String getListItemType(final GenClass context) {
-    return GMATransform.replaceDevName(this, super.getListItemType(context));
+  public String getImportedMapValueType(final GenClass context) {
+    return GMATransform.replaceDevName(this, super.getImportedMapValueType(context));
   }
   
   @Override
@@ -64,6 +69,11 @@ public class GMAGenParameterImpl extends GenParameterImpl {
   @Override
   public String getQualifiedListItemType(final GenClass context) {
     return GMATransform.replaceDevName(this, super.getQualifiedListItemType(context));
+  }
+  
+  @Override
+  public String getRawListItemType(final GenClass context) {
+    return GMATransform.replaceDevName(this, super.getRawListItemType(context));
   }
   
   @Override
