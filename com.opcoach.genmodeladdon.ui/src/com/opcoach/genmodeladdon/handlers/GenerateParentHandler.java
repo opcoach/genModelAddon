@@ -6,11 +6,11 @@ import javax.inject.Named;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
-import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 
 import com.opcoach.genmodeladdon.core.GenerateCommon;
+import com.opcoach.genmodeladdon.core.genmodel.GMAGenModel;
 
 public abstract class GenerateParentHandler {
 	
@@ -19,27 +19,27 @@ public abstract class GenerateParentHandler {
 	public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell shell,
 			@Named(IServiceConstants.ACTIVE_SELECTION) IStructuredSelection isel)
 	{
-		if (isel.getFirstElement() instanceof GenModel)
-			execute(shell, (GenModel) isel.getFirstElement());
+		if (isel.getFirstElement() instanceof GMAGenModel)
+			execute(shell, (GMAGenModel) isel.getFirstElement());
 	}
 	
 	@CanExecute
 	public boolean canExecuteWithISelection(@Named(IServiceConstants.ACTIVE_SELECTION) IStructuredSelection isel)
 	{
-		return isel.getFirstElement() instanceof GenModel;
+		return isel.getFirstElement() instanceof GMAGenModel;
 	}
 	
 	@CanExecute
-	public boolean canExecuteWithObject(@Named(IServiceConstants.ACTIVE_SELECTION) GenModel gm)
+	public boolean canExecuteWithObject(@Named(IServiceConstants.ACTIVE_SELECTION) GMAGenModel gm)
 	{
 		return true;
 	}
 
 	abstract public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell shell,
-			@Named(IServiceConstants.ACTIVE_SELECTION) GenModel gm);
+			@Named(IServiceConstants.ACTIVE_SELECTION) GMAGenModel gm);
 
 	/** Extract the project name from the resource of genmodel */
-	protected  String getProjectName(GenModel gm)
+	protected  String getProjectName(GMAGenModel gm)
 	{
 		return GenerateCommon.getProjectName(gm);
 	}

@@ -8,6 +8,7 @@ import com.opcoach.genmodeladdon.core.genmodel.GMAGenModel;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -803,14 +804,14 @@ public class GenerateDevStructure {
    * Compute the class name to be generated
    */
   public String computeClassFilename(final GenClass gc) {
-    return this.classPattern.replace("{0}", gc.getEcoreClass().getName());
+    return MessageFormat.format(this.classPattern, gc.getEcoreClass().getName());
   }
   
   /**
    * Compute the interface name to be generated
    */
   public String computeInterfaceFilename(final GenClass gc) {
-    return this.interfacePattern.replace("{0}", gc.getEcoreClass().getName());
+    return MessageFormat.format(this.interfacePattern, gc.getEcoreClass().getName());
   }
   
   /**
@@ -871,26 +872,21 @@ public class GenerateDevStructure {
    * Compute the factory interface name to be generated
    */
   public String computeFactoryInterfaceName(final GenPackage gp) {
-    String _prefix = gp.getPrefix();
-    String _replace = this.interfacePattern.replace("{0}", "Factory");
-    return (_prefix + _replace);
+    return MessageFormat.format(this.interfacePattern, gp.getFactoryName());
   }
   
   /**
    * Compute the factory interface name to be generated
    */
   public String computePackageInterfaceName(final GenPackage gp) {
-    String _prefix = gp.getPrefix();
-    return (_prefix + "Package");
+    return MessageFormat.format(this.interfacePattern, gp.getBasicPackageName());
   }
   
   /**
    * Compute the factory class name to be generated
    */
   public String computeFactoryClassName(final GenPackage gp) {
-    String _prefix = gp.getPrefix();
-    String _replace = this.classPattern.replace("{0}", "Factory");
-    return (_prefix + _replace);
+    return MessageFormat.format(this.classPattern, gp.getFactoryName());
   }
   
   /**

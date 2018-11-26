@@ -9,12 +9,12 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
-import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 
 import com.opcoach.genmodeladdon.core.GenerateAntFileForCodeGeneration;
 import com.opcoach.genmodeladdon.core.GenerateCommon;
+import com.opcoach.genmodeladdon.core.genmodel.GMAGenModel;
 
 public class GenerateAntFileHandler extends GenerateParentHandler
 {
@@ -23,7 +23,7 @@ public class GenerateAntFileHandler extends GenerateParentHandler
 	@Execute
 	@Override
 	public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell parentShell,
-			@Named(IServiceConstants.ACTIVE_SELECTION) GenModel gm)
+			@Named(IServiceConstants.ACTIVE_SELECTION) GMAGenModel gm)
 	{
 		GenerateAntFileForCodeGeneration gen = new GenerateAntFileForCodeGeneration();
 		IProject proj = GenerateCommon.getProject(gm);

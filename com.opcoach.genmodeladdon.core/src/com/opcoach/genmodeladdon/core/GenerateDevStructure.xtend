@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.EClass
 import org.eclipse.jdt.core.IClasspathEntry
 import org.eclipse.jdt.core.IJavaProject
 import org.eclipse.jdt.core.JavaCore
+import java.text.MessageFormat
 
 /** This class is used to proceed the different steps to generate the development structure
  * A method is defined for each step :
@@ -478,12 +479,12 @@ class GenerateDevStructure {
 
 	/** Compute the class name to be generated */
 	def computeClassFilename(GenClass gc) {
-		classPattern.replace("{0}", gc.ecoreClass.name)
+		MessageFormat.format(classPattern, gc.ecoreClass.name)
 	}
 
 	/** Compute the interface name to be generated */
 	def computeInterfaceFilename(GenClass gc) {
-		interfacePattern.replace("{0}", gc.ecoreClass.name)
+		MessageFormat.format(interfacePattern, gc.ecoreClass.name)
 	}
 
 	/** Compute the class name to be generated */
@@ -525,17 +526,17 @@ class GenerateDevStructure {
 
 	/** Compute the factory interface name to be generated */
 	def computeFactoryInterfaceName(GenPackage gp) {
-		gp.prefix + interfacePattern.replace("{0}", "Factory")
+		MessageFormat.format(interfacePattern, gp.factoryName)
 	}
 
 	/** Compute the factory interface name to be generated */
 	def computePackageInterfaceName(GenPackage gp) {
-		gp.prefix + "Package"
+		MessageFormat.format(interfacePattern, gp.basicPackageName)
 	}
 
 	/** Compute the factory class name to be generated */
 	def computeFactoryClassName(GenPackage gp) {
-		gp.prefix + classPattern.replace("{0}", "Factory")
+		MessageFormat.format(classPattern, gp.factoryName)
 	}
 
 	/** Compute the package name for class */

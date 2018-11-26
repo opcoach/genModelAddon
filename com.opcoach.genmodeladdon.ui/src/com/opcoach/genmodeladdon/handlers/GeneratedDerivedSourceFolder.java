@@ -14,7 +14,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
-import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -24,6 +23,7 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
 import com.opcoach.genmodeladdon.core.GenerateDevStructure;
+import com.opcoach.genmodeladdon.core.genmodel.GMAGenModel;
 import com.opcoach.genmodeladdon.ui.dialog.ConfirmFileSelectionDialog;
 import com.opcoach.genmodeladdon.ui.dialog.DerivedSourceParametersDialog;
 
@@ -34,7 +34,7 @@ public class GeneratedDerivedSourceFolder extends GenerateParentHandler
 
 	@Execute
 	public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell shell,
-			@Named(IServiceConstants.ACTIVE_SELECTION) GenModel gm)
+			@Named(IServiceConstants.ACTIVE_SELECTION) GMAGenModel gm)
 	{
 		parentShell = shell;
 

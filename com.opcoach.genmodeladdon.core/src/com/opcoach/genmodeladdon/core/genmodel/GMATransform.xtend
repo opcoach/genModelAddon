@@ -17,33 +17,25 @@ class GMATransform implements GMAConstants {
 // The map of devnames : key = implementation name, value = devName
 	protected Map<String, String> devNames = new TreeMap<String, String>()
 
-	String devInterfaceNamePattern = ADVISED_DEV_INTERFACE_PATTERN
-	String genInterfaceNamePattern = ADVISED_GEN_INTERFACE_PATTERN
-	String devClassNamePattern = ADVISED_DEV_CLASS_IMPL_PATTERN
-	String genClassNamePattern = ADVISED_GEN_CLASS_IMPL_PATTERN
+	String devInterfaceNamePattern = null 
+	String genInterfaceNamePattern = DEFAULT_GEN_INTERFACE_PATTERN
+	String devClassNamePattern = null 
+	String genClassNamePattern = DEFAULT_GEN_CLASS_IMPL_PATTERN
 
 	GMAGenModel gm
 	boolean isInit = false
 
 	new(GMAGenModel gm) {
-		this.gm = gm
-		if (gm.devInterfacePattern != null)
-			this.devInterfaceNamePattern = gm.devInterfacePattern
-		if (gm.devClassPattern != null)
-			this.devClassNamePattern = gm.devClassPattern
-		if (gm.interfaceNamePattern != null)
-			this.genInterfaceNamePattern = gm.interfaceNamePattern
-		if (gm.classNamePattern != null)
-			this.genClassNamePattern = gm.classNamePattern
+	  this(gm, true)
 	}
 
-	private new(GMAGenModel gm, boolean mustInitNames) {
+	private new(GMAGenModel gm, boolean mustInitPatterns) {
 
-		this(gm)
-
+		this.gm = gm
+		
 		// Try to get the dev interface and class values set in properties
-		if (mustInitNames) {
-			initNames
+		if (mustInitPatterns) {
+			initPatterns
 		}
 	}
 
@@ -53,7 +45,7 @@ class GMATransform implements GMAConstants {
 			consumer.accept(v)
 	}
 
-	private def initNames() {
+	private def initPatterns() {
 		initValue(gm.classNamePattern, [v|this.genClassNamePattern = v])
 		initValue(gm.interfaceNamePattern, [v|this.genInterfaceNamePattern = v])
 
@@ -89,13 +81,13 @@ class GMATransform implements GMAConstants {
 				if ((c instanceof EClass) && !c.name.endsWith("Package") && !GenerateCommon.isMapType(c)) {
 					val devIntName = MessageFormat.format(devInterfaceNamePattern, c.name)
 					val genIntName = MessageFormat.format(genInterfaceNamePattern, c.name)
-					println(
-						"Put : " + genIntName + "," + devIntName + " (used format : " + devInterfaceNamePattern + ")");
+					//println(
+					//	"Put : " + genIntName + "," + devIntName + " (used format : " + devInterfaceNamePattern + ")");
 					devNames.put(genIntName, devIntName)
 
 					val genClassName = MessageFormat.format(genClassNamePattern, c.name)
 					val devClassName = MessageFormat.format(devClassNamePattern, c.name)
-					println("Put : " + genClassName + "," + devClassName);
+					//println("Put : " + genClassName + "," + devClassName);
 					devNames.put(genClassName, devClassName)
 				}
 			}

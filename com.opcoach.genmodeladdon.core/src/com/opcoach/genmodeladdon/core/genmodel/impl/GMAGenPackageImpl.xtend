@@ -13,12 +13,5 @@ class GMAGenPackageImpl extends GenPackageImpl {
 		GMATransform.replaceDevName(this,super.getImportedPackageInterfaceName())
 	}
 	
-	override getFactoryClassName() {
-		GMATransform.replaceDevName(this,super.getFactoryClassName())
-	}
-	
-	override getFactoryInstanceName() {
-		GMATransform.replaceDevName(this,super.getFactoryInstanceName())
-	}
 
 }

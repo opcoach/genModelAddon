@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.ant.core.AntRunner;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -23,6 +24,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 
+import com.opcoach.genmodeladdon.core.GenerateCommon;
 import com.opcoach.genmodeladdon.core.GenerateDevStructure;
 import com.opcoach.genmodeladdon.core.genmodel.GMAGenModel;
 
@@ -115,6 +117,17 @@ public class WorkspaceConfigurator implements ProjectConstants
 	{
 		// Read the genModel
 		GMAGenModel gm = readSampleGenModel(root, genModelName);
+		gm.setDevClassPattern(cPattern);
+		gm.setDevInterfacePattern(iPattern);
+		
+		// Store this values in properties for the tests (needed when ant will read again GMAGenModel)
+		IFile f = GenerateCommon.getModelFile(gm);
+		GenerateCommon.setProperty(f, GenerateCommon.PROP_SRCDIR, srcDir);
+		GenerateCommon.setProperty(f, GenerateCommon.PROP_CLASS_PATTERN, cPattern);
+		GenerateCommon.setProperty(f, GenerateCommon.PROP_INTERFACE_PATTERN, iPattern);
+		GenerateCommon.setProperty(f, GenerateCommon.PROP_GENEMFCODE, Boolean.toString(true));
+		GenerateCommon.setProperty(f, GenerateCommon.PROP_GMA, Boolean.toString(true));
+
 		gmMap.put(genModelName, gm);
 
 		// Create the generator.

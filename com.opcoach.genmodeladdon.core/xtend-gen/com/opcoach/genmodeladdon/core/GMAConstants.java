@@ -30,7 +30,7 @@ public interface GMAConstants {
   
   public final static String DEFAULT_SRC_DEV = "src";
   
-  public final static String DEFAULT_DEV_INTERFACE_PATTERN = "{0}";
+  public final static String DEFAULT_GEN_INTERFACE_PATTERN = "{0}";
   
-  public final static String DEFAULT_DEV_CLASS_IMPL_PATTERN = "{0}Impl";
+  public final static String DEFAULT_GEN_CLASS_IMPL_PATTERN = "{0}Impl";
 }

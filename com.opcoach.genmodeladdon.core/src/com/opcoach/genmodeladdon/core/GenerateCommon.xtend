@@ -52,9 +52,17 @@ class GenerateCommon implements GMAConstants {
 	def static IFile getModelFile(GenModel gm) {
 
 		if (gm.eResource !== null) {
+
+			val pro = gm.getProject
+
 			val genModelUri = gm.eResource.URI
-			val p = new Path(genModelUri.toString.replaceFirst("platform:/resource", ""))
+			val uriString = genModelUri.toString
+
+			val pos = uriString.indexOf(pro.name)
+			val localPath = uriString.substring(pos)
+			val p = new Path(localPath)
 			val ws = ResourcesPlugin.workspace.root
+
 			return ws.getFile(p)
 		}
 		return null
@@ -112,14 +120,13 @@ class GenerateCommon implements GMAConstants {
 		// Path is between projectName and model Name ! 
 		return modelDir
 	}
-	
-	
+
 	def static isMapType(EClassifier c) {
 		// See :  GenBaseImpl::isJavaUtilMapEntry(String name)
 		val name = c.instanceClassName
 		return "java.util.Map.Entry".equals(name) || "java.util.Map$Entry".equals(name)
 	}
-	
+
 	def static isMapType(GenClass c) {
 		// See :  GenBaseImpl::isJavaUtilMapEntry(String name)
 		isMapType(c.ecoreClass)

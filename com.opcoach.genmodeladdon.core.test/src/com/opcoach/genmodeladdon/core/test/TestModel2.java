@@ -89,7 +89,7 @@ public class TestModel2 extends GenModelAddonTestCase
 	{
 
 		assertFileContains("src-gen/com/opcoach2/project/documentation/impl/GDocumentationProjectImpl.java",
-				"class MDocumentationProjectImpl extends GProjectImpl implements GDocumentationProject");
+				"class GDocumentationProjectImpl extends ProjectImpl implements GDocumentationProject");
 	}
 
 	// -----------------------------------------------------------------
@@ -133,7 +133,7 @@ public class TestModel2 extends GenModelAddonTestCase
 	public void theGProjectFactoryMustExtendsIGProjectFactory()
 	{
 		assertFileContains("src/com/opcoach2/project/GProjectFactory.java",
-				"public interface ProjectFactory extends IGProjectFactory");
+				"public interface GProjectFactory extends IGProjectFactory");
 	}
 
 	@Test
@@ -159,7 +159,7 @@ public class TestModel2 extends GenModelAddonTestCase
 	public void theFindTaskMethodMustReturnGTask()
 	{
 		assertFileContains("src-gen/com/opcoach2/project/IGProject.java", "GTask findFirstTask");
-		assertFileContains("src-gen/com/opcoach2/project/impl/ProjectImpl.java", "public GTask findFirstTask");
+		assertFileContains("src-gen/com/opcoach2/project/impl/GProjectImpl.java", "public GTask findFirstTask");
 
 	}
 

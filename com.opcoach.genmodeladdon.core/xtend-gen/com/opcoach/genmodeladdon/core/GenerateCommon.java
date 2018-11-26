@@ -67,9 +67,12 @@ public class GenerateCommon implements GMAConstants {
     Resource _eResource = gm.eResource();
     boolean _tripleNotEquals = (_eResource != null);
     if (_tripleNotEquals) {
+      final IProject pro = GenerateCommon.getProject(gm);
       final URI genModelUri = gm.eResource().getURI();
-      String _replaceFirst = genModelUri.toString().replaceFirst("platform:/resource", "");
-      final Path p = new Path(_replaceFirst);
+      final String uriString = genModelUri.toString();
+      final int pos = uriString.indexOf(pro.getName());
+      final String localPath = uriString.substring(pos);
+      final Path p = new Path(localPath);
       final IWorkspaceRoot ws = ResourcesPlugin.getWorkspace().getRoot();
       return ws.getFile(p);
     }

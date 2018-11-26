@@ -269,11 +269,11 @@ public class DerivedSourceParametersDialog extends Dialog implements GMAConstant
 
 		// Set the default values depending on values found in genmodel and in
 		// properties.
-		String cp = nullOrDefault(genModel.getClassNamePattern(), DEFAULT_DEV_CLASS_IMPL_PATTERN);
+		String cp = nullOrDefault(genModel.getClassNamePattern(), ADVISED_DEV_CLASS_IMPL_PATTERN);
 		genClassPattern.setText(cp);
 		genClassPatternInitial = cp;
 
-		String ip = nullOrDefault(genModel.getInterfaceNamePattern(),DEFAULT_DEV_INTERFACE_PATTERN);
+		String ip = nullOrDefault(genModel.getInterfaceNamePattern(),ADVISED_DEV_INTERFACE_PATTERN);
 		genInterfacePattern.setText(ip);
 		genInterfacePatternInitial = ip;
 
@@ -293,16 +293,16 @@ public class DerivedSourceParametersDialog extends Dialog implements GMAConstant
 		if (genEmfStr != null)
 			genEmf = Boolean.getBoolean(genEmfStr);
 
-		if (cp.equals(DEFAULT_DEV_CLASS_IMPL_PATTERN))
+		if (cp.equals(ADVISED_DEV_CLASS_IMPL_PATTERN))
 			devClassPattern.setText(cp + "Ext");
 		else
-			devClassPattern.setText(cpProp != null ? cpProp : DEFAULT_DEV_CLASS_IMPL_PATTERN);
+			devClassPattern.setText(cpProp != null ? cpProp : ADVISED_DEV_CLASS_IMPL_PATTERN);
 		previousDevClassPattern = devClassPattern.getText();
 
-		if (ip.equals(DEFAULT_DEV_INTERFACE_PATTERN))
+		if (ip.equals(ADVISED_DEV_INTERFACE_PATTERN))
 			devInterfacePattern.setText(ip + "Ext");
 		else
-			devInterfacePattern.setText(ipProp != null ? ipProp : DEFAULT_DEV_INTERFACE_PATTERN);
+			devInterfacePattern.setText(ipProp != null ? ipProp : ADVISED_DEV_INTERFACE_PATTERN);
 		previousDevInterfacePattern = devInterfacePattern.getText();
 		
 		devSourceDir.setText(srcProp != null ? srcProp : DEFAULT_SRC_DEV);

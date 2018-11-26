@@ -17,4 +17,5 @@ Require-Bundle: org.eclipse.emf.codegen.ecore;visibility:=reexport,
  org.eclipse.xtend.lib,
  org.eclipse.ant.launching,
  org.eclipse.jdt.launching
-Export-Package: com.opcoach.genmodeladdon.core
+Export-Package: com.opcoach.genmodeladdon.core,
+ com.opcoach.genmodeladdon.core.genmodel

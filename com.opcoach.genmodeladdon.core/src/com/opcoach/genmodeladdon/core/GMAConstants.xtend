@@ -29,8 +29,10 @@ interface GMAConstants {
 	public static val String ADVISED_GEN_SRC_DIR = "src-gen";
 
 	public static val String DEFAULT_SRC_DEV = "src";
-	public static val String DEFAULT_DEV_INTERFACE_PATTERN = "{0}";
-	public static val String DEFAULT_DEV_CLASS_IMPL_PATTERN = "{0}Impl";
+	
+	// Default values used by genmodel to generate class names
+	public static val String DEFAULT_GEN_INTERFACE_PATTERN = "{0}";
+	public static val String DEFAULT_GEN_CLASS_IMPL_PATTERN = "{0}Impl";
 	
 	
 }
