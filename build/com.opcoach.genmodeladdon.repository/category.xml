@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/com.opcoach.genmodeladdon.feature_2.1.0.qualifier.jar" id="com.opcoach.genmodeladdon.feature" version="2.1.0.qualifier">
+   <feature url="features/com.opcoach.genmodeladdon.feature_2.2.0.qualifier.jar" id="com.opcoach.genmodeladdon.feature" version="2.2.0.qualifier">
       <category name="com.opcoach.genModelAddon"/>
    </feature>
    <category-def name="com.opcoach.genModelAddon" label="EMF genModelAddon to generate code properly">
