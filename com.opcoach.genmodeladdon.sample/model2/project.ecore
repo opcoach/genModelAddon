@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="project" nsURI="http://com.opcoach2.project/1.0" nsPrefix="p">
+  <eClassifiers xsi:type="ecore:EClass" name="Person">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="taille" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="poids" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//TypePerson"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Project">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="checkName checkChief"/>
+    </eAnnotations>
+    <eOperations name="findFirstTask" eType="#//Task">
+      <eParameters name="p" eType="#//Person"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tasks" upperBound="-1"
+        eType="#//Task" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="chief" eType="#//Person"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mainTask" eType="#//Task"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//TypeProject"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Task">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subTasks" upperBound="-1"
+        eType="#//Task" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="responsable" eType="#//Person"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="kijs" eType="#//IntToDoubleMap"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Company">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="projects" upperBound="-1"
+        eType="#//Project" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="employees" upperBound="-1"
+        eType="#//Person" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Folder">
+    <eTypeParameters name="T"/>
+    <eOperations name="getFirst">
+      <eGenericType eTypeParameter="#//Folder/T"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="content" upperBound="-1"
+        containment="true">
+      <eGenericType eTypeParameter="#//Folder/T"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TaskFolder">
+    <eGenericSuperTypes eClassifier="#//Folder">
+      <eTypeArguments eClassifier="#//Task"/>
+    </eGenericSuperTypes>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Store">
+    <eTypeParameters name="T"/>
+    <eTypeParameters name="U"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TaskStore">
+    <eGenericSuperTypes eClassifier="#//Store">
+      <eTypeArguments eClassifier="#//Task"/>
+      <eTypeArguments eClassifier="#//Person"/>
+    </eGenericSuperTypes>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ClassAsInterface" abstract="true" interface="true">
+    <eOperations name="operationListener"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="TypePerson">
+    <eLiterals name="Chief" literal="Chief"/>
+    <eLiterals name="Developer" value="1" literal="Developer"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="TypeProject">
+    <eLiterals name="Documentation" literal="Documentation"/>
+    <eLiterals name="Code" value="1" literal="Code"/>
+    <eLiterals name="Test" value="2" literal="Test"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IntToDoubleMap" instanceClassName="java.util.Map$Entry">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDoubleObject"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ProjectFolder">
+    <eTypeParameters name="T">
+      <eBounds eClassifier="#//Project"/>
+    </eTypeParameters>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eSubpackages name="documentation" nsURI="http://www.opcoach2.com/project/documentation/1.0"
+      nsPrefix="doc">
+    <eClassifiers xsi:type="ecore:EClass" name="DocumentationProject" eSuperTypes="#//Project"/>
+    <eClassifiers xsi:type="ecore:EClass" name="DocumentationTask" eSuperTypes="#//Task"/>
+  </eSubpackages>
+</ecore:EPackage>

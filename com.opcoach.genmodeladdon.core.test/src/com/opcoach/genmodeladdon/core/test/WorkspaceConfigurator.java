@@ -38,7 +38,9 @@ public class WorkspaceConfigurator implements ProjectConstants
 
 	public static final String FANOISE_ANT_FILE = "generateEMFCode_fanoise.xml";
 	public static final String PROJECT_ANT_FILE = "generateEMFCode_project.xml";
+	public static final String PROJECT_ANT2_FILE = "generateEMFCode_project2.xml";
 	public static final String PROJECT_GENMODEL = "/" + DEST_SAMPLE_PROJECT + "/model/project.genmodel";
+	public static final String PROJECT2_GENMODEL = "/" + DEST_SAMPLE_PROJECT + "/model2/project.genmodel";
 	public static final String FANNOISE_GENMODEL = "/" + DEST_SAMPLE_PROJECT + "/model_fannoise/fannoise.genmodel";
 
 	private Map<String, GenModel> gmMap = new HashMap<String, GenModel>();
@@ -95,6 +97,7 @@ public class WorkspaceConfigurator implements ProjectConstants
 				// Copy the sample project in the runtime workspace
 				root = initWorkspace();
 				initGenModel(PROJECT_GENMODEL, PROJECT_ANT_FILE);
+				initGenModel(PROJECT2_GENMODEL, PROJECT_ANT2_FILE, "{0}Impl", "G{0}", "src");
 				initGenModel(FANNOISE_GENMODEL, FANOISE_ANT_FILE);
 
 			} catch (Exception ex)
@@ -107,14 +110,21 @@ public class WorkspaceConfigurator implements ProjectConstants
 		return sampleProject;
 	}
 
+	
 	public void initGenModel(String genModelName, String antFilename) throws IOException, InterruptedException
+	{
+		initGenModel(genModelName, antFilename, "{0}Impl", "{0}", "src");
+	}
+	
+
+	public void initGenModel(String genModelName, String antFilename, String cPattern, String iPattern, String srcDir) throws IOException, InterruptedException
 	{
 		// Read the genModel
 		GenModel gm = readSampleGenModel(root, genModelName);
 		gmMap.put(genModelName, gm);
 
 		// Create the generator.
-		GenerateDevStructure gen = new GenerateDevStructure(gm, "{0}Impl", "{0}", "src");
+		GenerateDevStructure gen = new GenerateDevStructure(gm, cPattern, iPattern, srcDir);
 		genMap.put(genModelName, gen);
 
 		// Remember of sample project

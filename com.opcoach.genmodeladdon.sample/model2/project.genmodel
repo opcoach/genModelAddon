@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="© OPCoach 2016" modelDirectory="/com.opcoach.genmodeladdon.sample/src-gen"
+    modelPluginID="com.opcoach.genmodeladdon.sample" modelName="Project" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0" copyrightFields="false"
+    interfaceNamePattern="IG{0}" classNamePattern="G{0}Impl" operationReflection="true"
+    importOrganizing="true">
+  <foreignModel>project.ecore</foreignModel>
+  <genPackages prefix="Project" basePackage="com.opcoach2" disposableProviderFactory="true"
+      ecorePackage="project.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="project.ecore#//TypePerson">
+      <genEnumLiterals ecoreEnumLiteral="project.ecore#//TypePerson/Chief"/>
+      <genEnumLiterals ecoreEnumLiteral="project.ecore#//TypePerson/Developer"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="project.ecore#//TypeProject">
+      <genEnumLiterals ecoreEnumLiteral="project.ecore#//TypeProject/Documentation"/>
+      <genEnumLiterals ecoreEnumLiteral="project.ecore#//TypeProject/Code"/>
+      <genEnumLiterals ecoreEnumLiteral="project.ecore#//TypeProject/Test"/>
+    </genEnums>
+    <genClasses ecoreClass="project.ecore#//Person">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute project.ecore#//Person/taille"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute project.ecore#//Person/poids"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute project.ecore#//Person/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute project.ecore#//Person/type"/>
+    </genClasses>
+    <genClasses ecoreClass="project.ecore#//Project">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute project.ecore#//Project/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference project.ecore#//Project/tasks"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference project.ecore#//Project/chief"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference project.ecore#//Project/mainTask"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute project.ecore#//Project/type"/>
+      <genOperations ecoreOperation="project.ecore#//Project/findFirstTask">
+        <genParameters ecoreParameter="project.ecore#//Project/findFirstTask/p"/>
+      </genOperations>
+    </genClasses>
+    <genClasses ecoreClass="project.ecore#//Task">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute project.ecore#//Task/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference project.ecore#//Task/subTasks"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference project.ecore#//Task/responsable"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference project.ecore#//Task/kijs"/>
+    </genClasses>
+    <genClasses ecoreClass="project.ecore#//Company">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference project.ecore#//Company/projects"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference project.ecore#//Company/employees"/>
+    </genClasses>
+    <genClasses ecoreClass="project.ecore#//Folder">
+      <genTypeParameters ecoreTypeParameter="project.ecore#//Folder/T"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference project.ecore#//Folder/content"/>
+      <genOperations ecoreOperation="project.ecore#//Folder/getFirst"/>
+    </genClasses>
+    <genClasses ecoreClass="project.ecore#//TaskFolder"/>
+    <genClasses ecoreClass="project.ecore#//Store">
+      <genTypeParameters ecoreTypeParameter="project.ecore#//Store/T"/>
+      <genTypeParameters ecoreTypeParameter="project.ecore#//Store/U"/>
+    </genClasses>
+    <genClasses ecoreClass="project.ecore#//TaskStore"/>
+    <genClasses image="false" ecoreClass="project.ecore#//ClassAsInterface">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute project.ecore#//ClassAsInterface/name"/>
+      <genOperations ecoreOperation="project.ecore#//ClassAsInterface/operationListener"/>
+    </genClasses>
+    <genClasses ecoreClass="project.ecore#//IntToDoubleMap">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute project.ecore#//IntToDoubleMap/key"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute project.ecore#//IntToDoubleMap/value"/>
+    </genClasses>
+    <genClasses ecoreClass="project.ecore#//ProjectFolder">
+      <genTypeParameters ecoreTypeParameter="project.ecore#//ProjectFolder/T"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute project.ecore#//ProjectFolder/name"/>
+    </genClasses>
+    <nestedGenPackages prefix="Documentation" basePackage="com.opcoach2.project" disposableProviderFactory="true"
+        ecorePackage="project.ecore#//documentation">
+      <genClasses ecoreClass="project.ecore#//documentation/DocumentationProject"/>
+      <genClasses ecoreClass="project.ecore#//documentation/DocumentationTask"/>
+    </nestedGenPackages>
+  </genPackages>
+</genmodel:GenModel>
