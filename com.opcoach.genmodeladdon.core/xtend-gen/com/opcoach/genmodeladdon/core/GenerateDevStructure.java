@@ -22,6 +22,8 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -38,6 +40,7 @@ import org.eclipse.emf.ecore.ETypeParameter;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.pde.internal.core.PDECore;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
@@ -53,7 +56,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  * generateGenModelCode : generate the EMF code using templates (calls the ant file)
  */
 @SuppressWarnings("all")
-public class GenerateDevStructure {
+public class GenerateDevStructure implements IResourceChangeListener {
   private String classPattern;
   
   private String interfacePattern;
@@ -116,6 +119,7 @@ public class GenerateDevStructure {
         status = "closed";
       }
       this.filesNotGenerated.clear();
+      ResourcesPlugin.getWorkspace().addResourceChangeListener(this, IResourceChangeEvent.POST_BUILD);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
@@ -336,11 +340,16 @@ public class GenerateDevStructure {
     return this.interfacePattern;
   }
   
+  private boolean waitingForRefresh = false;
+  
   public void refreshWorkspace() {
     try {
       try {
+        this.waitingForRefresh = true;
         ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
-        Thread.sleep(2000);
+        while (this.waitingForRefresh) {
+          Thread.sleep(1000);
+        }
       } catch (final Throwable _t) {
         if (_t instanceof CoreException) {
           final CoreException e = (CoreException)_t;
@@ -348,10 +357,17 @@ public class GenerateDevStructure {
         } else {
           throw Exceptions.sneakyThrow(_t);
         }
+      } finally {
+        PDECore.getDefault().getModelManager().bundleRootChanged(this.project);
       }
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
+  }
+  
+  @Override
+  public void resourceChanged(final IResourceChangeEvent event) {
+    this.waitingForRefresh = false;
   }
   
   public Object generateOverriddenFactoryInterface(final GenPackage gp, final String path) {

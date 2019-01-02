@@ -30,17 +30,17 @@ import org.eclipse.xtext.xbase.lib.InputOutput;
  */
 @SuppressWarnings("all")
 class GenerateExtensions {
-  private final static String EMF_GENERATED_PACKAGE = "org.eclipse.emf.ecore.generated_package";
+  private static final String EMF_GENERATED_PACKAGE = "org.eclipse.emf.ecore.generated_package";
   
-  private final static String FACTORY_OVERRIDE = "org.eclipse.emf.ecore.factory_override";
+  private static final String FACTORY_OVERRIDE = "org.eclipse.emf.ecore.factory_override";
   
-  private final static String PACKAGE_ELT = "package";
+  private static final String PACKAGE_ELT = "package";
   
-  private final static String FACTORY_ELT = "factory";
+  private static final String FACTORY_ELT = "factory";
   
-  private final static String URI_ATTR = "uri";
+  private static final String URI_ATTR = "uri";
   
-  private final static String CLASS_ATTR = "class";
+  private static final String CLASS_ATTR = "class";
   
   private WorkspaceBundlePluginModel fModel;
   
@@ -56,8 +56,13 @@ class GenerateExtensions {
       IPluginModelBase sourceModel = null;
       IPluginModelBase[] _workspaceModels = PluginRegistry.getWorkspaceModels();
       for (final IPluginModelBase m : _workspaceModels) {
-        if (((m.getBundleDescription() != null) && this.project.getName().equals(m.getBundleDescription().getSymbolicName()))) {
-          sourceModel = m;
+        {
+          String _symbolicName = m.getBundleDescription().getSymbolicName();
+          String _plus = ("Project name : " + _symbolicName);
+          InputOutput.<String>println(_plus);
+          if (((m.getBundleDescription() != null) && this.project.getName().equals(m.getBundleDescription().getSymbolicName()))) {
+            sourceModel = m;
+          }
         }
       }
       IPluginExtensionPoint[] _extensionPoints = sourceModel.getExtensions().getExtensionPoints();

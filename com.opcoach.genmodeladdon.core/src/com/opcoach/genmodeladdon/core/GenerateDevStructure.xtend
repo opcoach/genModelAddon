@@ -4,6 +4,7 @@ import com.opcoach.genmodeladdon.core.genmodel.GMAGenModel
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
+import java.text.MessageFormat
 import java.util.ArrayList
 import java.util.Collections
 import java.util.HashMap
@@ -12,6 +13,8 @@ import java.util.stream.Collectors
 import org.eclipse.ant.core.AntRunner
 import org.eclipse.core.resources.IProject
 import org.eclipse.core.resources.IResource
+import org.eclipse.core.resources.IResourceChangeEvent
+import org.eclipse.core.resources.IResourceChangeListener
 import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.CoreException
 import org.eclipse.core.runtime.IProgressMonitor
@@ -19,13 +22,12 @@ import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.core.runtime.Path
 import org.eclipse.core.runtime.Platform
 import org.eclipse.emf.codegen.ecore.genmodel.GenClass
-import org.eclipse.emf.codegen.ecore.genmodel.GenModel
 import org.eclipse.emf.codegen.ecore.genmodel.GenPackage
 import org.eclipse.emf.ecore.EClass
 import org.eclipse.jdt.core.IClasspathEntry
 import org.eclipse.jdt.core.IJavaProject
 import org.eclipse.jdt.core.JavaCore
-import java.text.MessageFormat
+import org.eclipse.pde.internal.core.PDECore
 
 /** This class is used to proceed the different steps to generate the development structure
  * A method is defined for each step :
@@ -33,7 +35,7 @@ import java.text.MessageFormat
  * generateAntFile : generate the ant file to generate the code (usefull for automatic builder)
  * generateGenModelCode : generate the EMF code using templates (calls the ant file)
  */
-class GenerateDevStructure {
+class GenerateDevStructure implements IResourceChangeListener {
 
 	String classPattern
 	String interfacePattern
@@ -88,6 +90,9 @@ class GenerateDevStructure {
 		// println("Project " + projectName + " is " + status  + " when creating devStructure for " + modelName)
 		// Reset the files not generated... (they are kept to ask if they must override existing files)
 		filesNotGenerated.clear
+
+		// Listen to workspace to be notified on refresh... 
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(this, IResourceChangeEvent.POST_BUILD)
 	}
 
 	new(GMAGenModel gm) {
@@ -265,6 +270,7 @@ class GenerateDevStructure {
 		// BUT AFTER THE EMF CODE GENERATION !!
 		generateExtensions
 
+		// Must refresh workspace
 		refreshWorkspace
 
 	}
@@ -281,15 +287,30 @@ class GenerateDevStructure {
 
 	def getInterfacePattern() { interfacePattern }
 
+	var waitingForRefresh = false;
+
 	def refreshWorkspace() {
 		try {
+			waitingForRefresh = true
 			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null)
 			// println("Waiting for refresh ")
-			Thread.sleep(2000); // Wait for refresh (important). MUST NOT BE LESS THAN 2 seconds for tycho build
+			// Thread.sleep(2000); // Wait for refresh (important). MUST NOT BE LESS THAN 2 seconds for tycho build
+			while (waitingForRefresh) {
+				//println("Waiting for refresh")
+				Thread.sleep(1000)
+			}
 		} catch (CoreException e) {
 			e.printStackTrace
 		}
+		finally {
+				PDECore.^default.modelManager.bundleRootChanged(project)
+		}
 
+	}
+
+	override resourceChanged(IResourceChangeEvent event) {
+		// println(" --->  Received the postbuild event")
+		waitingForRefresh = false
 	}
 
 	def generateOverriddenFactoryInterface(GenPackage gp, String path) {

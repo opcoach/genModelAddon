@@ -1,7 +1,9 @@
 package com.opcoach.genmodeladdon.core
 
+import java.util.ArrayList
 import java.util.Map
 import org.eclipse.core.resources.IProject
+import org.eclipse.pde.core.plugin.IPluginBase
 import org.eclipse.pde.core.plugin.IPluginElement
 import org.eclipse.pde.core.plugin.IPluginExtension
 import org.eclipse.pde.core.plugin.IPluginExtensionPoint
@@ -38,6 +40,12 @@ package class GenerateExtensions {
 	
 	// The input project that contains the extensions to be updated/added 
 	IProject project
+	
+	
+	// Temp for debug....
+	//static var sourceModels = new ArrayList<IPluginModelBase>
+	//static int ism = 0;
+	// End Temp for debug....
 
 	new(IProject p) {
 
@@ -54,12 +62,29 @@ package class GenerateExtensions {
 		// But these extensions can be found using the workspace models
 		// Search for the sourceModel from the project name
 		var IPluginModelBase sourceModel
+		//println("  *************  Start Looking for workspace project ")
 		for (m : PluginRegistry.getWorkspaceModels()) {
+			println("Project name : " + m.bundleDescription.symbolicName)
 			if (m.bundleDescription !== null && project.name.equals(m.bundleDescription.symbolicName))
+			{
+				//println("Keep it")
 				sourceModel = m
+				//sourceModels.add(sourceModel)
+				//ism++
+				}
 		}
+		//println("  *************  End Looking for workspace project ")
+		
 
 		// Copy current extension points in the new plugin model.
+	/* 	val nbEp = sourceModel.extensions.extensionPoints.size
+		if (nbEp == 0)
+		{
+			println(" No extension point ... ???? ")
+		}else
+		{
+		println(" -------->>>>>>>> There is " + nbEp + " extensions points in the source model")
+		}*/
 		for (IPluginExtensionPoint ept : sourceModel.extensions.extensionPoints) 
 			fModel.pluginBase.add(ept.copyExtensionPoint)
 

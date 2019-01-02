@@ -81,6 +81,8 @@ public class WorkspaceConfigurator implements ProjectConstants
 	{
 		return root;
 	}
+	
+	public  boolean isInitDone() { return initDone; }
 
 	/** initialize the sample project only once */
 	public IProject getSampleProject()
@@ -95,7 +97,7 @@ public class WorkspaceConfigurator implements ProjectConstants
 				initGenModel(PROJECT_GENMODEL, PROJECT_ANT_FILE);
 				initGenModel(PROJECT2_GENMODEL, PROJECT_ANT2_FILE, "{0}Impl", "G{0}", "src");
 				initGenModel(FANNOISE_GENMODEL, FANOISE_ANT_FILE);
-
+				System.out.println("Init finished");
 			} catch (Exception ex)
 			{
 				ex.printStackTrace();
@@ -178,7 +180,7 @@ public class WorkspaceConfigurator implements ProjectConstants
 
 	}
 
-	/** This method initialize the test workspace with a sample project 
+	/** This method initializes the test workspace with a sample project 
 	 * It calls the prepareTestWorkspace ant file that will unzip the sample project
 	 * */
 	private IWorkspaceRoot initWorkspace() throws IOException

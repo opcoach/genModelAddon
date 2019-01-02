@@ -11,7 +11,7 @@ import org.eclipse.xtend2.lib.StringConcatenation;
 
 @SuppressWarnings("all")
 public class GenerateAntFileForCodeGeneration {
-  public final static String ANT_FILENAME = "generateEMFCode.xml";
+  public static final String ANT_FILENAME = "generateEMFCode.xml";
   
   private CharSequence generateAntFileContent(final String modelDir, final String modelName) {
     StringConcatenation _builder = new StringConcatenation();
