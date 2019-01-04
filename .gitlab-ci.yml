@@ -1,0 +1,11 @@
+image: jdk:8
+stages:
+    - build
+
+build:
+    stage: build
+    script: ./mvnw -X clean install
+    artifacts:
+        paths:
+            - build/com.opcoach.genmodeladdon.repository/target/com.opcoach.genmodeladdon.repository-2.2.0-SNAPSHOT.zip
+
