@@ -3,9 +3,10 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Sample
 Bundle-SymbolicName: com.opcoach.genmodeladdon.sample;singleton:=true
 Bundle-Version: 2.2.0.qualifier
-Eclipse-BundleShape: dir
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ClassPath: ant_tasks/importer.ecore.tasks.jar,
  .
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.emf.ecore
+ org.eclipse.emf.ecore,
+ org.eclipse.emf.ecore.xmi;bundle-version="2.16.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Eclipse-BundleShape: dir
