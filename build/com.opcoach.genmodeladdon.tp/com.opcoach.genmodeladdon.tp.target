@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="GMA SimRel0319" sequenceNumber="1554742903">
+<target name="GMA SimRel0619" sequenceNumber="1561585058">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.xtext.sdk.feature.group" version="2.17.0.v20190304-1445"/>
-      <unit id="org.eclipse.xtend.sdk.feature.group" version="2.17.0.v20190304-1445"/>
-      <unit id="org.eclipse.xtext.xbase.feature.group" version="2.17.0.v20190304-1445"/>
-      <repository location="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.17.0/"/>
+      <unit id="org.eclipse.xtext.sdk.feature.group" version="2.18.0.v20190603-1516"/>
+      <unit id="org.eclipse.xtend.sdk.feature.group" version="2.18.0.v20190603-1516"/>
+      <unit id="org.eclipse.xtext.xbase.feature.group" version="2.18.0.v20190603-1516"/>
+      <repository location="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.18.0/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.rcp.feature.group" version="4.11.0.v20190307-0500"/>
-      <unit id="org.eclipse.ant.core" version="3.5.300.v20190213-1305"/>
+      <unit id="org.eclipse.rcp.feature.group" version="4.12.0.v20190605-1801"/>
+      <unit id="org.eclipse.ant.core" version="3.5.400.v20190510-0606"/>
       <unit id="org.apache.commons.io" version="2.6.0.v20190123-2029"/>
-      <unit id="org.eclipse.pde.feature.group" version="3.13.400.v20190307-0943"/>
-      <unit id="org.eclipse.emf.ant" version="2.10.0.v20180706-1146"/>
-      <unit id="org.eclipse.emf.sdk.feature.group" version="2.17.0.v20190301-1325"/>
-      <unit id="org.eclipse.emf.codegen.ecore.feature.group" version="2.17.0.v20190209-1542"/>
+      <unit id="org.eclipse.pde.feature.group" version="3.14.0.v20190605-1800"/>
+      <unit id="org.eclipse.emf.ant" version="2.11.0.v20190418-1022"/>
+      <unit id="org.eclipse.emf.sdk.feature.group" version="2.18.0.v20190528-0845"/>
+      <unit id="org.eclipse.emf.codegen.ecore.feature.group" version="2.18.0.v20190528-0725"/>
       <unit id="org.eclipse.emf.importer.ecore" version="2.10.0.v20180706-1146"/>
-      <unit id="org.eclipse.emf.importer" version="2.11.0.v20180706-1146"/>
-      <unit id="org.eclipse.ant.launching" version="1.2.400.v20190205-2142"/>
-      <unit id="org.eclipse.core.runtime" version="3.15.200.v20190301-1641"/>
+      <unit id="org.eclipse.emf.importer" version="2.12.0.v20190321-1539"/>
+      <unit id="org.eclipse.ant.launching" version="1.2.500.v20190510-0606"/>
+      <unit id="org.eclipse.core.runtime" version="3.15.300.v20190508-0543"/>
       <unit id="org.junit" version="4.12.0.v201504281640"/>
-      <unit id="org.eclipse.jdt.junit.runtime" version="3.4.900.v20181012-1045"/>
-      <unit id="org.eclipse.sdk.feature.group" version="4.11.0.v20190307-0943"/>
-      <repository location="http://download.eclipse.org/releases/2019-03"/>
+      <unit id="org.eclipse.jdt.junit.runtime" version="3.4.1000.v20190510-0840"/>
+      <unit id="org.eclipse.sdk.feature.group" version="4.12.0.v20190605-1801"/>
+      <repository location="http://download.eclipse.org/releases/2019-06"/>
     </location>
   </locations>
 </target>

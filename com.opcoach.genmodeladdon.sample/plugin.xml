@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin>
+
    <extension-point id="sampleExtensionPoint" name="sampleExtensionPoint" schema="schema/sampleExtensionPoint.exsd"/>
 
    <extension
@@ -43,6 +44,27 @@
                class="org.eclipse.equinox.internal.app.ErrorApplication">
          </run>
       </application>
+   </extension>
+   <extension
+         point="org.eclipse.emf.ecore.extension_parser">
+      <parser
+            type="ananax"
+            class="ananax.util.MAnanaxResourceFactoryImpl">
+      </parser>
+   </extension>
+   <extension
+         point="org.eclipse.emf.ecore.factory_override">
+      <factory
+            uri="platform:/resource/com.airbus.fannoise.xsd/xsd/duct_noise/common/acoustics/acoustics.xsd"
+            class="ananax.impl.AnanaxFactoryImpl">
+      </factory>
+   </extension>
+   <extension
+         point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="platform:/resource/com.airbus.fannoise.xsd/xsd/duct_noise/common/acoustics/acoustics.xsd"
+            class="ananax.MAnanaxPackage">
+      </package>
    </extension>
 
 </plugin>
