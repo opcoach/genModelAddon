@@ -88,4 +88,16 @@
     <eClassifiers xsi:type="ecore:EClass" name="DocumentationProject" eSuperTypes="#//Project"/>
     <eClassifiers xsi:type="ecore:EClass" name="DocumentationTask" eSuperTypes="#//Task"/>
   </eSubpackages>
+  <eSubpackages name="emptyPackage" nsURI="http://com.opcoach.project/empty/1.0" nsPrefix="e"/>
+  <eSubpackages name="packageWithoutClasses" nsURI="http://com.opcoach.project/packageWithoutClasses/1.0"
+      nsPrefix="pwc">
+    <eSubpackages name="intermediate" nsURI="http://com.opcoach.project/empty/intermediate/1.0"
+        nsPrefix="int">
+      <eClassifiers xsi:type="ecore:EClass" name="EmptyClass"/>
+    </eSubpackages>
+    <eSubpackages name="intermediate2" nsURI="http://com.opcoach.project/empty/intermediate2/1.0"
+        nsPrefix="int">
+      <eClassifiers xsi:type="ecore:EClass" name="EmptyClass2"/>
+    </eSubpackages>
+  </eSubpackages>
 </ecore:EPackage>

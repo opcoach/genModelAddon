@@ -149,9 +149,10 @@ public class TestExtensionGeneration extends GenModelAddonTestCase
 	{
 		PDEExtensionRegistry pdeReg = PDECore.getDefault().getExtensionsRegistry();
 
-		IPluginModelBase base = PluginRegistry.getWorkspaceModels()[0];
+		IPluginModelBase base = getPluginBase();
 		Collection<IPluginExtension> appliExt = new ArrayList<IPluginExtension>();
 
+		System.out.println("Plugin base is : " + base);
 		for (IPluginExtension e : pdeReg.findExtensionsForPlugin(base))
 		{
 			if (e.getPoint().equals("org.eclipse.core.runtime.applications"))
@@ -170,10 +171,9 @@ public class TestExtensionGeneration extends GenModelAddonTestCase
 		assertFileContains("plugin.xml", "<extension-point id=\"sampleExtensionPoint\" name=\"sampleExtensionPoint\" schema=\"schema/sampleExtensionPoint.exsd\"/>");
 
 		
-		/*
 		PDEExtensionRegistry pdeReg = PDECore.getDefault().getExtensionsRegistry();		
 		
-		IPluginModelBase base = PluginRegistry.getWorkspaceModels()[0];
+		IPluginModelBase base = getPluginBase();
 		Collection<IPluginExtensionPoint> appliExt = new ArrayList<>();
 
 		IPluginExtensionPoint pt = pdeReg.findExtensionPoint("com.opcoach.genmodeladdon.destsample.sampleExtensionPoint");
@@ -185,7 +185,6 @@ public class TestExtensionGeneration extends GenModelAddonTestCase
 		}
 
 		assertNotNull("The sample extension point must be still there", pt);
-	*/
 	}
 
 	/**

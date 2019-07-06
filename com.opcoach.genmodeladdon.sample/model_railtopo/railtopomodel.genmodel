@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/com.opcoach.genmodeladdon.sample/src-gen" modelPluginID="com.opcoach.genmodeladdon.sample"
+    modelName="Railtopomodel" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0" copyrightFields="false"
+    interfaceNamePattern="{0}Impl" classNamePattern="M{0}Impl" operationReflection="true"
+    importOrganizing="true">
+  <foreignModel>railtopomodel.ecore</foreignModel>
+  <genPackages prefix="Railtopomodel" disposableProviderFactory="true" ecorePackage="railtopomodel.ecore#/">
+    <nestedGenPackages prefix="Infrastructure" disposableProviderFactory="true" ecorePackage="railtopomodel.ecore#//infrastructure">
+      <nestedGenPackages prefix="Location" disposableProviderFactory="true" ecorePackage="railtopomodel.ecore#//infrastructure/location">
+        <genEnums typeSafeEnumCompatible="false" ecoreEnum="railtopomodel.ecore#//infrastructure/location/ApplicationDirection">
+          <genEnumLiterals ecoreEnumLiteral="railtopomodel.ecore#//infrastructure/location/ApplicationDirection/normal"/>
+          <genEnumLiterals ecoreEnumLiteral="railtopomodel.ecore#//infrastructure/location/ApplicationDirection/reverse"/>
+          <genEnumLiterals ecoreEnumLiteral="railtopomodel.ecore#//infrastructure/location/ApplicationDirection/both"/>
+        </genEnums>
+        <genClasses ecoreClass="railtopomodel.ecore#//infrastructure/location/AreaLocation">
+          <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference railtopomodel.ecore#//infrastructure/location/AreaLocation/associatedNetElements"/>
+        </genClasses>
+        <genClasses ecoreClass="railtopomodel.ecore#//infrastructure/location/EntityLocation"/>
+        <genClasses ecoreClass="railtopomodel.ecore#//infrastructure/location/AssociatedNetElement">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//infrastructure/location/AssociatedNetElement/keepsOrientation"/>
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference railtopomodel.ecore#//infrastructure/location/AssociatedNetElement/netElement"/>
+        </genClasses>
+        <genClasses ecoreClass="railtopomodel.ecore#//infrastructure/location/AssociatedNetElementCoordinate">
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference railtopomodel.ecore#//infrastructure/location/AssociatedNetElementCoordinate/start"/>
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference railtopomodel.ecore#//infrastructure/location/AssociatedNetElementCoordinate/end"/>
+        </genClasses>
+        <genClasses ecoreClass="railtopomodel.ecore#//infrastructure/location/AssociatedNetElementIntrinsic">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//infrastructure/location/AssociatedNetElementIntrinsic/intrinsicCoordBegin"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//infrastructure/location/AssociatedNetElementIntrinsic/intrinsicCoordEnd"/>
+        </genClasses>
+        <genClasses ecoreClass="railtopomodel.ecore#//infrastructure/location/LinearLocation">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//infrastructure/location/LinearLocation/applicationDirection"/>
+          <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference railtopomodel.ecore#//infrastructure/location/LinearLocation/associatedElements"/>
+        </genClasses>
+        <genClasses ecoreClass="railtopomodel.ecore#//infrastructure/location/OrderedAssociatedNetElement">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//infrastructure/location/OrderedAssociatedNetElement/sequence"/>
+        </genClasses>
+        <genClasses ecoreClass="railtopomodel.ecore#//infrastructure/location/LinearLocationCoordinate">
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference railtopomodel.ecore#//infrastructure/location/LinearLocationCoordinate/coordinates"/>
+        </genClasses>
+        <genClasses ecoreClass="railtopomodel.ecore#//infrastructure/location/SpotLocation">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//infrastructure/location/SpotLocation/applicationDirection"/>
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference railtopomodel.ecore#//infrastructure/location/SpotLocation/netElement"/>
+        </genClasses>
+        <genClasses ecoreClass="railtopomodel.ecore#//infrastructure/location/SpotLocationCoordinate">
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference railtopomodel.ecore#//infrastructure/location/SpotLocationCoordinate/coordinate"/>
+        </genClasses>
+        <genClasses ecoreClass="railtopomodel.ecore#//infrastructure/location/SpotLocationIntrinsic">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//infrastructure/location/SpotLocationIntrinsic/intrinsicCoord"/>
+        </genClasses>
+      </nestedGenPackages>
+      <nestedGenPackages prefix="Topology" disposableProviderFactory="true" ecorePackage="railtopomodel.ecore#//infrastructure/topology">
+        <genEnums typeSafeEnumCompatible="false" ecoreEnum="railtopomodel.ecore#//infrastructure/topology/Navigability">
+          <genEnumLiterals ecoreEnumLiteral="railtopomodel.ecore#//infrastructure/topology/Navigability/ab"/>
+          <genEnumLiterals ecoreEnumLiteral="railtopomodel.ecore#//infrastructure/topology/Navigability/ba"/>
+          <genEnumLiterals ecoreEnumLiteral="railtopomodel.ecore#//infrastructure/topology/Navigability/both"/>
+          <genEnumLiterals ecoreEnumLiteral="railtopomodel.ecore#//infrastructure/topology/Navigability/none"/>
+        </genEnums>
+        <genEnums typeSafeEnumCompatible="false" ecoreEnum="railtopomodel.ecore#//infrastructure/topology/Usage">
+          <genEnumLiterals ecoreEnumLiteral="railtopomodel.ecore#//infrastructure/topology/Usage/_0"/>
+          <genEnumLiterals ecoreEnumLiteral="railtopomodel.ecore#//infrastructure/topology/Usage/_1"/>
+        </genEnums>
+        <genEnums typeSafeEnumCompatible="false" ecoreEnum="railtopomodel.ecore#//infrastructure/topology/Orientation">
+          <genEnumLiterals ecoreEnumLiteral="railtopomodel.ecore#//infrastructure/topology/Orientation/_1"/>
+          <genEnumLiterals ecoreEnumLiteral="railtopomodel.ecore#//infrastructure/topology/Orientation/_0"/>
+        </genEnums>
+        <genClasses image="false" ecoreClass="railtopomodel.ecore#//infrastructure/topology/CompositionNetElement">
+          <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference railtopomodel.ecore#//infrastructure/topology/CompositionNetElement/elementCollections"/>
+        </genClasses>
+        <genClasses ecoreClass="railtopomodel.ecore#//infrastructure/topology/NetElement">
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference railtopomodel.ecore#//infrastructure/topology/NetElement/relations"/>
+        </genClasses>
+        <genClasses ecoreClass="railtopomodel.ecore#//infrastructure/topology/Relation"/>
+        <genClasses ecoreClass="railtopomodel.ecore#//infrastructure/topology/ElementPartCollection"/>
+        <genClasses ecoreClass="railtopomodel.ecore#//infrastructure/topology/LinearElement"/>
+        <genClasses ecoreClass="railtopomodel.ecore#//infrastructure/topology/NonLinearElement"/>
+        <genClasses ecoreClass="railtopomodel.ecore#//infrastructure/topology/OrderedCollection">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//infrastructure/topology/OrderedCollection/sequence"/>
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference railtopomodel.ecore#//infrastructure/topology/OrderedCollection/elementParts"/>
+        </genClasses>
+        <genClasses ecoreClass="railtopomodel.ecore#//infrastructure/topology/PositionedRelation">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//infrastructure/topology/PositionedRelation/navigability"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//infrastructure/topology/PositionedRelation/positionOnA"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//infrastructure/topology/PositionedRelation/positionOnB"/>
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference railtopomodel.ecore#//infrastructure/topology/PositionedRelation/elementA"/>
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference railtopomodel.ecore#//infrastructure/topology/PositionedRelation/elementB"/>
+        </genClasses>
+        <genClasses ecoreClass="railtopomodel.ecore#//infrastructure/topology/UnorderedCollection">
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference railtopomodel.ecore#//infrastructure/topology/UnorderedCollection/elementParts"/>
+        </genClasses>
+        <genClasses ecoreClass="railtopomodel.ecore#//infrastructure/topology/PositioningNetElement">
+          <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference railtopomodel.ecore#//infrastructure/topology/PositioningNetElement/associatedPositioningSystems"/>
+        </genClasses>
+      </nestedGenPackages>
+      <nestedGenPackages prefix="Network" disposableProviderFactory="true" ecorePackage="railtopomodel.ecore#//infrastructure/network">
+        <genEnums typeSafeEnumCompatible="false" ecoreEnum="railtopomodel.ecore#//infrastructure/network/DescriptionLevel">
+          <genEnumLiterals ecoreEnumLiteral="railtopomodel.ecore#//infrastructure/network/DescriptionLevel/macro"/>
+          <genEnumLiterals ecoreEnumLiteral="railtopomodel.ecore#//infrastructure/network/DescriptionLevel/meso"/>
+          <genEnumLiterals ecoreEnumLiteral="railtopomodel.ecore#//infrastructure/network/DescriptionLevel/micro"/>
+        </genEnums>
+        <genClasses ecoreClass="railtopomodel.ecore#//infrastructure/network/LevelNetwork">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//infrastructure/network/LevelNetwork/descriptionLevel"/>
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference railtopomodel.ecore#//infrastructure/network/LevelNetwork/networkResources"/>
+        </genClasses>
+        <genClasses ecoreClass="railtopomodel.ecore#//infrastructure/network/Network">
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference railtopomodel.ecore#//infrastructure/network/Network/levels"/>
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference railtopomodel.ecore#//infrastructure/network/Network/networkResources"/>
+        </genClasses>
+        <genClasses image="false" ecoreClass="railtopomodel.ecore#//infrastructure/network/NetworkResource">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//infrastructure/network/NetworkResource/validFrom"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//infrastructure/network/NetworkResource/validTo"/>
+        </genClasses>
+      </nestedGenPackages>
+      <nestedGenPackages prefix="NetEntity" disposableProviderFactory="true" ecorePackage="railtopomodel.ecore#//infrastructure/netEntity">
+        <genClasses ecoreClass="railtopomodel.ecore#//infrastructure/netEntity/LocatedNetEntity">
+          <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference railtopomodel.ecore#//infrastructure/netEntity/LocatedNetEntity/locations"/>
+        </genClasses>
+        <genClasses ecoreClass="railtopomodel.ecore#//infrastructure/netEntity/NetEntity"/>
+      </nestedGenPackages>
+    </nestedGenPackages>
+    <nestedGenPackages prefix="Common" disposableProviderFactory="true" ecorePackage="railtopomodel.ecore#//common">
+      <nestedGenPackages prefix="PositioningSystem" disposableProviderFactory="true"
+          ecorePackage="railtopomodel.ecore#//common/positioningSystem">
+        <genEnums typeSafeEnumCompatible="false" ecoreEnum="railtopomodel.ecore#//common/positioningSystem/LrsMethod">
+          <genEnumLiterals ecoreEnumLiteral="railtopomodel.ecore#//common/positioningSystem/LrsMethod/absolute"/>
+          <genEnumLiterals ecoreEnumLiteral="railtopomodel.ecore#//common/positioningSystem/LrsMethod/relative"/>
+          <genEnumLiterals ecoreEnumLiteral="railtopomodel.ecore#//common/positioningSystem/LrsMethod/interpolation"/>
+        </genEnums>
+        <genClasses ecoreClass="railtopomodel.ecore#//common/positioningSystem/AssociatedPositioningSystem">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//common/positioningSystem/AssociatedPositioningSystem/validFrom"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//common/positioningSystem/AssociatedPositioningSystem/validTo"/>
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference railtopomodel.ecore#//common/positioningSystem/AssociatedPositioningSystem/positioningSystem"/>
+          <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference railtopomodel.ecore#//common/positioningSystem/AssociatedPositioningSystem/intrinsicCoordinates"/>
+        </genClasses>
+        <genClasses ecoreClass="railtopomodel.ecore#//common/positioningSystem/PositioningSystem">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//common/positioningSystem/PositioningSystem/validFrom"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//common/positioningSystem/PositioningSystem/validTo"/>
+        </genClasses>
+        <genClasses ecoreClass="railtopomodel.ecore#//common/positioningSystem/IntrinsicCoordinate">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//common/positioningSystem/IntrinsicCoordinate/intrinsicCoord"/>
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference railtopomodel.ecore#//common/positioningSystem/IntrinsicCoordinate/coordinates"/>
+        </genClasses>
+        <genClasses ecoreClass="railtopomodel.ecore#//common/positioningSystem/PositioningSystemCoordinate">
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference railtopomodel.ecore#//common/positioningSystem/PositioningSystemCoordinate/positioningSystem"/>
+        </genClasses>
+        <genClasses ecoreClass="railtopomodel.ecore#//common/positioningSystem/GeometricCoordinate">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//common/positioningSystem/GeometricCoordinate/x"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//common/positioningSystem/GeometricCoordinate/y"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//common/positioningSystem/GeometricCoordinate/z"/>
+        </genClasses>
+        <genClasses ecoreClass="railtopomodel.ecore#//common/positioningSystem/GeometricPositioningSystem">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//common/positioningSystem/GeometricPositioningSystem/crsDefinition"/>
+        </genClasses>
+        <genClasses ecoreClass="railtopomodel.ecore#//common/positioningSystem/LinearAnchorPoint">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//common/positioningSystem/LinearAnchorPoint/anchorName"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//common/positioningSystem/LinearAnchorPoint/measure"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//common/positioningSystem/LinearAnchorPoint/measureToNext"/>
+        </genClasses>
+        <genClasses ecoreClass="railtopomodel.ecore#//common/positioningSystem/LinearCoordinate">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//common/positioningSystem/LinearCoordinate/lateralOffset"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//common/positioningSystem/LinearCoordinate/measure"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//common/positioningSystem/LinearCoordinate/verticalOffset"/>
+        </genClasses>
+        <genClasses ecoreClass="railtopomodel.ecore#//common/positioningSystem/LinearPositioningSystem">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//common/positioningSystem/LinearPositioningSystem/endMeasure"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//common/positioningSystem/LinearPositioningSystem/linearReferencingMethod"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//common/positioningSystem/LinearPositioningSystem/startMeasure"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//common/positioningSystem/LinearPositioningSystem/units"/>
+          <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference railtopomodel.ecore#//common/positioningSystem/LinearPositioningSystem/anchors"/>
+        </genClasses>
+      </nestedGenPackages>
+      <nestedGenPackages prefix="Base" disposableProviderFactory="true" ecorePackage="railtopomodel.ecore#//common/base">
+        <genClasses ecoreClass="railtopomodel.ecore#//common/base/NamedResource">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//common/base/NamedResource/longname"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute railtopomodel.ecore#//common/base/NamedResource/name"/>
+        </genClasses>
+        <genClasses ecoreClass="railtopomodel.ecore#//common/base/LegacyId"/>
+        <genClasses ecoreClass="railtopomodel.ecore#//common/base/Tid"/>
+        <genClasses ecoreClass="railtopomodel.ecore#//common/base/Uuid"/>
+        <genClasses ecoreClass="railtopomodel.ecore#//common/base/BaseObject">
+          <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference railtopomodel.ecore#//common/base/BaseObject/id"/>
+        </genClasses>
+      </nestedGenPackages>
+    </nestedGenPackages>
+  </genPackages>
+  <genPackages prefix="Types" disposableProviderFactory="true" ecorePackage="Types.ecore#/">
+    <genDataTypes ecoreDataType="Types.ecore#//Boolean"/>
+    <genDataTypes ecoreDataType="Types.ecore#//Integer"/>
+    <genDataTypes ecoreDataType="Types.ecore#//Real"/>
+    <genDataTypes ecoreDataType="Types.ecore#//String"/>
+    <genDataTypes ecoreDataType="Types.ecore#//UnlimitedNatural"/>
+  </genPackages>
+</genmodel:GenModel>

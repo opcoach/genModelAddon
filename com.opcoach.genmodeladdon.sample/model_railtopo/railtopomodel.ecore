@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="railtopomodel" nsURI="http:///railtopomodel.ecore" nsPrefix="railtopomodel">
+  <eAnnotations source="http://www.eclipse.org/uml2/2.0.0/UML">
+    <details key="originalName" value="Railtopomodel"/>
+  </eAnnotations>
+  <eSubpackages name="infrastructure" nsURI="http:///railtopomodel/infrastructure.ecore"
+      nsPrefix="railtopomodel.infrastructure">
+    <eAnnotations source="http://www.eclipse.org/uml2/2.0.0/UML">
+      <details key="originalName" value="Infrastructure"/>
+    </eAnnotations>
+    <eSubpackages name="location" nsURI="http:///railtopomodel/infrastructure/location.ecore"
+        nsPrefix="railtopomodel.infrastructure.location">
+      <eAnnotations source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <details key="originalName" value="Location"/>
+      </eAnnotations>
+      <eClassifiers xsi:type="ecore:EClass" name="AreaLocation" eSuperTypes="#//infrastructure/location/EntityLocation">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="associatedNetElements"
+            ordered="false" lowerBound="1" upperBound="-1" eType="#//infrastructure/location/AssociatedNetElement"
+            containment="true">
+          <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+            <details key="suppressedGetVisibility" value="true"/>
+            <details key="suppressedIsSetVisibility" value="true"/>
+            <details key="suppressedUnsetVisibility" value="true"/>
+            <details key="suppressedSetVisibility" value="true"/>
+          </eAnnotations>
+        </eStructuralFeatures>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="EntityLocation" eSuperTypes="#//common/base/BaseObject"/>
+      <eClassifiers xsi:type="ecore:EClass" name="AssociatedNetElement">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="keepsOrientation" ordered="false"
+            lowerBound="1" eType="ecore:EDataType Types.ecore#//Boolean"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="netElement" ordered="false"
+            lowerBound="1" eType="#//infrastructure/topology/PositioningNetElement"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="AssociatedNetElementCoordinate"
+          eSuperTypes="#//infrastructure/location/AssociatedNetElement">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="start" ordered="false"
+            lowerBound="1" eType="#//common/positioningSystem/PositioningSystemCoordinate"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="end" ordered="false"
+            lowerBound="1" eType="#//common/positioningSystem/PositioningSystemCoordinate"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="AssociatedNetElementIntrinsic" eSuperTypes="#//infrastructure/location/AssociatedNetElement">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="intrinsicCoordBegin"
+            ordered="false" lowerBound="1" eType="ecore:EDataType Types.ecore#//Real"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="intrinsicCoordEnd"
+            ordered="false" lowerBound="1" eType="ecore:EDataType Types.ecore#//Real"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="LinearLocation" eSuperTypes="#//infrastructure/location/EntityLocation">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="applicationDirection"
+            ordered="false" lowerBound="1" eType="#//infrastructure/location/ApplicationDirection"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="associatedElements"
+            ordered="false" lowerBound="1" upperBound="-1" eType="#//infrastructure/location/OrderedAssociatedNetElement"
+            containment="true"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EEnum" name="ApplicationDirection">
+        <eLiterals name="normal"/>
+        <eLiterals name="reverse" value="1"/>
+        <eLiterals name="both" value="2"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="OrderedAssociatedNetElement" eSuperTypes="#//infrastructure/location/AssociatedNetElement">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="sequence" ordered="false"
+            lowerBound="1" eType="ecore:EDataType Types.ecore#//Integer"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="LinearLocationCoordinate" eSuperTypes="#//infrastructure/location/LinearLocation">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="coordinates" ordered="false"
+            lowerBound="1" upperBound="-1" eType="#//common/positioningSystem/PositioningSystemCoordinate"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="SpotLocation" eSuperTypes="#//infrastructure/location/EntityLocation">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="applicationDirection"
+            ordered="false" lowerBound="1" eType="#//infrastructure/location/ApplicationDirection"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="netElement" ordered="false"
+            lowerBound="1" eType="#//infrastructure/topology/PositioningNetElement"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="SpotLocationCoordinate" eSuperTypes="#//infrastructure/location/SpotLocation">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="coordinate" ordered="false"
+            lowerBound="1" eType="#//common/positioningSystem/PositioningSystemCoordinate"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="SpotLocationIntrinsic" eSuperTypes="#//infrastructure/location/SpotLocation">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="intrinsicCoord" ordered="false"
+            lowerBound="1" eType="ecore:EDataType Types.ecore#//Real"/>
+      </eClassifiers>
+    </eSubpackages>
+    <eSubpackages name="topology" nsURI="http:///railtopomodel/infrastructure/topology.ecore"
+        nsPrefix="railtopomodel.infrastructure.topology">
+      <eAnnotations source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <details key="originalName" value="Topology"/>
+      </eAnnotations>
+      <eClassifiers xsi:type="ecore:EClass" name="CompositionNetElement" abstract="true"
+          eSuperTypes="#//infrastructure/topology/NetElement">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="elementCollections"
+            ordered="false" upperBound="-1" eType="#//infrastructure/topology/ElementPartCollection"
+            containment="true"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="NetElement" eSuperTypes="#//infrastructure/network/NetworkResource">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="relations" ordered="false"
+            lowerBound="1" upperBound="-1" eType="#//infrastructure/topology/Relation"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="Relation" eSuperTypes="#//infrastructure/network/NetworkResource"/>
+      <eClassifiers xsi:type="ecore:EClass" name="ElementPartCollection" eSuperTypes="#//common/base/BaseObject"/>
+      <eClassifiers xsi:type="ecore:EClass" name="LinearElement" eSuperTypes="#//infrastructure/topology/PositioningNetElement"/>
+      <eClassifiers xsi:type="ecore:EClass" name="NonLinearElement" eSuperTypes="#//infrastructure/topology/PositioningNetElement"/>
+      <eClassifiers xsi:type="ecore:EEnum" name="Navigability">
+        <eLiterals name="ab">
+          <eAnnotations source="http://www.eclipse.org/uml2/2.0.0/UML">
+            <details key="originalName" value="AB"/>
+          </eAnnotations>
+        </eLiterals>
+        <eLiterals name="ba" value="1">
+          <eAnnotations source="http://www.eclipse.org/uml2/2.0.0/UML">
+            <details key="originalName" value="BA"/>
+          </eAnnotations>
+        </eLiterals>
+        <eLiterals name="both" value="2">
+          <eAnnotations source="http://www.eclipse.org/uml2/2.0.0/UML">
+            <details key="originalName" value="Both"/>
+          </eAnnotations>
+        </eLiterals>
+        <eLiterals name="none" value="3">
+          <eAnnotations source="http://www.eclipse.org/uml2/2.0.0/UML">
+            <details key="originalName" value="None"/>
+          </eAnnotations>
+        </eLiterals>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="OrderedCollection" eSuperTypes="#//infrastructure/topology/ElementPartCollection">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="sequence" ordered="false"
+            lowerBound="1" eType="ecore:EDataType Types.ecore#//Integer"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="elementParts" lowerBound="1"
+            upperBound="-1" eType="#//infrastructure/topology/NetElement"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="PositionedRelation" eSuperTypes="#//infrastructure/topology/Relation">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="navigability" ordered="false"
+            lowerBound="1" eType="#//infrastructure/topology/Navigability"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="positionOnA" ordered="false"
+            lowerBound="1" eType="#//infrastructure/topology/Usage"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="positionOnB" ordered="false"
+            lowerBound="1" eType="#//infrastructure/topology/Usage"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="elementA" ordered="false"
+            lowerBound="1" eType="#//infrastructure/topology/PositioningNetElement"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="elementB" ordered="false"
+            lowerBound="1" eType="#//infrastructure/topology/PositioningNetElement"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EEnum" name="Usage">
+        <eLiterals name="_0">
+          <eAnnotations source="http://www.eclipse.org/uml2/2.0.0/UML">
+            <details key="originalName" value="0"/>
+          </eAnnotations>
+        </eLiterals>
+        <eLiterals name="_1" value="1">
+          <eAnnotations source="http://www.eclipse.org/uml2/2.0.0/UML">
+            <details key="originalName" value="1"/>
+          </eAnnotations>
+        </eLiterals>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="UnorderedCollection" eSuperTypes="#//infrastructure/topology/ElementPartCollection">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="elementParts" ordered="false"
+            lowerBound="1" upperBound="-1" eType="#//infrastructure/topology/NetElement"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EEnum" name="Orientation">
+        <eLiterals name="_1" value="1">
+          <eAnnotations source="http://www.eclipse.org/uml2/2.0.0/UML">
+            <details key="originalName" value="1"/>
+          </eAnnotations>
+        </eLiterals>
+        <eLiterals name="_0">
+          <eAnnotations source="http://www.eclipse.org/uml2/2.0.0/UML">
+            <details key="originalName" value="0"/>
+          </eAnnotations>
+        </eLiterals>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="PositioningNetElement" eSuperTypes="#//infrastructure/topology/CompositionNetElement">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="associatedPositioningSystems"
+            ordered="false" lowerBound="1" upperBound="-1" eType="#//common/positioningSystem/AssociatedPositioningSystem"
+            containment="true"/>
+      </eClassifiers>
+    </eSubpackages>
+    <eSubpackages name="network" nsURI="http:///railtopomodel/infrastructure/network.ecore"
+        nsPrefix="railtopomodel.infrastructure.network">
+      <eAnnotations source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <details key="originalName" value="Network"/>
+      </eAnnotations>
+      <eClassifiers xsi:type="ecore:EClass" name="LevelNetwork" eSuperTypes="#//common/base/BaseObject">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="descriptionLevel" ordered="false"
+            lowerBound="1" eType="#//infrastructure/network/DescriptionLevel"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="networkResources" ordered="false"
+            lowerBound="1" upperBound="-1" eType="#//infrastructure/network/NetworkResource"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EEnum" name="DescriptionLevel">
+        <eLiterals name="macro">
+          <eAnnotations source="http://www.eclipse.org/uml2/2.0.0/UML">
+            <details key="originalName" value="Macro"/>
+          </eAnnotations>
+        </eLiterals>
+        <eLiterals name="meso" value="1">
+          <eAnnotations source="http://www.eclipse.org/uml2/2.0.0/UML">
+            <details key="originalName" value="Meso"/>
+          </eAnnotations>
+        </eLiterals>
+        <eLiterals name="micro" value="2">
+          <eAnnotations source="http://www.eclipse.org/uml2/2.0.0/UML">
+            <details key="originalName" value="Micro"/>
+          </eAnnotations>
+        </eLiterals>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="Network" eSuperTypes="#//common/base/NamedResource">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="levels" ordered="false"
+            lowerBound="1" upperBound="-1" eType="#//infrastructure/network/LevelNetwork"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="networkResources" ordered="false"
+            upperBound="-1" eType="#//infrastructure/network/NetworkResource"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="NetworkResource" abstract="true"
+          eSuperTypes="#//common/base/NamedResource">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="validFrom" ordered="false"
+            eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="validTo" ordered="false"
+            eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+      </eClassifiers>
+    </eSubpackages>
+    <eSubpackages name="netEntity" nsURI="http:///railtopomodel/infrastructure/netEntity.ecore"
+        nsPrefix="railtopomodel.infrastructure.netEntity">
+      <eAnnotations source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <details key="originalName" value="NetEntity"/>
+      </eAnnotations>
+      <eClassifiers xsi:type="ecore:EClass" name="LocatedNetEntity" eSuperTypes="#//infrastructure/netEntity/NetEntity">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="locations" ordered="false"
+            lowerBound="1" upperBound="-1" eType="#//infrastructure/location/EntityLocation"
+            containment="true"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="NetEntity" eSuperTypes="#//infrastructure/network/NetworkResource"/>
+    </eSubpackages>
+  </eSubpackages>
+  <eSubpackages name="common" nsURI="http:///railtopomodel/common.ecore" nsPrefix="railtopomodel.common">
+    <eAnnotations source="http://www.eclipse.org/uml2/2.0.0/UML">
+      <details key="originalName" value="Common"/>
+    </eAnnotations>
+    <eSubpackages name="positioningSystem" nsURI="http:///railtopomodel/common/positioningSystem.ecore"
+        nsPrefix="railtopomodel.common.positioningSystem">
+      <eAnnotations source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <details key="originalName" value="PositioningSystem"/>
+      </eAnnotations>
+      <eClassifiers xsi:type="ecore:EClass" name="AssociatedPositioningSystem" eSuperTypes="#//common/base/BaseObject">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="validFrom" ordered="false"
+            lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="validTo" ordered="false"
+            lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="positioningSystem"
+            ordered="false" lowerBound="1" eType="#//common/positioningSystem/PositioningSystem"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="intrinsicCoordinates"
+            ordered="false" lowerBound="1" upperBound="-1" eType="#//common/positioningSystem/IntrinsicCoordinate"
+            containment="true"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="PositioningSystem" eSuperTypes="#//common/base/NamedResource">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="validFrom" ordered="false"
+            lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="validTo" ordered="false"
+            lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="IntrinsicCoordinate" eSuperTypes="#//common/base/BaseObject">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="intrinsicCoord" ordered="false"
+            lowerBound="1" eType="ecore:EDataType Types.ecore#//Real"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="coordinates" ordered="false"
+            upperBound="-1" eType="#//common/positioningSystem/PositioningSystemCoordinate"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="PositioningSystemCoordinate">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="positioningSystem"
+            ordered="false" lowerBound="1" eType="#//common/positioningSystem/PositioningSystem"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="GeometricCoordinate" eSuperTypes="#//common/positioningSystem/PositioningSystemCoordinate">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="x" ordered="false"
+            lowerBound="1" eType="ecore:EDataType Types.ecore#//Real"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="y" ordered="false"
+            lowerBound="1" eType="ecore:EDataType Types.ecore#//Real"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="z" ordered="false"
+            lowerBound="1" eType="ecore:EDataType Types.ecore#//Real"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="GeometricPositioningSystem" eSuperTypes="#//common/positioningSystem/PositioningSystem">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="crsDefinition" ordered="false"
+            lowerBound="1" eType="ecore:EDataType Types.ecore#//String"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="LinearAnchorPoint" eSuperTypes="#//common/base/BaseObject">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="anchorName" ordered="false"
+            lowerBound="1" eType="ecore:EDataType Types.ecore#//String"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="measure" ordered="false"
+            lowerBound="1" eType="ecore:EDataType Types.ecore#//Real"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="measureToNext" ordered="false"
+            lowerBound="1" eType="ecore:EDataType Types.ecore#//Real"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="LinearCoordinate" eSuperTypes="#//common/positioningSystem/PositioningSystemCoordinate">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="lateralOffset" ordered="false"
+            lowerBound="1" eType="ecore:EDataType Types.ecore#//Real"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="measure" ordered="false"
+            lowerBound="1" eType="ecore:EDataType Types.ecore#//Real"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="verticalOffset" ordered="false"
+            lowerBound="1" eType="ecore:EDataType Types.ecore#//Real"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="LinearPositioningSystem" eSuperTypes="#//common/positioningSystem/PositioningSystem">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="endMeasure" ordered="false"
+            lowerBound="1" eType="ecore:EDataType Types.ecore#//Real"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="linearReferencingMethod"
+            ordered="false" lowerBound="1" eType="#//common/positioningSystem/LrsMethod"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="startMeasure" ordered="false"
+            lowerBound="1" eType="ecore:EDataType Types.ecore#//Real"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="units" ordered="false"
+            lowerBound="1" eType="ecore:EDataType Types.ecore#//String"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="anchors" ordered="false"
+            lowerBound="1" upperBound="-1" eType="#//common/positioningSystem/LinearAnchorPoint"
+            containment="true"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EEnum" name="LrsMethod">
+        <eLiterals name="absolute"/>
+        <eLiterals name="relative" value="1"/>
+        <eLiterals name="interpolation" value="2"/>
+      </eClassifiers>
+    </eSubpackages>
+    <eSubpackages name="base" nsURI="http:///railtopomodel/common/base.ecore" nsPrefix="railtopomodel.common.base">
+      <eAnnotations source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <details key="originalName" value="Base"/>
+      </eAnnotations>
+      <eClassifiers xsi:type="ecore:EClass" name="NamedResource" eSuperTypes="#//common/base/BaseObject">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="longname" ordered="false"
+            lowerBound="1" eType="ecore:EDataType Types.ecore#//String"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false"
+            lowerBound="1" eType="ecore:EDataType Types.ecore#//String"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="LegacyId" eSuperTypes="#//common/base/Tid">
+        <eAnnotations source="http://www.eclipse.org/uml2/2.0.0/UML">
+          <details key="originalName" value="legacyID"/>
+        </eAnnotations>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="Tid">
+        <eAnnotations source="http://www.eclipse.org/uml2/2.0.0/UML">
+          <details key="originalName" value="tID"/>
+        </eAnnotations>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="Uuid" eSuperTypes="#//common/base/Tid">
+        <eAnnotations source="http://www.eclipse.org/uml2/2.0.0/UML">
+          <details key="originalName" value="UUID"/>
+        </eAnnotations>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="BaseObject">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="id" ordered="false"
+            lowerBound="1" eType="#//common/base/Tid" containment="true"/>
+      </eClassifiers>
+    </eSubpackages>
+  </eSubpackages>
+</ecore:EPackage>

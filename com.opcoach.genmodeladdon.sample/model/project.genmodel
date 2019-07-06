@@ -71,5 +71,18 @@
       <genClasses ecoreClass="project.ecore#//documentation/DocumentationProject"/>
       <genClasses ecoreClass="project.ecore#//documentation/DocumentationTask"/>
     </nestedGenPackages>
+    <nestedGenPackages prefix="EmptyPackage" basePackage="com.opcoach.project" disposableProviderFactory="true"
+        ecorePackage="project.ecore#//emptyPackage"/>
+    <nestedGenPackages prefix="PackageWithoutClasses" basePackage="com.opcoach.project"
+        disposableProviderFactory="true" ecorePackage="project.ecore#//packageWithoutClasses">
+      <nestedGenPackages prefix="Intermediate" basePackage="com.opcoach.project.packageWithoutClasses"
+          disposableProviderFactory="true" ecorePackage="project.ecore#//packageWithoutClasses/intermediate">
+        <genClasses ecoreClass="project.ecore#//packageWithoutClasses/intermediate/EmptyClass"/>
+      </nestedGenPackages>
+      <nestedGenPackages prefix="Intermediate2" basePackage="com.opcoach.project.packageWithoutClasses"
+          disposableProviderFactory="true" ecorePackage="project.ecore#//packageWithoutClasses/intermediate2">
+        <genClasses ecoreClass="project.ecore#//packageWithoutClasses/intermediate2/EmptyClass2"/>
+      </nestedGenPackages>
+    </nestedGenPackages>
   </genPackages>
 </genmodel:GenModel>

@@ -17,6 +17,8 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.codegen.ecore.genmodel.GenClass;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.codegen.ecore.genmodel.GenPackage;
+import org.eclipse.pde.core.plugin.IPluginModelBase;
+import org.eclipse.pde.core.plugin.PluginRegistry;
 import org.junit.BeforeClass;
 
 import com.opcoach.genmodeladdon.core.GenerateDevStructure;
@@ -67,6 +69,22 @@ public class GenModelAddonTestCase implements ProjectConstants
 
 		return sampleProject;
 	}
+	
+	/** Get the plugin base for the destsample project in the workspace */
+	protected IPluginModelBase getPluginBase()
+	{
+		IPluginModelBase result = null;
+		for (IPluginModelBase pmb : PluginRegistry.getWorkspaceModels())
+		{
+			if (DEST_SAMPLE_PROJECT.equals(pmb.getBundleDescription().getSymbolicName()))
+			{
+					result = pmb;
+					break;
+			}
+		}
+		return result;
+	}
+
 	
 	/**
 	 * This method checks if a string occures in a File.
