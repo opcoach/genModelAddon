@@ -171,7 +171,7 @@ public class TestExtensionGeneration extends GenModelAddonTestCase
 		assertFileContains("plugin.xml", "<extension-point id=\"sampleExtensionPoint\" name=\"sampleExtensionPoint\" schema=\"schema/sampleExtensionPoint.exsd\"/>");
 
 		
-		PDEExtensionRegistry pdeReg = PDECore.getDefault().getExtensionsRegistry();		
+	/*	PDEExtensionRegistry pdeReg = PDECore.getDefault().getExtensionsRegistry();		
 		
 		IPluginModelBase base = getPluginBase();
 		Collection<IPluginExtensionPoint> appliExt = new ArrayList<>();
@@ -184,7 +184,7 @@ public class TestExtensionGeneration extends GenModelAddonTestCase
 
 		}
 
-		assertNotNull("The sample extension point must be still there", pt);
+		assertNotNull("The sample extension point must be still there", pt);*/
 	}
 
 	/**
