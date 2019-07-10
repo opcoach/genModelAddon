@@ -17,9 +17,9 @@ class GMATransform implements GMAConstants {
 // The map of devnames : key = implementation name, value = devName
 	protected Map<String, String> devNames = new TreeMap<String, String>()
 
-	String devInterfaceNamePattern = null 
+	String devInterfaceNamePattern = DEFAULT_SRC_INTERFACE_PATTERN 
 	String genInterfaceNamePattern = DEFAULT_GEN_INTERFACE_PATTERN
-	String devClassNamePattern = null 
+	String devClassNamePattern = DEFAULT_SRC_CLASS_IMPL_PATTERN 
 	String genClassNamePattern = DEFAULT_GEN_CLASS_IMPL_PATTERN
 
 	GMAGenModel gm
@@ -54,8 +54,21 @@ class GMATransform implements GMAConstants {
 			initValue(GenerateCommon.getProperty(f, PROP_CLASS_PATTERN), [v|devClassNamePattern = v])
 			initValue(GenerateCommon.getProperty(f, PROP_INTERFACE_PATTERN), [v|devInterfaceNamePattern = v])
 		}
+		
+		println(this)
+		
 	}
 
+
+	override toString() {
+		val title = gm.genModel.eResource == null ? gm.genModel.toString : gm.genModel.eResource.URI
+		println("GmaTransform for : " + title)
+		println("   -> genClassNamePattern : " + genClassNamePattern)
+		println("   -> genInterfaceNamePattern : " + genInterfaceNamePattern)
+		println("   -> devClassNamePattern : " + devClassNamePattern)
+		println("   -> devInterfaceNamePattern : " + devInterfaceNamePattern) 
+	}
+	
 	def init() {
 		if (!isInit) {
 

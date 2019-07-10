@@ -33,6 +33,8 @@ interface GMAConstants {
 	// Default values used by genmodel to generate class names
 	public static val String DEFAULT_GEN_INTERFACE_PATTERN = "{0}";
 	public static val String DEFAULT_GEN_CLASS_IMPL_PATTERN = "{0}Impl";
+	public static val String DEFAULT_SRC_INTERFACE_PATTERN = "{0}Dev";
+	public static val String DEFAULT_SRC_CLASS_IMPL_PATTERN = "{0}DevImpl";
 	
 	
 }

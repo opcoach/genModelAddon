@@ -65,6 +65,10 @@ class GenerateCommon implements GMAConstants {
 
 			return ws.getFile(p)
 		}
+		else
+		{
+			println("eresource null dans gemmodel ?? ")
+		}
 		return null
 	}
 

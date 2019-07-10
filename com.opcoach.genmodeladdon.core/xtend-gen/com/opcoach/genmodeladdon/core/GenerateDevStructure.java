@@ -1,5 +1,6 @@
 package com.opcoach.genmodeladdon.core;
 
+import com.google.common.collect.Iterables;
 import com.opcoach.genmodeladdon.core.GMAConstants;
 import com.opcoach.genmodeladdon.core.GenerateAntFileForCodeGeneration;
 import com.opcoach.genmodeladdon.core.GenerateCommon;
@@ -190,16 +191,19 @@ public class GenerateDevStructure implements IResourceChangeListener {
         this.generateOverriddenInterface(c, interfaceAbsolutePath);
       }
     }
-    this.generateOverriddenFactoryInterface(gp, interfaceAbsolutePath);
-    this.generateOverriddenFactoryClass(gp, srcAbsolutePath);
-    this.generateOverriddenPackageInterface(gp, interfaceAbsolutePath);
-    String _computePackageNameForClasses = this.computePackageNameForClasses(gp);
-    String _plus_2 = (_computePackageNameForClasses + ".");
-    String _computeFactoryClassName = this.computeFactoryClassName(gp);
-    final String factoryClassName = (_plus_2 + _computeFactoryClassName);
-    final String packageClassName = gp.getQualifiedPackageInterfaceName();
-    this.factories.put(gp.getEcorePackage().getNsURI(), factoryClassName);
-    this.packages.put(gp.getEcorePackage().getNsURI(), packageClassName);
+    final int nbClasses = IterableExtensions.size(Iterables.<EClass>filter(gp.getEcorePackage().getEClassifiers(), EClass.class));
+    if ((nbClasses > 0)) {
+      this.generateOverriddenFactoryInterface(gp, interfaceAbsolutePath);
+      this.generateOverriddenFactoryClass(gp, srcAbsolutePath);
+      this.generateOverriddenPackageInterface(gp, interfaceAbsolutePath);
+      String _computePackageNameForClasses = this.computePackageNameForClasses(gp);
+      String _plus_2 = (_computePackageNameForClasses + ".");
+      String _computeFactoryClassName = this.computeFactoryClassName(gp);
+      final String factoryClassName = (_plus_2 + _computeFactoryClassName);
+      final String packageClassName = gp.getQualifiedPackageInterfaceName();
+      this.factories.put(gp.getEcorePackage().getNsURI(), factoryClassName);
+      this.packages.put(gp.getEcorePackage().getNsURI(), packageClassName);
+    }
     List<GenPackage> _subGenPackages = gp.getSubGenPackages();
     for (final GenPackage sp : _subGenPackages) {
       this.generateDevStructure(sp);
@@ -318,8 +322,8 @@ public class GenerateDevStructure implements IResourceChangeListener {
     this.initializeGenModelConvenientProperties();
     this.generateDevStructure(true);
     final File antFile = this.generateAntFile(antFilename);
-    NullProgressMonitor _nullProgressMonitor = new NullProgressMonitor();
-    this.generateGenModelCode(antFile, _nullProgressMonitor);
+    final NullProgressMonitor npm = new NullProgressMonitor();
+    this.generateGenModelCode(antFile, npm);
     this.generateExtensions();
     this.refreshWorkspace();
   }
@@ -347,8 +351,12 @@ public class GenerateDevStructure implements IResourceChangeListener {
       try {
         this.waitingForRefresh = true;
         ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
-        while (this.waitingForRefresh) {
-          Thread.sleep(1000);
+        int nbWait = 0;
+        while ((this.waitingForRefresh && (nbWait < 3))) {
+          {
+            Thread.sleep(2000);
+            nbWait = (nbWait + 1);
+          }
         }
       } catch (final Throwable _t) {
         if (_t instanceof CoreException) {

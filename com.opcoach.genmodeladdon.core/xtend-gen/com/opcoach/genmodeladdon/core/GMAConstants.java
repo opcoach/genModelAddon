@@ -33,4 +33,8 @@ public interface GMAConstants {
   public static final String DEFAULT_GEN_INTERFACE_PATTERN = "{0}";
   
   public static final String DEFAULT_GEN_CLASS_IMPL_PATTERN = "{0}Impl";
+  
+  public static final String DEFAULT_SRC_INTERFACE_PATTERN = "{0}Dev";
+  
+  public static final String DEFAULT_SRC_CLASS_IMPL_PATTERN = "{0}DevImpl";
 }

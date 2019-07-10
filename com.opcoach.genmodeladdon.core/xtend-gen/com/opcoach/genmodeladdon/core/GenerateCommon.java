@@ -18,6 +18,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
@@ -75,6 +76,8 @@ public class GenerateCommon implements GMAConstants {
       final Path p = new Path(localPath);
       final IWorkspaceRoot ws = ResourcesPlugin.getWorkspace().getRoot();
       return ws.getFile(p);
+    } else {
+      InputOutput.<String>println("eresource null dans gemmodel ?? ");
     }
     return null;
   }

@@ -277,7 +277,22 @@ public class TestInterfaceGeneration extends GenModelAddonTestCase
 
 	}
 
+	// -----------------------------------------------------------------------
+	// ------------------- Tests for issue #78 / https://github.com/opcoach/genModelAddon/issues/78
+	// -----------------------------------------------------------------------
+	@Test
+	public void emptyEPackagesMustNotGenerateFactory()
+	{
+		assertFileNotExists("src/railtopomodel/impl/RailtopomodelFactoryImpl.java");
+	}
 	
+	@Test
+	public void emptyEPackagesMustNotGeneratePackage()
+	{
+		assertFileNotExists("src/railtopomodel/RailtopomodelPackage.java");
+	
+	}
+
 
 
 }

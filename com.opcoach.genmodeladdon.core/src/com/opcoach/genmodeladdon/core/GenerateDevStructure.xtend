@@ -11,6 +11,7 @@ import java.util.HashMap
 import java.util.Map
 import java.util.stream.Collectors
 import org.eclipse.ant.core.AntRunner
+import org.eclipse.core.internal.resources.Workspace
 import org.eclipse.core.resources.IProject
 import org.eclipse.core.resources.IResource
 import org.eclipse.core.resources.IResourceChangeEvent
@@ -139,20 +140,27 @@ class GenerateDevStructure implements IResourceChangeListener {
 			generateOverriddenInterface(c, interfaceAbsolutePath)
 		}
 
-		// Generate factory interface and implementation
-		gp.generateOverriddenFactoryInterface(interfaceAbsolutePath)
-		gp.generateOverriddenFactoryClass(srcAbsolutePath)
+		// Count nb of EClasses in the Package
+		val nbClasses = gp.getEcorePackage.EClassifiers.filter(EClass).size
 
-		// Generate  package interface (used to have a dev interface compliant with generated code)
-		gp.generateOverriddenPackageInterface(interfaceAbsolutePath)
+       // println("There are " + nbClasses + " classes in package " + gp.getEcorePackage.name + " with URI " + gp.getEcorePackage.nsURI)
+	
+		// Generate factory interface and implementation only if they are classes
+		if (nbClasses > 0) {
+			gp.generateOverriddenFactoryInterface(interfaceAbsolutePath)
+			gp.generateOverriddenFactoryClass(srcAbsolutePath)
 
-		// remember of factory and package classes for this uri. 
-		val factoryClassName = gp.computePackageNameForClasses + "." + gp.computeFactoryClassName
-		val packageClassName = gp.qualifiedPackageInterfaceName
+			// Generate  package interface (used to have a dev interface compliant with generated code)
+			gp.generateOverriddenPackageInterface(interfaceAbsolutePath)
 
-		factories.put(gp.getEcorePackage.nsURI, factoryClassName)
-		// println("Added this factory in list : " + factoryClassName)
-		packages.put(gp.getEcorePackage.nsURI, packageClassName)
+			// remember of factory and package classes for this uri. 
+			val factoryClassName = gp.computePackageNameForClasses + "." + gp.computeFactoryClassName
+			val packageClassName = gp.qualifiedPackageInterfaceName
+
+			factories.put(gp.getEcorePackage.nsURI, factoryClassName)
+			// println("Added this factory in list : " + factoryClassName)
+			packages.put(gp.getEcorePackage.nsURI, packageClassName)
+		}
 
 		// Iterate on subpackages 
 		for (sp : gp.subGenPackages)
@@ -264,7 +272,8 @@ class GenerateDevStructure implements IResourceChangeListener {
 		val antFile = generateAntFile(antFilename)
 
 		// Once dev structure is generated and ant file too, can call it !
-		generateGenModelCode(antFile, new NullProgressMonitor)
+		val npm = new NullProgressMonitor
+		generateGenModelCode(antFile, npm)
 
 		// Must generate or update extensions in plugin.xml file
 		// BUT AFTER THE EMF CODE GENERATION !!
@@ -272,7 +281,14 @@ class GenerateDevStructure implements IResourceChangeListener {
 
 		// Must refresh workspace
 		refreshWorkspace
-
+	/*println("ON FERME CARREMENT LE WORKSAPCE PUIS ON LE REOUVRE AU LIEU DE FAIRE UN REFRESH FOIREUX")
+	 * val ws = ResourcesPlugin.workspace as Workspace
+	 * println("Close workspace after generation")
+	 * ws.close(npm)
+	 * Thread.sleep(5000)
+	 * println("Reopen workspage after generation")
+	 ws.open(npm)*/
+	// PDECore.^default.modelManager.bundleRootChanged(project)
 	}
 
 	def setClassPattern(String cp) {
@@ -295,15 +311,17 @@ class GenerateDevStructure implements IResourceChangeListener {
 			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null)
 			// println("Waiting for refresh ")
 			// Thread.sleep(2000); // Wait for refresh (important). MUST NOT BE LESS THAN 2 seconds for tycho build
-			while (waitingForRefresh) {
-				//println("Waiting for refresh")
-				Thread.sleep(1000)
+			// Wait 3 times to refresh, if it does not arrives stop waiting
+			var nbWait = 0
+			while (waitingForRefresh && nbWait < 3) {
+				// println("Waiting for refresh " + nbWait)
+				Thread.sleep(2000)
+				nbWait = nbWait + 1
 			}
 		} catch (CoreException e) {
 			e.printStackTrace
-		}
-		finally {
-				PDECore.^default.modelManager.bundleRootChanged(project)
+		} finally {
+			PDECore.^default.modelManager.bundleRootChanged(project)
 		}
 
 	}

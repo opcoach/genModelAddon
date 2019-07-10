@@ -1,5 +1,6 @@
 package com.opcoach.genmodeladdon.core.genmodel;
 
+import com.google.common.base.Objects;
 import com.opcoach.genmodeladdon.core.GMAConstants;
 import com.opcoach.genmodeladdon.core.GenerateCommon;
 import com.opcoach.genmodeladdon.core.genmodel.GMAGenModel;
@@ -17,6 +18,8 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 
 /**
  * This class computes the new names for generated classes according to pattern name matching
@@ -25,11 +28,11 @@ import org.eclipse.emf.ecore.EcorePackage;
 public class GMATransform implements GMAConstants {
   protected Map<String, String> devNames = new TreeMap<String, String>();
   
-  private String devInterfaceNamePattern = null;
+  private String devInterfaceNamePattern = GMAConstants.DEFAULT_SRC_INTERFACE_PATTERN;
   
   private String genInterfaceNamePattern = GMAConstants.DEFAULT_GEN_INTERFACE_PATTERN;
   
-  private String devClassNamePattern = null;
+  private String devClassNamePattern = GMAConstants.DEFAULT_SRC_CLASS_IMPL_PATTERN;
   
   private String genClassNamePattern = GMAConstants.DEFAULT_GEN_CLASS_IMPL_PATTERN;
   
@@ -54,26 +57,53 @@ public class GMATransform implements GMAConstants {
     }
   }
   
-  private void initPatterns() {
-    final Consumer<String> _function = (String v) -> {
-      this.genClassNamePattern = v;
-    };
-    this.initValue(this.gm.getClassNamePattern(), _function);
-    final Consumer<String> _function_1 = (String v) -> {
-      this.genInterfaceNamePattern = v;
-    };
-    this.initValue(this.gm.getInterfaceNamePattern(), _function_1);
-    final IFile f = GenerateCommon.getModelFile(this.gm);
-    if ((f != null)) {
-      final Consumer<String> _function_2 = (String v) -> {
-        this.devClassNamePattern = v;
+  private GMATransform initPatterns() {
+    GMATransform _xblockexpression = null;
+    {
+      final Consumer<String> _function = (String v) -> {
+        this.genClassNamePattern = v;
       };
-      this.initValue(GenerateCommon.getProperty(f, GMAConstants.PROP_CLASS_PATTERN), _function_2);
-      final Consumer<String> _function_3 = (String v) -> {
-        this.devInterfaceNamePattern = v;
+      this.initValue(this.gm.getClassNamePattern(), _function);
+      final Consumer<String> _function_1 = (String v) -> {
+        this.genInterfaceNamePattern = v;
       };
-      this.initValue(GenerateCommon.getProperty(f, GMAConstants.PROP_INTERFACE_PATTERN), _function_3);
+      this.initValue(this.gm.getInterfaceNamePattern(), _function_1);
+      final IFile f = GenerateCommon.getModelFile(this.gm);
+      if ((f != null)) {
+        final Consumer<String> _function_2 = (String v) -> {
+          this.devClassNamePattern = v;
+        };
+        this.initValue(GenerateCommon.getProperty(f, GMAConstants.PROP_CLASS_PATTERN), _function_2);
+        final Consumer<String> _function_3 = (String v) -> {
+          this.devInterfaceNamePattern = v;
+        };
+        this.initValue(GenerateCommon.getProperty(f, GMAConstants.PROP_INTERFACE_PATTERN), _function_3);
+      }
+      _xblockexpression = InputOutput.<GMATransform>println(this);
     }
+    return _xblockexpression;
+  }
+  
+  @Override
+  public String toString() {
+    String _xblockexpression = null;
+    {
+      Object _xifexpression = null;
+      Resource _eResource = this.gm.getGenModel().eResource();
+      boolean _equals = Objects.equal(_eResource, null);
+      if (_equals) {
+        _xifexpression = this.gm.getGenModel().toString();
+      } else {
+        _xifexpression = this.gm.getGenModel().eResource().getURI();
+      }
+      final Object title = _xifexpression;
+      InputOutput.<String>println(("GmaTransform for : " + title));
+      InputOutput.<String>println(("   -> genClassNamePattern : " + this.genClassNamePattern));
+      InputOutput.<String>println(("   -> genInterfaceNamePattern : " + this.genInterfaceNamePattern));
+      InputOutput.<String>println(("   -> devClassNamePattern : " + this.devClassNamePattern));
+      _xblockexpression = InputOutput.<String>println(("   -> devInterfaceNamePattern : " + this.devInterfaceNamePattern));
+    }
+    return _xblockexpression;
   }
   
   public boolean init() {
