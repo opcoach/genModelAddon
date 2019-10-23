@@ -29,6 +29,10 @@ location "http://download.eclipse.org/releases/2019-09" {
 	
 }
 
+// Add support for java 11 (removed javax.annotation)...
+location "https://download.eclipse.org/tools/orbit/downloads/drops/R20190827152740/repository" {
+	javax.annotation
+}
 
 
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="GMA SimRel0919" sequenceNumber="1571826651">
+<target name="GMA SimRel0919" sequenceNumber="1571831722">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.xtext.sdk.feature.group" version="2.19.0.v20190902-1322"/>
@@ -25,6 +25,10 @@
       <unit id="org.eclipse.jdt.junit.runtime" version="3.4.1000.v20190510-0840"/>
       <unit id="org.eclipse.sdk.feature.group" version="4.13.0.v20190916-1323"/>
       <repository location="http://download.eclipse.org/releases/2019-09"/>
+    </location>
+    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="javax.annotation" version="1.2.0.v201602091430"/>
+      <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20190827152740/repository"/>
     </location>
   </locations>
 </target>
