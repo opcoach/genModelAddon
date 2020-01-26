@@ -1,11 +1,8 @@
-/GMAGenFeatureImpl.java
 /GMAFactoryImpl.java
 /GMAGenClassImpl.java
+/GMAGenFeatureImpl.java
 /GMAGenModelImpl.java
 /GMAGenOperationImpl.java
 /GMAGenPackageImpl.java
 /GMAGenParameterImpl.java
 /GMAGenTypeParameterImpl.java
-/GMAImportManager.java
-/GMATransform.java
-/GMAGenModel.java
