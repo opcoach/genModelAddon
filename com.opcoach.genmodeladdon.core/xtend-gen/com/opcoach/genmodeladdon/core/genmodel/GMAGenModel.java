@@ -8,13 +8,13 @@ import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
  */
 @SuppressWarnings("all")
 public interface GMAGenModel extends GenModel {
-  public abstract void setDevClassPattern(final String cpattern);
+  void setDevClassPattern(final String cpattern);
   
-  public abstract void setDevInterfacePattern(final String ipattern);
+  void setDevInterfacePattern(final String ipattern);
   
-  public abstract String getDevClassPattern();
+  String getDevClassPattern();
   
-  public abstract String getDevInterfacePattern();
+  String getDevInterfacePattern();
   
-  public abstract GMATransform getGMATransform();
+  GMATransform getGMATransform();
 }

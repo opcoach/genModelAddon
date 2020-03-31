@@ -43,7 +43,6 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.pde.internal.core.PDECore;
 import org.eclipse.xtend2.lib.StringConcatenation;
-import org.eclipse.xtext.xbase.lib.ArrayExtensions;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
@@ -95,7 +94,7 @@ public class GenerateDevStructure implements IResourceChangeListener {
    */
   public GenerateDevStructure(final GMAGenModel gm, final String cPattern, final String iPattern, final String srcDir) {
     try {
-      boolean _contains = ArrayExtensions.contains(Platform.getApplicationArgs(), GMAConstants.PARAM_DEBUG_MODE);
+      boolean _contains = ((List<String>)Conversions.doWrapArray(Platform.getApplicationArgs())).contains(GMAConstants.PARAM_DEBUG_MODE);
       if (_contains) {
         this.debug = true;
       }
