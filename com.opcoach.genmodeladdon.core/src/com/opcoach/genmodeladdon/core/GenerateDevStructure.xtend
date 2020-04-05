@@ -11,7 +11,6 @@ import java.util.HashMap
 import java.util.Map
 import java.util.stream.Collectors
 import org.eclipse.ant.core.AntRunner
-import org.eclipse.core.internal.resources.Workspace
 import org.eclipse.core.resources.IProject
 import org.eclipse.core.resources.IResource
 import org.eclipse.core.resources.IResourceChangeEvent
@@ -62,24 +61,20 @@ class GenerateDevStructure implements IResourceChangeListener {
 	Map<String, String> packages = new HashMap
 
 	/** Build the generator with 4 parameters
-	 * @param cpattern : the class name pattern used for generation ({0}Impl for instance)
-	 * @param ipattern : the interface name pattern used for generation ({0} for instance)
-	 * @param srcDir : the source directory (relative path) in project
+	 * gm : the GMAGenModelImpl correctly initialized with cPattern, iPattern and srcDir
 	 */
-	new(GMAGenModel gm, String cPattern, String iPattern, String srcDir) {
+	new(GMAGenModel gm) {
 
 		if (Platform.applicationArgs.contains(GMAConstants.PARAM_DEBUG_MODE)) {
 			debug = true
 		}
 
 		gmaGenModel = gm
-		gmaGenModel.devClassPattern = cPattern
-		gmaGenModel.devInterfacePattern = iPattern
 		if (gm.copyrightText !== null)
 			copyright = computeCopyrightComment.toString
-		classPattern = cPattern
-		interfacePattern = iPattern
-		srcDevDirectory = srcDir
+		classPattern = gm.devClassPattern
+		interfacePattern = gm.devInterfacePattern
+		srcDevDirectory = gm.srcDir
 		project = GenerateCommon.getProject(gm)
 		projectName = project.name
 		modelName = GenerateCommon.getModelName(gm)
@@ -96,9 +91,6 @@ class GenerateDevStructure implements IResourceChangeListener {
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(this, IResourceChangeEvent.POST_BUILD)
 	}
 
-	new(GMAGenModel gm) {
-		this(gm, "{0}ExtImpl", "{0}Ext", "src")
-	}
 
 	/** Generate the file structure. If genFiles is false just compute the files to be generated */
 	def generateDevStructure(boolean genFiles) {

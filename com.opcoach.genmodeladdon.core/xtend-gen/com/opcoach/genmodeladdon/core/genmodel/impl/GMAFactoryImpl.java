@@ -8,7 +8,6 @@ import com.opcoach.genmodeladdon.core.genmodel.impl.GMAGenOperationImpl;
 import com.opcoach.genmodeladdon.core.genmodel.impl.GMAGenPackageImpl;
 import com.opcoach.genmodeladdon.core.genmodel.impl.GMAGenParameterImpl;
 import com.opcoach.genmodeladdon.core.genmodel.impl.GMAGenTypeParameterImpl;
-import org.eclipse.emf.codegen.ecore.genmodel.GenBase;
 import org.eclipse.emf.codegen.ecore.genmodel.GenClass;
 import org.eclipse.emf.codegen.ecore.genmodel.GenFeature;
 import org.eclipse.emf.codegen.ecore.genmodel.GenOperation;
@@ -23,10 +22,6 @@ import org.eclipse.emf.codegen.ecore.genmodel.impl.GenModelFactoryImpl;
  */
 @SuppressWarnings("all")
 public class GMAFactoryImpl extends GenModelFactoryImpl {
-  public static boolean isInGMAProject(final GenBase gm) {
-    return true;
-  }
-  
   @Override
   public GenFeature createGenFeature() {
     return new GMAGenFeatureImpl();

@@ -1,6 +1,5 @@
 package com.opcoach.genmodeladdon.core.genmodel;
 
-import com.google.common.base.Objects;
 import com.opcoach.genmodeladdon.core.GMAConstants;
 import com.opcoach.genmodeladdon.core.GenerateCommon;
 import com.opcoach.genmodeladdon.core.genmodel.GMAGenModel;
@@ -8,8 +7,6 @@ import java.text.MessageFormat;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.function.Consumer;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.codegen.ecore.genmodel.GenBase;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.codegen.ecore.genmodel.GenPackage;
@@ -41,57 +38,46 @@ public class GMATransform implements GMAConstants {
   private boolean isInit = false;
   
   public GMATransform(final GMAGenModel gm) {
-    this(gm, true);
-  }
-  
-  private GMATransform(final GMAGenModel gm, final boolean mustInitPatterns) {
     this.gm = gm;
-    if (mustInitPatterns) {
-      this.initPatterns();
-    }
-  }
-  
-  private void initValue(final String v, final Consumer<String> consumer) {
-    if (((v != null) && (v.length() > 0))) {
-      consumer.accept(v);
-    }
+    this.initPatterns();
   }
   
   private GMATransform initPatterns() {
     GMATransform _xblockexpression = null;
     {
-      final Consumer<String> _function = (String v) -> {
-        this.genClassNamePattern = v;
-      };
-      this.initValue(this.gm.getClassNamePattern(), _function);
-      final Consumer<String> _function_1 = (String v) -> {
-        this.genInterfaceNamePattern = v;
-      };
-      this.initValue(this.gm.getInterfaceNamePattern(), _function_1);
-      final IFile f = GenerateCommon.getModelFile(this.gm);
-      if ((f != null)) {
-        final Consumer<String> _function_2 = (String v) -> {
-          this.devClassNamePattern = v;
-        };
-        this.initValue(GenerateCommon.getProperty(f, GMAConstants.PROP_CLASS_PATTERN), _function_2);
-        final Consumer<String> _function_3 = (String v) -> {
-          this.devInterfaceNamePattern = v;
-        };
-        this.initValue(GenerateCommon.getProperty(f, GMAConstants.PROP_INTERFACE_PATTERN), _function_3);
+      String _xifexpression = null;
+      String _classNamePattern = this.gm.getClassNamePattern();
+      boolean _tripleEquals = (_classNamePattern == null);
+      if (_tripleEquals) {
+        _xifexpression = GMAConstants.DEFAULT_GEN_CLASS_IMPL_PATTERN;
+      } else {
+        _xifexpression = this.gm.getClassNamePattern();
       }
+      this.genClassNamePattern = _xifexpression;
+      String _xifexpression_1 = null;
+      String _interfaceNamePattern = this.gm.getInterfaceNamePattern();
+      boolean _tripleEquals_1 = (_interfaceNamePattern == null);
+      if (_tripleEquals_1) {
+        _xifexpression_1 = GMAConstants.DEFAULT_GEN_INTERFACE_PATTERN;
+      } else {
+        _xifexpression_1 = this.gm.getInterfaceNamePattern();
+      }
+      this.genInterfaceNamePattern = _xifexpression_1;
+      this.devClassNamePattern = this.gm.getDevClassPattern();
+      this.devInterfaceNamePattern = this.gm.getDevInterfacePattern();
       _xblockexpression = InputOutput.<GMATransform>println(this);
     }
     return _xblockexpression;
   }
   
   @Override
-  public String toString() {
+  public synchronized String toString() {
     String _xblockexpression = null;
     {
       Object _xifexpression = null;
       Resource _eResource = this.gm.getGenModel().eResource();
-      boolean _equals = Objects.equal(_eResource, null);
-      if (_equals) {
+      boolean _tripleEquals = (_eResource == null);
+      if (_tripleEquals) {
         _xifexpression = this.gm.getGenModel().toString();
       } else {
         _xifexpression = this.gm.getGenModel().eResource().getURI();

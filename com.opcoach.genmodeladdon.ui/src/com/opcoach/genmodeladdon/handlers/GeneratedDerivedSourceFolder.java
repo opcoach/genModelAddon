@@ -44,12 +44,16 @@ public class GeneratedDerivedSourceFolder extends GenerateParentHandler
 		int status = dial.open();
 		if (status == Dialog.OK)
 		{
-			String ip = dial.getDevInterfacePattern();
-			String cp = dial.getDevClassPattern();
+			
+			gm.setDevClassPattern(dial.getDevClassPattern());
+			gm.setDevInterfacePattern(dial.getDevInterfacePattern());
 			String src = dial.getSrcDir();
+			gm.setSrcDir(src);
+			
 			boolean generateEMFModelCode = dial.getGenerateEMFModelCode();
+			gm.setGenerateEMFCode(generateEMFModelCode);
 
-			final GenerateDevStructure gds = new GenerateDevStructure(gm, cp, ip, src);
+			final GenerateDevStructure gds = new GenerateDevStructure(gm);
 
 			// set some genModel convenient properties.
 			gds.initializeGenModelConvenientProperties();

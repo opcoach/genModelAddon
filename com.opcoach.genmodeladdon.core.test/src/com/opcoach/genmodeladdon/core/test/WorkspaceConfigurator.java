@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 
+import com.opcoach.genmodeladdon.core.GMAConstants;
 import com.opcoach.genmodeladdon.core.GenerateCommon;
 import com.opcoach.genmodeladdon.core.GenerateDevStructure;
 import com.opcoach.genmodeladdon.core.genmodel.GMAGenModel;
@@ -36,7 +37,7 @@ import com.opcoach.genmodeladdon.core.genmodel.GMAGenModel;
  * @author olivier
  *
  */
-public class WorkspaceConfigurator implements ProjectConstants
+public class WorkspaceConfigurator implements ProjectConstants, GMAConstants
 {
 
 	private Map<String, GMAGenModel> gmMap = new HashMap<>();
@@ -112,7 +113,7 @@ public class WorkspaceConfigurator implements ProjectConstants
 	
 	public void initGenModel(String genModelName, String antFilename) throws IOException, InterruptedException
 	{
-		initGenModel(genModelName, antFilename, "{0}Impl", "{0}", "src");
+		initGenModel(genModelName, antFilename, ADVISED_DEV_CLASS_IMPL_PATTERN, ADVISED_DEV_INTERFACE_PATTERN, DEFAULT_SRC_DEV);
 	}
 	
 
@@ -122,19 +123,13 @@ public class WorkspaceConfigurator implements ProjectConstants
 		GMAGenModel gm = readSampleGenModel(root, genModelName);
 		gm.setDevClassPattern(cPattern);
 		gm.setDevInterfacePattern(iPattern);
-		
-		// Store this values in properties for the tests (needed when ant will read again GMAGenModel)
-		IFile f = GenerateCommon.getModelFile(gm);
-		GenerateCommon.setProperty(f, GenerateCommon.PROP_SRCDIR, srcDir);
-		GenerateCommon.setProperty(f, GenerateCommon.PROP_CLASS_PATTERN, cPattern);
-		GenerateCommon.setProperty(f, GenerateCommon.PROP_INTERFACE_PATTERN, iPattern);
-		GenerateCommon.setProperty(f, GenerateCommon.PROP_GENEMFCODE, Boolean.toString(true));
-		GenerateCommon.setProperty(f, GenerateCommon.PROP_GMA, Boolean.toString(true));
+		gm.setSrcDir( srcDir);
+		gm.setGenerateEMFCode(true);
 
 		gmMap.put(genModelName, gm);
 
 		// Create the generator.
-		GenerateDevStructure gen = new GenerateDevStructure(gm, cPattern, iPattern, srcDir);
+		GenerateDevStructure gen = new GenerateDevStructure(gm);
 		genMap.put(genModelName, gen);
 
 		// Remember of sample project

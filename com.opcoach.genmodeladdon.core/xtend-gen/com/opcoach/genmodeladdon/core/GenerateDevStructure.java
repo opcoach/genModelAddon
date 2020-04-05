@@ -43,6 +43,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.pde.internal.core.PDECore;
 import org.eclipse.xtend2.lib.StringConcatenation;
+import org.eclipse.xtext.xbase.lib.ArrayExtensions;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
@@ -88,27 +89,23 @@ public class GenerateDevStructure implements IResourceChangeListener {
   
   /**
    * Build the generator with 4 parameters
-   * @param cpattern : the class name pattern used for generation ({0}Impl for instance)
-   * @param ipattern : the interface name pattern used for generation ({0} for instance)
-   * @param srcDir : the source directory (relative path) in project
+   * gm : the GMAGenModelImpl correctly initialized with cPattern, iPattern and srcDir
    */
-  public GenerateDevStructure(final GMAGenModel gm, final String cPattern, final String iPattern, final String srcDir) {
+  public GenerateDevStructure(final GMAGenModel gm) {
     try {
-      boolean _contains = ((List<String>)Conversions.doWrapArray(Platform.getApplicationArgs())).contains(GMAConstants.PARAM_DEBUG_MODE);
+      boolean _contains = ArrayExtensions.contains(Platform.getApplicationArgs(), GMAConstants.PARAM_DEBUG_MODE);
       if (_contains) {
         this.debug = true;
       }
       this.gmaGenModel = gm;
-      this.gmaGenModel.setDevClassPattern(cPattern);
-      this.gmaGenModel.setDevInterfacePattern(iPattern);
       String _copyrightText = gm.getCopyrightText();
       boolean _tripleNotEquals = (_copyrightText != null);
       if (_tripleNotEquals) {
         this.copyright = this.computeCopyrightComment().toString();
       }
-      this.classPattern = cPattern;
-      this.interfacePattern = iPattern;
-      this.srcDevDirectory = srcDir;
+      this.classPattern = gm.getDevClassPattern();
+      this.interfacePattern = gm.getDevInterfacePattern();
+      this.srcDevDirectory = gm.getSrcDir();
       this.project = GenerateCommon.getProject(gm);
       this.projectName = this.project.getName();
       this.modelName = GenerateCommon.getModelName(gm);
@@ -124,10 +121,6 @@ public class GenerateDevStructure implements IResourceChangeListener {
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
-  }
-  
-  public GenerateDevStructure(final GMAGenModel gm) {
-    this(gm, "{0}ExtImpl", "{0}Ext", "src");
   }
   
   /**

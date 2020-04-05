@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Text;
 import com.opcoach.genmodeladdon.Util;
 import com.opcoach.genmodeladdon.core.GMAConstants;
 import com.opcoach.genmodeladdon.core.GenerateCommon;
+import com.opcoach.genmodeladdon.core.genmodel.GMAGenModel;
 
 public class DerivedSourceParametersDialog extends Dialog implements GMAConstants
 {
@@ -30,7 +31,7 @@ public class DerivedSourceParametersDialog extends Dialog implements GMAConstant
 	private Text devSourceDir;
 	private Text devInterfacePattern;
 	private Text devClassPattern;
-	private GenModel genModel;
+	private GMAGenModel genModel;
 	private String interfacePattern;
 	private String classPattern;
 	private String srcDir;
@@ -243,7 +244,7 @@ public class DerivedSourceParametersDialog extends Dialog implements GMAConstant
 		btnAdvisedValues.setEnabled(editGenModelValues);
 	}
 
-	public void setGenModel(GenModel gm)
+	public void setGenModel(GMAGenModel gm)
 	{
 		genModel = gm;
 	}
@@ -284,26 +285,17 @@ public class DerivedSourceParametersDialog extends Dialog implements GMAConstant
 
 
 		// Try to restore the previous properties if they exist.
-		IFile f = getGenModelFile();
-		String cpProp = GenerateCommon.getProperty(f, GenerateCommon.PROP_CLASS_PATTERN);
-		String ipProp = GenerateCommon.getProperty(f, GenerateCommon.PROP_INTERFACE_PATTERN);
-		String srcProp = GenerateCommon.getProperty(f, GenerateCommon.PROP_SRCDIR);
-		String genEmfStr = GenerateCommon.getProperty(f, GenerateCommon.PROP_GENEMFCODE);
-		boolean genEmf = true;
-		if (genEmfStr != null)
-			genEmf = Boolean.getBoolean(genEmfStr);
+		String cpProp = genModel.getDevClassPattern(); 
+		String ipProp = genModel.getDevInterfacePattern();
+		String srcProp = genModel.getSrcDir();
+		boolean genEmf = genModel.mustGenerateEMF();
+		
 
-		if (cp.equals(ADVISED_DEV_CLASS_IMPL_PATTERN))
-			devClassPattern.setText(cp + "Ext");
-		else
-			devClassPattern.setText(cpProp != null ? cpProp : ADVISED_DEV_CLASS_IMPL_PATTERN);
-		previousDevClassPattern = devClassPattern.getText();
+		devClassPattern.setText(cpProp);
+		previousDevClassPattern = cpProp;
 
-		if (ip.equals(ADVISED_DEV_INTERFACE_PATTERN))
-			devInterfacePattern.setText(ip + "Ext");
-		else
-			devInterfacePattern.setText(ipProp != null ? ipProp : ADVISED_DEV_INTERFACE_PATTERN);
-		previousDevInterfacePattern = devInterfacePattern.getText();
+		devInterfacePattern.setText(ipProp);
+		previousDevInterfacePattern = ipProp;
 		
 		devSourceDir.setText(srcProp != null ? srcProp : DEFAULT_SRC_DEV);
 		
@@ -363,12 +355,11 @@ public class DerivedSourceParametersDialog extends Dialog implements GMAConstant
 		srcDir = devSourceDir.getText();
 
 		// Store this values in properties...
-		IFile f = getGenModelFile();
-		GenerateCommon.setProperty(f, GenerateCommon.PROP_SRCDIR, srcDir);
-		GenerateCommon.setProperty(f, GenerateCommon.PROP_CLASS_PATTERN, classPattern);
-		GenerateCommon.setProperty(f, GenerateCommon.PROP_INTERFACE_PATTERN, interfacePattern);
-		GenerateCommon.setProperty(f, GenerateCommon.PROP_GENEMFCODE, Boolean.toString(generateEMFCode));
-		GenerateCommon.setProperty(f, GenerateCommon.PROP_GMA, Boolean.toString(true));
+		// IFile f = getGenModelFile();
+		genModel.setSrcDir(srcDir);
+		genModel.setDevClassPattern( classPattern);
+		genModel.setDevInterfacePattern(interfacePattern);
+		genModel.setGenerateEMFCode(generateEMFCode);
 
 		super.okPressed();
 	}

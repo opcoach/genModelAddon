@@ -5,7 +5,6 @@ import com.opcoach.genmodeladdon.core.GenerateCommon
 import java.text.MessageFormat
 import java.util.Map
 import java.util.TreeMap
-import java.util.function.Consumer
 import org.eclipse.emf.codegen.ecore.genmodel.GenBase
 import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EPackage
@@ -17,58 +16,45 @@ class GMATransform implements GMAConstants {
 // The map of devnames : key = implementation name, value = devName
 	protected Map<String, String> devNames = new TreeMap<String, String>()
 
-	String devInterfaceNamePattern = DEFAULT_SRC_INTERFACE_PATTERN 
+	String devInterfaceNamePattern = DEFAULT_SRC_INTERFACE_PATTERN
 	String genInterfaceNamePattern = DEFAULT_GEN_INTERFACE_PATTERN
-	String devClassNamePattern = DEFAULT_SRC_CLASS_IMPL_PATTERN 
+	String devClassNamePattern = DEFAULT_SRC_CLASS_IMPL_PATTERN
 	String genClassNamePattern = DEFAULT_GEN_CLASS_IMPL_PATTERN
 
 	GMAGenModel gm
 	boolean isInit = false
 
 	new(GMAGenModel gm) {
-	  this(gm, true)
-	}
-
-	private new(GMAGenModel gm, boolean mustInitPatterns) {
-
 		this.gm = gm
-		
+
 		// Try to get the dev interface and class values set in properties
-		if (mustInitPatterns) {
-			initPatterns
-		}
+		initPatterns
 	}
 
-// Set the value in the consumer if not null
-	private def initValue(String v, Consumer<String> consumer) {
-		if ((v !== null) && v.length > 0)
-			consumer.accept(v)
-	}
 
 	private def initPatterns() {
-		initValue(gm.classNamePattern, [v|this.genClassNamePattern = v])
-		initValue(gm.interfaceNamePattern, [v|this.genInterfaceNamePattern = v])
 
-		val f = GenerateCommon.getModelFile(gm)
-		if (f !== null) {
-			initValue(GenerateCommon.getProperty(f, PROP_CLASS_PATTERN), [v|devClassNamePattern = v])
-			initValue(GenerateCommon.getProperty(f, PROP_INTERFACE_PATTERN), [v|devInterfaceNamePattern = v])
-		}
-		
+		genClassNamePattern = (gm.classNamePattern === null) ? DEFAULT_GEN_CLASS_IMPL_PATTERN : gm.classNamePattern
+		genInterfaceNamePattern = (gm.interfaceNamePattern === null)
+			? DEFAULT_GEN_INTERFACE_PATTERN
+			: gm.interfaceNamePattern
+
+		devClassNamePattern = gm.devClassPattern
+		devInterfaceNamePattern = gm.devInterfacePattern
+
 		println(this)
-		
+
 	}
 
-
-	override toString() {
-		val title = gm.genModel.eResource == null ? gm.genModel.toString : gm.genModel.eResource.URI
+	override synchronized toString() {
+		val title = gm.genModel.eResource === null ? gm.genModel.toString : gm.genModel.eResource.URI
 		println("GmaTransform for : " + title)
 		println("   -> genClassNamePattern : " + genClassNamePattern)
 		println("   -> genInterfaceNamePattern : " + genInterfaceNamePattern)
 		println("   -> devClassNamePattern : " + devClassNamePattern)
-		println("   -> devInterfaceNamePattern : " + devInterfaceNamePattern) 
+		println("   -> devInterfaceNamePattern : " + devInterfaceNamePattern)
 	}
-	
+
 	def init() {
 		if (!isInit) {
 
@@ -94,13 +80,13 @@ class GMATransform implements GMAConstants {
 				if ((c instanceof EClass) && !c.name.endsWith("Package") && !GenerateCommon.isMapType(c)) {
 					val devIntName = MessageFormat.format(devInterfaceNamePattern, c.name)
 					val genIntName = MessageFormat.format(genInterfaceNamePattern, c.name)
-					//println(
-					//	"Put : " + genIntName + "," + devIntName + " (used format : " + devInterfaceNamePattern + ")");
+					// println(
+					// "Put : " + genIntName + "," + devIntName + " (used format : " + devInterfaceNamePattern + ")");
 					devNames.put(genIntName, devIntName)
 
 					val genClassName = MessageFormat.format(genClassNamePattern, c.name)
 					val devClassName = MessageFormat.format(devClassNamePattern, c.name)
-					//println("Put : " + genClassName + "," + devClassName);
+					// println("Put : " + genClassName + "," + devClassName);
 					devNames.put(genClassName, devClassName)
 				}
 			}

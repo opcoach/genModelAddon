@@ -1,22 +1,20 @@
 package com.opcoach.genmodeladdon.core;
 
-import org.eclipse.core.runtime.QualifiedName;
-
 @SuppressWarnings("all")
 public interface GMAConstants {
   static final String PLUGIN_ID = "com.opcoach.genmodeladdon.core";
   
-  static final QualifiedName PROP_INTERFACE_PATTERN = new QualifiedName(GMAConstants.PLUGIN_ID, "interfacePattern");
+  static final String PROP_DEV_INTERFACE_PATTERN = "interfacePattern";
   
-  static final QualifiedName PROP_CLASS_PATTERN = new QualifiedName(GMAConstants.PLUGIN_ID, "classPattern");
+  static final String PROP_DEV_CLASS_PATTERN = "classPattern";
   
-  static final QualifiedName PROP_SRCDIR = new QualifiedName(GMAConstants.PLUGIN_ID, "srcDir");
+  static final String PROP_SRCDIR = "srcDir";
   
   static final String PARAM_DEBUG_MODE = "-gmaDebug";
   
-  static final QualifiedName PROP_GENEMFCODE = new QualifiedName(GMAConstants.PLUGIN_ID, "generateEMFCodeAfter");
+  static final String PROP_GENEMFCODE = "generateEMFCodeAfter";
   
-  static final QualifiedName PROP_GMA = new QualifiedName(GMAConstants.PLUGIN_ID, "genModelAddon");
+  static final String GMA_EXT = ".gma";
   
   static final String ADVISED_GEN_INTERFACE_PATTERN = "M{0}";
   

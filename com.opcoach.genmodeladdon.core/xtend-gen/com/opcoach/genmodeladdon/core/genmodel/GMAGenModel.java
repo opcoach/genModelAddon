@@ -12,9 +12,17 @@ public interface GMAGenModel extends GenModel {
   
   void setDevInterfacePattern(final String ipattern);
   
+  void setSrcDir(final String dir);
+  
+  void setGenerateEMFCode(final boolean gen);
+  
   String getDevClassPattern();
   
   String getDevInterfacePattern();
+  
+  String getSrcDir();
+  
+  boolean mustGenerateEMF();
   
   GMATransform getGMATransform();
 }

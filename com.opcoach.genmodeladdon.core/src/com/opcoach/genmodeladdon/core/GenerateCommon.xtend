@@ -3,20 +3,15 @@ package com.opcoach.genmodeladdon.core
 import org.eclipse.core.resources.IFile
 import org.eclipse.core.resources.IProject
 import org.eclipse.core.resources.ResourcesPlugin
-import org.eclipse.core.runtime.IStatus
 import org.eclipse.core.runtime.Path
-import org.eclipse.core.runtime.Platform
-import org.eclipse.core.runtime.QualifiedName
-import org.eclipse.core.runtime.Status
 import org.eclipse.emf.codegen.ecore.genmodel.GenClass
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EClassifier
-import org.osgi.framework.FrameworkUtil
 
 /** A class to provide some generation common methods */
 class GenerateCommon implements GMAConstants {
-
+    
 	/** Extract the project name from the genmodel resource */
 	def static String getProjectName(GenModel gm) {
 		return getProjectNameFromURI(gm.eResource().getURI())
@@ -72,25 +67,8 @@ class GenerateCommon implements GMAConstants {
 		return null
 	}
 
-	def static String getProperty(IFile f, QualifiedName qn) {
-		var String result = null
-		try {
-			result = f.getPersistentProperty(qn)
-		} catch (Exception e) {
-			// There is no property file... no value.
-		}
-		return result
-	}
 
-	def static setProperty(IFile f, QualifiedName qn, String value) {
-		try {
-			f.setPersistentProperty(qn, value)
-		} catch (Exception e) {
-			val bndl = FrameworkUtil.getBundle(GenerateCommon)
-			val logger = Platform.getLog(bndl);
-			logger.log(new Status(IStatus.WARNING, PLUGIN_ID, "Unable to store the property : " + qn, e))
-		}
-	}
+
 
 	/** Find the model name from the genmodel */
 	def static getModelName(GenModel gm) {

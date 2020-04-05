@@ -6,21 +6,13 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.ILog;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.QualifiedName;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.codegen.ecore.genmodel.GenClass;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.InputOutput;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.FrameworkUtil;
 
 /**
  * A class to provide some generation common methods
@@ -80,35 +72,6 @@ public class GenerateCommon implements GMAConstants {
       InputOutput.<String>println("eresource null dans gemmodel ?? ");
     }
     return null;
-  }
-  
-  public static String getProperty(final IFile f, final QualifiedName qn) {
-    String result = null;
-    try {
-      result = f.getPersistentProperty(qn);
-    } catch (final Throwable _t) {
-      if (_t instanceof Exception) {
-      } else {
-        throw Exceptions.sneakyThrow(_t);
-      }
-    }
-    return result;
-  }
-  
-  public static void setProperty(final IFile f, final QualifiedName qn, final String value) {
-    try {
-      f.setPersistentProperty(qn, value);
-    } catch (final Throwable _t) {
-      if (_t instanceof Exception) {
-        final Exception e = (Exception)_t;
-        final Bundle bndl = FrameworkUtil.getBundle(GenerateCommon.class);
-        final ILog logger = Platform.getLog(bndl);
-        Status _status = new Status(IStatus.WARNING, GMAConstants.PLUGIN_ID, ("Unable to store the property : " + qn), e);
-        logger.log(_status);
-      } else {
-        throw Exceptions.sneakyThrow(_t);
-      }
-    }
   }
   
   /**
