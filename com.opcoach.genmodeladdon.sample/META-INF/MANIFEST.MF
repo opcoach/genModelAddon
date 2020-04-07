@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Sample
 Bundle-SymbolicName: com.opcoach.genmodeladdon.sample;singleton:=true
-Bundle-Version: 2.2.0.qualifier
+Bundle-Version: 2.3.0.qualifier
 Bundle-ClassPath: ant_tasks/importer.ecore.tasks.jar,
  .
 Require-Bundle: org.eclipse.core.runtime,
