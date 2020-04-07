@@ -96,6 +96,8 @@
         <setEntry value="org.eclipse.e4.ui.css.swt.theme@default:default"/>
         <setEntry value="org.eclipse.e4.ui.css.swt@default:default"/>
         <setEntry value="org.eclipse.e4.ui.di@default:default"/>
+        <setEntry value="org.eclipse.e4.ui.dialogs@default:default"/>
+        <setEntry value="org.eclipse.e4.ui.ide@default:default"/>
         <setEntry value="org.eclipse.e4.ui.model.workbench@default:default"/>
         <setEntry value="org.eclipse.e4.ui.services@default:default"/>
         <setEntry value="org.eclipse.e4.ui.widgets@default:default"/>
@@ -150,6 +152,7 @@
         <setEntry value="org.eclipse.equinox.simpleconfigurator.manipulator@default:default"/>
         <setEntry value="org.eclipse.equinox.simpleconfigurator@1:true"/>
         <setEntry value="org.eclipse.help@default:default"/>
+        <setEntry value="org.eclipse.jdt.annotation*2.2.400.v20191120-1313@default:default"/>
         <setEntry value="org.eclipse.jdt.compiler.apt@default:false"/>
         <setEntry value="org.eclipse.jdt.compiler.tool@default:false"/>
         <setEntry value="org.eclipse.jdt.core@default:default"/>
