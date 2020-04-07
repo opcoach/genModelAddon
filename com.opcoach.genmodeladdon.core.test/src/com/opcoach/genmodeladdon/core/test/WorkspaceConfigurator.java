@@ -90,7 +90,7 @@ public class WorkspaceConfigurator implements ProjectConstants, GMAConstants
 	{
 		if (!initDone)
 		{
-			System.out.println("******  Creating the project in test workspace ");
+			// System.out.println("******  Creating the project in test workspace ");
 			try
 			{
 				// Copy the sample project in the runtime workspace
@@ -99,7 +99,7 @@ public class WorkspaceConfigurator implements ProjectConstants, GMAConstants
 				initGenModel(PROJECT2_GENMODEL, PROJECT_ANT2_FILE, "{0}Impl", "G{0}", "src");
 				initGenModel(FANNOISE_GENMODEL, FANOISE_ANT_FILE);
 				initGenModel(RAILTOPO_GENMODEL, RAILTOPO_ANT_FILE);
-				System.out.println("Init finished");
+				// System.out.println("Init finished");
 			} catch (Exception ex)
 			{
 				ex.printStackTrace();

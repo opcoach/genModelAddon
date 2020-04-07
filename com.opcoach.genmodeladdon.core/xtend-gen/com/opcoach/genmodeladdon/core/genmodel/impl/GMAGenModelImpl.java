@@ -254,11 +254,9 @@ public class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMACon
             if (_startsWith_1) {
               URL _uRL = new URL(gmafn);
               final URL u = FileLocator.resolve(_uRL);
-              InputOutput.<String>println(("url  " + u));
               this.propertyFileName = u.toString().replaceFirst("file:", "");
             }
           }
-          InputOutput.<String>println(("gma properties file " + this.propertyFileName));
         }
       }
       return this.propertyFileName;

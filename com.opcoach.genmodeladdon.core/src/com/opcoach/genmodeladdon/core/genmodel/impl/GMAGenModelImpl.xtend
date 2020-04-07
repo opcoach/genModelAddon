@@ -188,10 +188,9 @@ class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMAConstants 
 				    else if (gmafn.startsWith("platform:/resource/"))
 				    {
 				    	val u = FileLocator.resolve(new URL(gmafn))
-				       println("url  " + u)
 				    	propertyFileName = u.toString.replaceFirst("file:", "")
 				    }
-				println("gma properties file " + propertyFileName)
+				// println("gma properties file " + propertyFileName)
 			}
 		}
 		return propertyFileName

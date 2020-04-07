@@ -152,7 +152,7 @@ public class TestExtensionGeneration extends GenModelAddonTestCase
 		IPluginModelBase base = getPluginBase();
 		Collection<IPluginExtension> appliExt = new ArrayList<IPluginExtension>();
 
-		System.out.println("Plugin base is : " + base);
+		// System.out.println("Plugin base is : " + base);
 		for (IPluginExtension e : pdeReg.findExtensionsForPlugin(base))
 		{
 			if (e.getPoint().equals("org.eclipse.core.runtime.applications"))
