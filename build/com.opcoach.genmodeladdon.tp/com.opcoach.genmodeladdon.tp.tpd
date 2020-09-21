@@ -1,15 +1,15 @@
-target "GMA SimRel0620"
+target "GMA SimRel0920"
 
 with source requirements 
 
 
-location "http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.22.0/" {
+location "http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.23.0/" {
   org.eclipse.xtext.sdk.feature.group
   org.eclipse.xtend.sdk.feature.group
   org.eclipse.xtext.xbase.feature.group
 }
 
-location "http://download.eclipse.org/releases/2020-06" {
+location "http://download.eclipse.org/releases/2020-09" {
 	
 	org.eclipse.rcp.feature.group
 	org.eclipse.ant.core
@@ -30,7 +30,7 @@ location "http://download.eclipse.org/releases/2020-06" {
 }
 
 // Add support for java 11 (removed javax.annotation)...
-location "https://download.eclipse.org/tools/orbit/downloads/drops/R20200529191137/repository" {
+location "https://download.eclipse.org/tools/orbit/downloads/drops/R20200831200620/repository" {
 	javax.annotation
 }
 

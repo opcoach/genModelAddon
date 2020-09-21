@@ -4,3 +4,5 @@ Bundle-Name: com.opcoach.project.test
 Bundle-SymbolicName: com.opcoach.project.test;singleton:=true
 Bundle-Version: 0.1.0.qualifier
 Require-Bundle: org.eclipse.emf.ecore
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Automatic-Module-Name: com.opcoach.project.test

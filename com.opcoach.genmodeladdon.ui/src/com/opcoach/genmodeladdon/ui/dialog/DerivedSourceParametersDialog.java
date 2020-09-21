@@ -1,7 +1,5 @@
 package com.opcoach.genmodeladdon.ui.dialog;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
@@ -19,7 +17,6 @@ import org.eclipse.swt.widgets.Text;
 
 import com.opcoach.genmodeladdon.Util;
 import com.opcoach.genmodeladdon.core.GMAConstants;
-import com.opcoach.genmodeladdon.core.GenerateCommon;
 import com.opcoach.genmodeladdon.core.genmodel.GMAGenModel;
 
 public class DerivedSourceParametersDialog extends Dialog implements GMAConstants
@@ -249,10 +246,6 @@ public class DerivedSourceParametersDialog extends Dialog implements GMAConstant
 		genModel = gm;
 	}
 
-	private IFile getGenModelFile()
-	{
-		return GenerateCommon.getModelFile(genModel);
-	}
 	
 	/**
 	 * Returns the default value if the string is null or empty.
