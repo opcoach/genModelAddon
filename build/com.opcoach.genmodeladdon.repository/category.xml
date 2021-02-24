@@ -3,6 +3,9 @@
    <feature id="com.opcoach.genmodeladdon.feature">
       <category name="com.opcoach.genModelAddon"/>
    </feature>
+   <feature id="com.opcoach.genmodeladdon.feature.source">
+      <category name="com.opcoach.genModelAddon"/>
+   </feature>
    <category-def name="com.opcoach.genModelAddon" label="EMF genModelAddon to generate code properly">
       <description>
          This category contains an addon to generate a code structure so as to override properly the EMF generated code.
