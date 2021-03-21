@@ -1,7 +1,5 @@
 package com.opcoach.genmodeladdon.core.genmodel;
 
-import com.opcoach.genmodeladdon.core.genmodel.GMAGenModel;
-import com.opcoach.genmodeladdon.core.genmodel.GMATransform;
 import java.util.Collection;
 import java.util.List;
 import org.eclipse.emf.codegen.util.ImportManager;

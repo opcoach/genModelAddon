@@ -13,7 +13,7 @@ The home page of this project is here : http://opcoach.github.io/genModelAddon/
    </description>
 
    <copyright>
-      @ 2017 OPCoach
+      @ 2021 OPCoach
    </copyright>
 
    <license url="http://www.example.com/license">
@@ -32,8 +32,8 @@ http://opcoach.github.io/genModelAddon/
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.pde.core"/>
       <import plugin="org.apache.commons.io"/>
-      <import plugin="org.eclipse.jdt.core" version="3.10.2" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ant.core" version="3.4.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.ant.core"/>
       <import plugin="org.eclipse.emf.importer.ecore"/>
       <import plugin="org.eclipse.emf.ant"/>
       <import plugin="org.eclipse.ant.launching"/>
@@ -43,7 +43,9 @@ http://opcoach.github.io/genModelAddon/
       <import plugin="org.eclipse.e4.ui.services" version="1.1.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.jface" version="3.10.2" match="greaterOrEqual"/>
       <import plugin="org.eclipse.e4.core.di" version="1.4.0" match="greaterOrEqual"/>
-      <import plugin="com.google.guava" version="27.1.0" match="compatible"/>
+      <import plugin="javax.annotation"/>
+      <import plugin="javax.inject"/>
+      <import plugin="com.google.guava"/>
    </requires>
 
    <plugin

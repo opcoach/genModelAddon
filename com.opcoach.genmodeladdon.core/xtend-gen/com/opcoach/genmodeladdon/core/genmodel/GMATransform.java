@@ -2,7 +2,6 @@ package com.opcoach.genmodeladdon.core.genmodel;
 
 import com.opcoach.genmodeladdon.core.GMAConstants;
 import com.opcoach.genmodeladdon.core.GenerateCommon;
-import com.opcoach.genmodeladdon.core.genmodel.GMAGenModel;
 import java.text.MessageFormat;
 import java.util.Map;
 import java.util.Set;

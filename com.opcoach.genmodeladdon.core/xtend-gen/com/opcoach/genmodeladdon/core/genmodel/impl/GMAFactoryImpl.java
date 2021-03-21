@@ -1,13 +1,6 @@
 package com.opcoach.genmodeladdon.core.genmodel.impl;
 
 import com.opcoach.genmodeladdon.core.genmodel.GMAGenModel;
-import com.opcoach.genmodeladdon.core.genmodel.impl.GMAGenClassImpl;
-import com.opcoach.genmodeladdon.core.genmodel.impl.GMAGenFeatureImpl;
-import com.opcoach.genmodeladdon.core.genmodel.impl.GMAGenModelImpl;
-import com.opcoach.genmodeladdon.core.genmodel.impl.GMAGenOperationImpl;
-import com.opcoach.genmodeladdon.core.genmodel.impl.GMAGenPackageImpl;
-import com.opcoach.genmodeladdon.core.genmodel.impl.GMAGenParameterImpl;
-import com.opcoach.genmodeladdon.core.genmodel.impl.GMAGenTypeParameterImpl;
 import org.eclipse.emf.codegen.ecore.genmodel.GenClass;
 import org.eclipse.emf.codegen.ecore.genmodel.GenFeature;
 import org.eclipse.emf.codegen.ecore.genmodel.GenOperation;

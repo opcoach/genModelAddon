@@ -1,6 +1,5 @@
 package com.opcoach.genmodeladdon.core;
 
-import com.opcoach.genmodeladdon.core.GMAConstants;
 import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;

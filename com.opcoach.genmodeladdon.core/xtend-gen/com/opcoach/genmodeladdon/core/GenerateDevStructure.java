@@ -1,10 +1,6 @@
 package com.opcoach.genmodeladdon.core;
 
 import com.google.common.collect.Iterables;
-import com.opcoach.genmodeladdon.core.GMAConstants;
-import com.opcoach.genmodeladdon.core.GenerateAntFileForCodeGeneration;
-import com.opcoach.genmodeladdon.core.GenerateCommon;
-import com.opcoach.genmodeladdon.core.GenerateExtensions;
 import com.opcoach.genmodeladdon.core.genmodel.GMAGenModel;
 import java.io.File;
 import java.io.FileWriter;
