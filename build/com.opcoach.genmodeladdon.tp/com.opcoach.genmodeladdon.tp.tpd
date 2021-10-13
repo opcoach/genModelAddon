@@ -9,7 +9,7 @@ location "http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.25.0
   org.eclipse.xtext.xbase.feature.group
 }
 
-location "http://download.eclipse.org/releases/2021-06" {
+location "http://download.eclipse.org/releases/2021-09" {
 	
 	org.eclipse.rcp.feature.group
 	org.eclipse.ant.core
@@ -18,7 +18,7 @@ location "http://download.eclipse.org/releases/2021-06" {
 	org.eclipse.emf.ant
 	org.eclipse.emf.sdk.feature.group
 	org.eclipse.emf.codegen.ecore.feature.group
-	org.eclipse.emf.importer.ecore 
+	org.eclipse.emf.importer.ecore
 	org.eclipse.emf.importer 
 	org.eclipse.ant.launching
 	org.eclipse.core.runtime
@@ -32,7 +32,7 @@ location "http://download.eclipse.org/releases/2021-06" {
 }
 
 // Add support for java 11 (removed javax.annotation)...
-location "https://download.eclipse.org/tools/orbit/downloads/drops/R20210602031627/repository" {
+location "https://download.eclipse.org/tools/orbit/downloads/drops/R20210825222808/repository" {
 	javax.annotation
 }
 
