@@ -36,5 +36,5 @@ public interface GMAConstants {
   
   static final String DEFAULT_SRC_CLASS_IMPL_PATTERN = "{0}DevImpl";
   
-  static final String NATURE_ID = "com.opcoach.genmodeladdon.core.GMANature";
+  static final String NATURE_ID = "com.opcoach.genmodeladdon.ui.GMANature";
 }
