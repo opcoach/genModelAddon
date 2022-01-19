@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.FileLocator
 import org.eclipse.emf.codegen.ecore.genmodel.GenPackage
 import org.eclipse.emf.codegen.ecore.genmodel.impl.GenModelImpl
 import org.eclipse.emf.codegen.util.ImportManager
+import com.opcoach.genmodeladdon.core.GMAHelper
 
 class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMAConstants {
 
@@ -103,6 +104,9 @@ class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMAConstants 
 
 	override getImportedName(String qualifiedName) {
 		val pname = super.getImportedName(qualifiedName)
+		// Do not transform anything if project is not compliant with GMA
+		if(!GMAHelper.GMACompliant(this))
+			return pname
 		val result = GMATransform.replaceDevName(pname)
 		if (result != pname)
 			println("--->> genModelImportedName convert " + pname + " into " + result)

@@ -2,6 +2,7 @@ package com.opcoach.genmodeladdon.core.genmodel.impl;
 
 import com.google.common.base.Objects;
 import com.opcoach.genmodeladdon.core.GMAConstants;
+import com.opcoach.genmodeladdon.core.GMAHelper;
 import com.opcoach.genmodeladdon.core.genmodel.GMAGenModel;
 import com.opcoach.genmodeladdon.core.genmodel.GMAImportManager;
 import com.opcoach.genmodeladdon.core.genmodel.GMATransform;
@@ -126,6 +127,11 @@ public class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMACon
     String _xblockexpression = null;
     {
       final String pname = super.getImportedName(qualifiedName);
+      boolean _GMACompliant = GMAHelper.GMACompliant(this);
+      boolean _not = (!_GMACompliant);
+      if (_not) {
+        return pname;
+      }
       final String result = this.getGMATransform().replaceDevName(pname);
       boolean _notEquals = (!Objects.equal(result, pname));
       if (_notEquals) {

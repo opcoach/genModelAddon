@@ -1,6 +1,7 @@
 package com.opcoach.genmodeladdon.core.genmodel;
 
 import com.opcoach.genmodeladdon.core.GMAConstants;
+import com.opcoach.genmodeladdon.core.GMAHelper;
 import com.opcoach.genmodeladdon.core.GenerateCommon;
 import java.text.MessageFormat;
 import java.util.Map;
@@ -182,6 +183,11 @@ public class GMATransform implements GMAConstants {
   public static String replaceDevName(final GenBase base, final String stringToTranslate) {
     String _xblockexpression = null;
     {
+      boolean _GMACompliant = GMAHelper.GMACompliant(base);
+      boolean _not = (!_GMACompliant);
+      if (_not) {
+        return stringToTranslate;
+      }
       final GenModel genModel = base.getGenModel();
       GMATransform dt = null;
       if ((genModel instanceof GMAGenModel)) {
