@@ -10,16 +10,6 @@
       </fragment>
    </extension>
 
-	<extension
-         id="GMANature"
-         name="%extension.name"
-         point="org.eclipse.core.resources.natures">
-      <runtime>
-         <run
-               class="com.opcoach.genmodeladdon.nature.GMANature">
-         </run>
-      </runtime>
-   </extension>
    <extension
          point="org.eclipse.ui.commands">
       <category
@@ -53,7 +43,7 @@
                            type="org.eclipse.core.resources.IProject">
                         <test
                               property="org.eclipse.core.resources.projectNature"
-                              value="com.opcoach.genmodeladdon.ui.GMANature">
+                              value="com.opcoach.genmodeladdon.core.GMANature">
                         </test>
                      </adapt>
                   </iterate>
@@ -77,7 +67,7 @@
                         <not>
                            <test
                                  property="org.eclipse.core.resources.projectNature"
-                                 value="com.opcoach.genmodeladdon.ui.GMANature">
+                                 value="com.opcoach.genmodeladdon.core.GMANature">
                            </test>
                         </not>
                      </adapt>

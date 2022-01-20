@@ -9,4 +9,15 @@
       </factory>
    </extension>
 
+	<extension
+         id="GMANature"
+         name="%extension.name"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="com.opcoach.genmodeladdon.nature.GMANature">
+         </run>
+      </runtime>
+   </extension>
+
 </plugin>

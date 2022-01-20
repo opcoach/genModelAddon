@@ -28,6 +28,7 @@ import com.opcoach.genmodeladdon.core.GMAConstants;
 import com.opcoach.genmodeladdon.core.GenerateCommon;
 import com.opcoach.genmodeladdon.core.GenerateDevStructure;
 import com.opcoach.genmodeladdon.core.genmodel.GMAGenModel;
+import com.opcoach.genmodeladdon.nature.GMANature;
 
 /**
  * This class is used once to initialize the projects : - unzip the sample
@@ -134,6 +135,15 @@ public class WorkspaceConfigurator implements ProjectConstants, GMAConstants
 
 		// Remember of sample project
 		sampleProject = root.getProject(DEST_SAMPLE_PROJECT);
+		
+		// Assign it the GMA nature is not set aleady
+		try {
+			if( !sampleProject.hasNature(GMAConstants.NATURE_ID))
+				GMANature.toggleNature(sampleProject);
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		NullProgressMonitor npm = new NullProgressMonitor();
 		try
 		{
