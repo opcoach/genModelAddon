@@ -9,6 +9,7 @@ import org.eclipse.emf.codegen.ecore.genmodel.GenBase
 import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EPackage
 import org.eclipse.emf.ecore.EcorePackage
+import com.opcoach.genmodeladdon.core.GMAHelper
 
 /** This class computes the new names for generated classes according to pattern name matching */
 class GMATransform implements GMAConstants {
@@ -134,6 +135,9 @@ class GMATransform implements GMAConstants {
 
 	/** Transform a String with default computed names with the new names */
 	static def replaceDevName(GenBase base, String stringToTranslate) {
+		// Do not translate anything if project is not compliant with GMA
+		if(!GMAHelper.GMACompliant(base))
+			return stringToTranslate
 		// Check it base has a GenModelImpl with its own devtransform
 		val genModel = base.genModel
 		var GMATransform dt = null

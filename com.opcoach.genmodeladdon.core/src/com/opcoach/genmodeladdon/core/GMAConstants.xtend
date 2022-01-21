@@ -33,5 +33,7 @@ interface GMAConstants {
 	public static val String DEFAULT_SRC_INTERFACE_PATTERN = "{0}Dev"
 	public static val String DEFAULT_SRC_CLASS_IMPL_PATTERN = "{0}DevImpl"
 	
+	// GMA nature
+  	public static val String NATURE_ID = "com.opcoach.genmodeladdon.core.GMANature";
 	
 }

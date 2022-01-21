@@ -2,17 +2,6 @@
 <plugin>
 
    <extension
-         point="org.eclipse.core.expressions.definitions">
-      <definition
-            id="com.opcoach.genmodeladdon.ui.genModelSelected">
-         <iterate>
-            <instanceof
-                  value="org.eclipse.emf.codegen.ecore.genmodel.GenModel">
-            </instanceof>
-         </iterate>
-      </definition>
-   </extension>
-   <extension
          id="com.opcoach.genmodeladdon.ui.fragment"
          point="org.eclipse.e4.workbench.model">
       <fragment
@@ -21,4 +10,71 @@
       </fragment>
    </extension>
 
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="com.opcoach.genmodeladdon.ui.nature.category"
+            name="%category.name">
+      </category>
+      <command
+            categoryId="com.opcoach.genmodeladdon.ui.nature.category"
+            defaultHandler="com.opcoach.genmodeladdon.handlers.AddRemoveGMANature"
+            id="com.opcoach.genmodeladdon.ui.command.addRemoveGMANature"
+            name="%command.name">
+      </command>
+   </extension>
+      <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.eclipse.ui.projectConfigure?after=additions">
+         <command
+               label="%command.label"
+               commandId="com.opcoach.genmodeladdon.ui.command.addRemoveGMANature"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="selection">
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <adapt
+                           type="org.eclipse.core.resources.IProject">
+                        <test
+                              property="org.eclipse.core.resources.projectNature"
+                              value="com.opcoach.genmodeladdon.core.GMANature">
+                        </test>
+                     </adapt>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+         <command
+               label="%command.label.0"
+               commandId="com.opcoach.genmodeladdon.ui.command.addRemoveGMANature"
+               style="push">
+           <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="selection">
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <adapt
+                           type="org.eclipse.core.resources.IProject">
+                        <not>
+                           <test
+                                 property="org.eclipse.core.resources.projectNature"
+                                 value="com.opcoach.genmodeladdon.core.GMANature">
+                           </test>
+                        </not>
+                     </adapt>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
 </plugin>

@@ -12,7 +12,7 @@
     <elements xsi:type="menu:MenuContribution" xmi:id="_6NdsUPvXEeSRa5pGQfH9tQ" elementId="com.opcoach.genmodeladdon.ui.menucontribution.0" positionInParent="before=open-actions" parentId="org.eclipse.emf.codegen.ecore.genmodel.presentation.GenModelEditorID">
       <children xsi:type="menu:MenuSeparator" xmi:id="_e35UQHN2EeWkc5nT9MKUaA" elementId="com.opcoach.genmodeladdon.ui.menuseparator.0"/>
       <children xsi:type="menu:HandledMenuItem" xmi:id="_R4cT4PvYEeSRa5pGQfH9tQ" elementId="com.opcoach.genmodeladdon.ui.handledmenuitem." label="Generate Developer Structure" iconURI="platform:/plugin/com.opcoach.genmodeladdon.ui/icons/opcoach.png" command="_MD83oPvWEeSRa5pGQfH9tQ">
-        <visibleWhen xsi:type="ui:CoreExpression" xmi:id="_B0R0EHN2EeWkc5nT9MKUaA" coreExpressionId="com.opcoach.genmodeladdon.ui.genModelSelected"/>
+        <visibleWhen xsi:type="ui:ImperativeExpression" xmi:id="_sphWYHktEeyOhI-pJycYKA" contributionURI="bundleclass://com.opcoach.genmodeladdon.ui/com.opcoach.genmodeladdon.handlers.GenerateStructureTester"/>
       </children>
       <children xsi:type="menu:MenuSeparator" xmi:id="_gyjqIHN2EeWkc5nT9MKUaA" elementId="com.opcoach.genmodeladdon.ui.menuseparator.1"/>
     </elements>
