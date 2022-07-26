@@ -17,7 +17,7 @@ public class GMAGenClassImpl extends GenClassImpl {
     }
     return _xblockexpression;
   }
-  
+
   @Override
   public List<String> getClassImplementsList() {
     UniqueEList<String> _xblockexpression = null;
@@ -31,22 +31,22 @@ public class GMAGenClassImpl extends GenClassImpl {
     }
     return _xblockexpression;
   }
-  
+
   @Override
   public String getClassTypeArguments() {
     return GMATransform.replaceDevName(this, super.getClassTypeArguments());
   }
-  
+
   @Override
   public String getTypeParameters() {
     return GMATransform.replaceDevName(this, super.getTypeParameters());
   }
-  
+
   @Override
   public String getInterfaceExtends() {
     return GMATransform.replaceDevName(this, super.getInterfaceExtends());
   }
-  
+
   @Override
   public String getListConstructor(final GenFeature genFeature) {
     return GMATransform.replaceDevName(this, super.getListConstructor(genFeature));

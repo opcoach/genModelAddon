@@ -1,9 +1,8 @@
 package com.opcoach.genmodeladdon.core
 
-import java.util.ArrayList
 import java.util.Map
 import org.eclipse.core.resources.IProject
-import org.eclipse.pde.core.plugin.IPluginBase
+import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.pde.core.plugin.IPluginElement
 import org.eclipse.pde.core.plugin.IPluginExtension
 import org.eclipse.pde.core.plugin.IPluginExtensionPoint
@@ -11,6 +10,7 @@ import org.eclipse.pde.core.plugin.IPluginModelBase
 import org.eclipse.pde.core.plugin.IPluginObject
 import org.eclipse.pde.core.plugin.PluginRegistry
 import org.eclipse.pde.internal.core.PDECore
+import org.eclipse.pde.internal.core.PluginModelManager
 import org.eclipse.pde.internal.core.bundle.WorkspaceBundlePluginModel
 import org.eclipse.pde.internal.core.project.PDEProject
 
@@ -94,7 +94,8 @@ package class GenerateExtensions {
 		}
 
 		// Must inform the modelManager that project should be updated (don't remove this line)
-		PDECore.^default.modelManager.bundleRootChanged(project)
+		PluginModelManager.instance.targetReloaded(new NullProgressMonitor())	
+		// Deprecated since 2022-03 :PDECore.^default.modelManager.bundleRootChanged(project)
 
 	}
 
@@ -180,8 +181,9 @@ package class GenerateExtensions {
 		// Can store the new fModel to override the previous plugin.xml file.
 		fModel.save
 		
-		/// Don't forget to force a refresh of extension/extension points...
-		PDECore.^default.modelManager.bundleRootChanged(project)
+		/// Don't forget to force a refresh of extension/extension points by reloading target
+		PluginModelManager.instance.targetReloaded(new NullProgressMonitor())	
+		// Deprecated since 2022-03 : PDECore.^default.modelManager.bundleRootChanged(project)
 
 	}
 
@@ -197,7 +199,8 @@ package class GenerateExtensions {
 
 			if (factoryExt !== null) {
 				// remove it from current plugin.xml to recreate it with correct values
-				fModel.getPluginBase().remove(factoryExt)
+				fModel.plugin.remove(factoryExt)
+				// fModel.getPluginBase()
 			}
 
 		} while (factoryExt !== null)

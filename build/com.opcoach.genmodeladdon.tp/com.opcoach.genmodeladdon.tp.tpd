@@ -1,16 +1,16 @@
-target "GMA SimRel0322"
+target "GMA SimRel0622"
 
 with source requirements 
 
 
-location "http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.26.0/" {
+location "http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.27.0/" {
   org.eclipse.xtext.sdk.feature.group
-  org.eclipse.xtend.sdk.feature.group
+  org.eclipse.xtend.sdk.feature.group 
   org.eclipse.xtext.xbase.feature.group
 }
 
 
-location "http://download.eclipse.org/releases/2022-03" {
+location "http://download.eclipse.org/releases/2022-06" {
 	
 	org.eclipse.rcp.feature.group
 	org.eclipse.ant.core
@@ -19,6 +19,8 @@ location "http://download.eclipse.org/releases/2022-03" {
 	org.eclipse.emf.ant
 	org.eclipse.emf.sdk.feature.group
 	org.eclipse.emf.codegen.ecore.feature.group
+	org.eclipse.emf.mwe2.language.sdk.feature.group
+	
 	org.eclipse.emf.importer.ecore
 	org.eclipse.emf.importer 
 	org.eclipse.ant.launching
@@ -33,7 +35,7 @@ location "http://download.eclipse.org/releases/2022-03" {
 }
 
 // Add support for java 11 (removed javax.annotation)...
-location "https://download.eclipse.org/tools/orbit/downloads/drops/R20220302172233/repository" {
+location "https://download.eclipse.org/tools/orbit/downloads/drops/R20220531185310/repository" {
 	javax.annotation
 }
 

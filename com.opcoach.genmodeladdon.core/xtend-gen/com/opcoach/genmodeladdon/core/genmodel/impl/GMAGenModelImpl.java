@@ -25,19 +25,19 @@ import org.eclipse.xtext.xbase.lib.InputOutput;
 @SuppressWarnings("all")
 public class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMAConstants {
   private GMATransform gmaTransform = null;
-  
+
   private Properties properties;
-  
+
   private String propertyFileName = null;
-  
+
   private String cPattern;
-  
+
   private String iPattern;
-  
+
   private String srcDir;
-  
+
   private Boolean genEMFCode;
-  
+
   @Override
   public GMATransform getGMATransform() {
     if ((this.gmaTransform == null)) {
@@ -95,16 +95,16 @@ public class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMACon
     }
     return this.gmaTransform;
   }
-  
+
   public GMATransform setGMATransform(final GMATransform gmat) {
     return this.gmaTransform = gmat;
   }
-  
+
   @Override
   public void emitSortedImports() {
     super.emitSortedImports();
   }
-  
+
   @Override
   public void setImportManager(final ImportManager im) {
     if ((im == null)) {
@@ -121,7 +121,7 @@ public class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMACon
       }
     }
   }
-  
+
   @Override
   public String getImportedName(final String qualifiedName) {
     String _xblockexpression = null;
@@ -141,19 +141,19 @@ public class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMACon
     }
     return _xblockexpression;
   }
-  
+
   @Override
   public void setDevClassPattern(final String cpattern) {
     this.cPattern = cpattern;
     this.setProperty(GMAConstants.PROP_DEV_CLASS_PATTERN, cpattern);
   }
-  
+
   @Override
   public void setDevInterfacePattern(final String ipattern) {
     this.iPattern = ipattern;
     this.setProperty(GMAConstants.PROP_DEV_INTERFACE_PATTERN, ipattern);
   }
-  
+
   @Override
   public String getDevClassPattern() {
     String _xblockexpression = null;
@@ -175,7 +175,7 @@ public class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMACon
     }
     return _xblockexpression;
   }
-  
+
   @Override
   public String getDevInterfacePattern() {
     String _xblockexpression = null;
@@ -197,7 +197,7 @@ public class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMACon
     }
     return _xblockexpression;
   }
-  
+
   public Object readProperties() {
     Object _xifexpression = null;
     if ((this.properties == null)) {
@@ -223,7 +223,7 @@ public class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMACon
     }
     return _xifexpression;
   }
-  
+
   public void saveProperties() {
     try {
       StringConcatenation _builder = new StringConcatenation();
@@ -243,7 +243,7 @@ public class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMACon
       throw Exceptions.sneakyThrow(_e);
     }
   }
-  
+
   public String getPropertyFilename() {
     try {
       if ((this.propertyFileName == null)) {
@@ -270,7 +270,7 @@ public class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMACon
       throw Exceptions.sneakyThrow(_e);
     }
   }
-  
+
   private String getProperty(final String qn) {
     String _xblockexpression = null;
     {
@@ -286,25 +286,25 @@ public class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMACon
     }
     return _xblockexpression;
   }
-  
+
   private void setProperty(final String qn, final String value) {
     this.readProperties();
     this.properties.setProperty(qn, value);
     this.saveProperties();
   }
-  
+
   @Override
   public void setSrcDir(final String dir) {
     this.srcDir = dir;
     this.setProperty(GMAConstants.PROP_SRCDIR, dir);
   }
-  
+
   @Override
   public void setGenerateEMFCode(final boolean gen) {
     this.genEMFCode = Boolean.valueOf(gen);
     this.setProperty(GMAConstants.PROP_GENEMFCODE, Boolean.valueOf(gen).toString());
   }
-  
+
   @Override
   public String getSrcDir() {
     if ((this.srcDir == null)) {
@@ -315,7 +315,7 @@ public class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMACon
     }
     return this.srcDir;
   }
-  
+
   @Override
   public boolean mustGenerateEMF() {
     if ((this.genEMFCode == null)) {

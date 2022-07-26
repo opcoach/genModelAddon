@@ -28,6 +28,7 @@ import org.eclipse.jdt.core.IClasspathEntry
 import org.eclipse.jdt.core.IJavaProject
 import org.eclipse.jdt.core.JavaCore
 import org.eclipse.pde.internal.core.PDECore
+import org.eclipse.pde.internal.core.PluginModelManager
 
 /** This class is used to proceed the different steps to generate the development structure
  * A method is defined for each step :
@@ -313,7 +314,8 @@ class GenerateDevStructure implements IResourceChangeListener {
 		} catch (CoreException e) {
 			e.printStackTrace
 		} finally {
-			PDECore.^default.modelManager.bundleRootChanged(project)
+			PluginModelManager.instance.targetReloaded(new NullProgressMonitor())
+			// PDECore.^default.modelManager.bundleRootChanged(project)
 		}
 
 	}

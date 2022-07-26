@@ -9,7 +9,7 @@ public class GMAGenPackageImpl extends GenPackageImpl {
   public String getImportedPackageClassName() {
     return GMATransform.replaceDevName(this, super.getImportedPackageClassName());
   }
-  
+
   @Override
   public String getImportedPackageInterfaceName() {
     return GMATransform.replaceDevName(this, super.getImportedPackageInterfaceName());
