@@ -2,7 +2,7 @@
 <feature
       id="com.opcoach.genmodeladdon.feature"
       label="EMF genModelAddon (override generated code)"
-      version="2.4.0.qualifier"
+      version="2.5.0.qualifier"
       provider-name="OPCOACH">
 
    <description url="http://www.example.com/description">
@@ -13,7 +13,7 @@ The home page of this project is here : http://opcoach.github.io/genModelAddon/
    </description>
 
    <copyright>
-      @ 2021 OPCoach
+      @ 2022 OPCoach
    </copyright>
 
    <license url="http://www.example.com/license">
