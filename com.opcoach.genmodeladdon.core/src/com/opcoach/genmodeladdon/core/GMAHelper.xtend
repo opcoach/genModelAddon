@@ -8,6 +8,9 @@ class GMAHelper {
 	static def boolean GMACompliant(GenBase context) {
 		val genModel = context.getGenModel()
 		val path = genModel.getModelProjectDirectory()
+		if( path === null ) {
+			return false
+		}
 		val workspace = ResourcesPlugin.getWorkspace()
 		val modelProject = workspace.getRoot().getProject(path)
 		try {
