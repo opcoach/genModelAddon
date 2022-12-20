@@ -25,19 +25,21 @@ import org.eclipse.xtext.xbase.lib.InputOutput;
 @SuppressWarnings("all")
 public class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMAConstants {
   private GMATransform gmaTransform = null;
-
+  
   private Properties properties;
-
+  
   private String propertyFileName = null;
-
+  
   private String cPattern;
-
+  
   private String iPattern;
-
+  
   private String srcDir;
-
+  
   private Boolean genEMFCode;
-
+  
+  private Boolean genXtendCode;
+  
   @Override
   public GMATransform getGMATransform() {
     if ((this.gmaTransform == null)) {
@@ -95,16 +97,16 @@ public class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMACon
     }
     return this.gmaTransform;
   }
-
+  
   public GMATransform setGMATransform(final GMATransform gmat) {
     return this.gmaTransform = gmat;
   }
-
+  
   @Override
   public void emitSortedImports() {
     super.emitSortedImports();
   }
-
+  
   @Override
   public void setImportManager(final ImportManager im) {
     if ((im == null)) {
@@ -121,7 +123,7 @@ public class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMACon
       }
     }
   }
-
+  
   @Override
   public String getImportedName(final String qualifiedName) {
     String _xblockexpression = null;
@@ -141,19 +143,19 @@ public class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMACon
     }
     return _xblockexpression;
   }
-
+  
   @Override
   public void setDevClassPattern(final String cpattern) {
     this.cPattern = cpattern;
     this.setProperty(GMAConstants.PROP_DEV_CLASS_PATTERN, cpattern);
   }
-
+  
   @Override
   public void setDevInterfacePattern(final String ipattern) {
     this.iPattern = ipattern;
     this.setProperty(GMAConstants.PROP_DEV_INTERFACE_PATTERN, ipattern);
   }
-
+  
   @Override
   public String getDevClassPattern() {
     String _xblockexpression = null;
@@ -175,7 +177,7 @@ public class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMACon
     }
     return _xblockexpression;
   }
-
+  
   @Override
   public String getDevInterfacePattern() {
     String _xblockexpression = null;
@@ -197,7 +199,7 @@ public class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMACon
     }
     return _xblockexpression;
   }
-
+  
   public Object readProperties() {
     Object _xifexpression = null;
     if ((this.properties == null)) {
@@ -207,9 +209,11 @@ public class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMACon
         this.properties = _properties;
         Object _xtrycatchfinallyexpression = null;
         try {
-          String _propertyFilename = this.getPropertyFilename();
-          final FileReader fr = new FileReader(_propertyFilename);
-          this.properties.load(fr);
+          final String fileName = this.getPropertyFilename();
+          if ((fileName != null)) {
+            final FileReader fr = new FileReader(fileName);
+            this.properties.load(fr);
+          }
         } catch (final Throwable _t) {
           if (_t instanceof Exception) {
             _xtrycatchfinallyexpression = null;
@@ -223,7 +227,7 @@ public class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMACon
     }
     return _xifexpression;
   }
-
+  
   public void saveProperties() {
     try {
       StringConcatenation _builder = new StringConcatenation();
@@ -243,7 +247,7 @@ public class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMACon
       throw Exceptions.sneakyThrow(_e);
     }
   }
-
+  
   public String getPropertyFilename() {
     try {
       if ((this.propertyFileName == null)) {
@@ -270,7 +274,7 @@ public class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMACon
       throw Exceptions.sneakyThrow(_e);
     }
   }
-
+  
   private String getProperty(final String qn) {
     String _xblockexpression = null;
     {
@@ -286,25 +290,31 @@ public class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMACon
     }
     return _xblockexpression;
   }
-
+  
   private void setProperty(final String qn, final String value) {
     this.readProperties();
     this.properties.setProperty(qn, value);
     this.saveProperties();
   }
-
+  
   @Override
   public void setSrcDir(final String dir) {
     this.srcDir = dir;
     this.setProperty(GMAConstants.PROP_SRCDIR, dir);
   }
-
+  
   @Override
   public void setGenerateEMFCode(final boolean gen) {
     this.genEMFCode = Boolean.valueOf(gen);
     this.setProperty(GMAConstants.PROP_GENEMFCODE, Boolean.valueOf(gen).toString());
   }
-
+  
+  @Override
+  public void setGenerateXtendCode(final boolean gen) {
+    this.genXtendCode = Boolean.valueOf(gen);
+    this.setProperty(GMAConstants.PROP_GENXTENDCODE, Boolean.valueOf(gen).toString());
+  }
+  
   @Override
   public String getSrcDir() {
     if ((this.srcDir == null)) {
@@ -315,14 +325,20 @@ public class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMACon
     }
     return this.srcDir;
   }
-
+  
   @Override
   public boolean mustGenerateEMF() {
     if ((this.genEMFCode == null)) {
-      String _property = this.getProperty(GMAConstants.PROP_GENEMFCODE);
-      Boolean _boolean = new Boolean(_property);
-      this.genEMFCode = _boolean;
+      this.genEMFCode = Boolean.valueOf(this.getProperty(GMAConstants.PROP_GENEMFCODE));
     }
     return this.genEMFCode.booleanValue();
+  }
+  
+  @Override
+  public boolean mustGenerateXtendCode() {
+    if ((this.genXtendCode == null)) {
+      this.genXtendCode = Boolean.valueOf(this.getProperty(GMAConstants.PROP_GENXTENDCODE));
+    }
+    return this.genXtendCode.booleanValue();
   }
 }

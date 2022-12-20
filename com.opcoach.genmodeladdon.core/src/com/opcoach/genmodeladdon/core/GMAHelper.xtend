@@ -16,6 +16,7 @@ class GMAHelper {
 		try {
 			return modelProject.hasNature(GMAConstants.NATURE_ID)
 		} catch (CoreException e) {
+			//System.err.println(e.message)
 			return false
 		}
 	}

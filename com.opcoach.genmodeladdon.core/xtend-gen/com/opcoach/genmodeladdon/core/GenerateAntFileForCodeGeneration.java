@@ -12,7 +12,7 @@ import org.eclipse.xtend2.lib.StringConcatenation;
 @SuppressWarnings("all")
 public class GenerateAntFileForCodeGeneration {
   public static final String ANT_FILENAME = "generateEMFCode.xml";
-
+  
   private CharSequence generateAntFileContent(final String modelDir, final String modelName) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
@@ -72,11 +72,11 @@ public class GenerateAntFileForCodeGeneration {
     _builder.newLine();
     return _builder;
   }
-
+  
   public File getAntFile(final IProject proj) {
     return this.getAntFile(proj, GenerateAntFileForCodeGeneration.ANT_FILENAME);
   }
-
+  
   public File getAntFile(final IProject proj, final String antFileName) {
     final IPath location = proj.getLocation();
     String _oSString = location.toOSString();
@@ -85,11 +85,11 @@ public class GenerateAntFileForCodeGeneration {
     final File f = new File(srcAbsolutePath);
     return f;
   }
-
+  
   public File generateAntFile(final String modelDir, final String modelName, final IProject proj) throws IOException, CoreException {
     return this.generateAntFile(modelDir, modelName, proj, GenerateAntFileForCodeGeneration.ANT_FILENAME);
   }
-
+  
   public File generateAntFile(final String modelDir, final String modelName, final IProject proj, final String antFileName) throws IOException, CoreException {
     final File f = this.getAntFile(proj, antFileName);
     boolean _exists = f.exists();

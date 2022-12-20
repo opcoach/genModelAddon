@@ -19,32 +19,32 @@ public class GMAFactoryImpl extends GenModelFactoryImpl {
   public GenFeature createGenFeature() {
     return new GMAGenFeatureImpl();
   }
-
+  
   @Override
   public GenClass createGenClass() {
     return new GMAGenClassImpl();
   }
-
+  
   @Override
   public GMAGenModel createGenModel() {
     return new GMAGenModelImpl();
   }
-
+  
   @Override
   public GenOperation createGenOperation() {
     return new GMAGenOperationImpl();
   }
-
+  
   @Override
   public GenPackage createGenPackage() {
     return new GMAGenPackageImpl();
   }
-
+  
   @Override
   public GenParameter createGenParameter() {
     return new GMAGenParameterImpl();
   }
-
+  
   @Override
   public GenTypeParameter createGenTypeParameter() {
     return new GMAGenTypeParameterImpl();

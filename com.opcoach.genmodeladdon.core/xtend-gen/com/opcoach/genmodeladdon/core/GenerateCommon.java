@@ -24,7 +24,7 @@ public class GenerateCommon implements GMAConstants {
   public static String getProjectName(final GenModel gm) {
     return GenerateCommon.getProjectNameFromURI(gm.eResource().getURI());
   }
-
+  
   public static String getProjectNameFromURI(final URI genModelUri) {
     final URI rootUri = URI.createURI(ResourcesPlugin.getWorkspace().getRoot().getLocationURI().toString());
     final String lastSegOfRootUri = rootUri.lastSegment();
@@ -39,7 +39,7 @@ public class GenerateCommon implements GMAConstants {
     final int lastIndex = segments.lastIndexOf(lastSegOfRootUri);
     return segments.get((lastIndex + 1));
   }
-
+  
   /**
    * Find the project from a genmodel
    */
@@ -51,7 +51,7 @@ public class GenerateCommon implements GMAConstants {
     }
     return _xblockexpression;
   }
-
+  
   /**
    * Find the IFile from a genmodel
    */
@@ -72,7 +72,7 @@ public class GenerateCommon implements GMAConstants {
     }
     return null;
   }
-
+  
   /**
    * Find the model name from the genmodel
    */
@@ -88,7 +88,7 @@ public class GenerateCommon implements GMAConstants {
     }
     return _xblockexpression;
   }
-
+  
   /**
    * Find the model directory in its project
    */
@@ -97,7 +97,7 @@ public class GenerateCommon implements GMAConstants {
     final String projectName = GenerateCommon.getProject(gm).getName();
     return GenerateCommon.getModelPathFromStringURI(projectName, uri.toString());
   }
-
+  
   /**
    * Find the model directory in its project
    */
@@ -113,12 +113,12 @@ public class GenerateCommon implements GMAConstants {
     }
     return modelDir;
   }
-
+  
   public static boolean isMapType(final EClassifier c) {
     final String name = c.getInstanceClassName();
     return ("java.util.Map.Entry".equals(name) || "java.util.Map$Entry".equals(name));
   }
-
+  
   public static boolean isMapType(final GenClass c) {
     return GenerateCommon.isMapType(c.getEcoreClass());
   }

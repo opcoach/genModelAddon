@@ -13,6 +13,9 @@ public class GMAHelper {
   public static boolean GMACompliant(final GenBase context) {
     final GenModel genModel = context.getGenModel();
     final String path = genModel.getModelProjectDirectory();
+    if ((path == null)) {
+      return false;
+    }
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
     final IProject modelProject = workspace.getRoot().getProject(path);
     try {
