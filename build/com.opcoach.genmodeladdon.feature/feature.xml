@@ -2,7 +2,7 @@
 <feature
       id="com.opcoach.genmodeladdon.feature"
       label="EMF genModelAddon (override generated code)"
-      version="2.5.0.qualifier"
+      version="2.6.0.qualifier"
       provider-name="OPCOACH">
 
    <description url="http://www.example.com/description">

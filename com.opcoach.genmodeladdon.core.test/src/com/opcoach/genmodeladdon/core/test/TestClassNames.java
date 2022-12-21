@@ -119,35 +119,35 @@ public class TestClassNames extends GenModelAddonTestCase {
 
 	@Test
 	public void testXtendClassNames() {
-		assertFileExists("src/com//opcoach/xtend/project/impl/CompanyImpl.xtend");
-		assertFileNotExists("src/com//opcoach/xtend/project/impl/CompanyImpl.java");
+		assertFileExists("src/com/opcoach/xtend/project/impl/CompanyImpl.xtend");
+		assertFileNotExists("src/com/opcoach/xtend/project/impl/CompanyImpl.java");
 
-		assertFileExists("src/com//opcoach/xtend/project/impl/FolderImpl.xtend");
-		assertFileNotExists("src/com//opcoach/xtend/project/impl/FolderImpl.java");
+		assertFileExists("src/com/opcoach/xtend/project/impl/FolderImpl.xtend");
+		assertFileNotExists("src/com/opcoach/xtend/project/impl/FolderImpl.java");
 
-		assertFileExists("src/com//opcoach/xtend/project/impl/PersonImpl.xtend");
-		assertFileNotExists("src/com//opcoach/xtend/project/impl/PersonImpl.java");
+		assertFileExists("src/com/opcoach/xtend/project/impl/PersonImpl.xtend");
+		assertFileNotExists("src/com/opcoach/xtend/project/impl/PersonImpl.java");
 
-		assertFileExists("src/com//opcoach/xtend/project/impl/ProjectFactoryImpl.java");
-		assertFileNotExists("src/com//opcoach/xtend/project/impl/ProjectFactoryImpl.xtend");
+		assertFileExists("src/com/opcoach/xtend/project/impl/ProjectFactoryImpl.java");
+		assertFileNotExists("src/com/opcoach/xtend/project/impl/ProjectFactoryImpl.xtend");
 
-		assertFileExists("src/com//opcoach/xtend/project/impl/ProjectFolderImpl.xtend");
-		assertFileNotExists("src/com//opcoach/xtend/project/impl/ProjectFolderImpl.java");
+		assertFileExists("src/com/opcoach/xtend/project/impl/ProjectFolderImpl.xtend");
+		assertFileNotExists("src/com/opcoach/xtend/project/impl/ProjectFolderImpl.java");
 
-		assertFileExists("src/com//opcoach/xtend/project/impl/ProjectImpl.xtend");
-		assertFileNotExists("src/com//opcoach/xtend/project/impl/ProjectImpl.java");
+		assertFileExists("src/com/opcoach/xtend/project/impl/ProjectImpl.xtend");
+		assertFileNotExists("src/com/opcoach/xtend/project/impl/ProjectImpl.java");
 
-		assertFileExists("src/com//opcoach/xtend/project/impl/StoreImpl.xtend");
-		assertFileNotExists("src/com//opcoach/xtend/project/impl/StoreImpl.java");
+		assertFileExists("src/com/opcoach/xtend/project/impl/StoreImpl.xtend");
+		assertFileNotExists("src/com/opcoach/xtend/project/impl/StoreImpl.java");
 
-		assertFileExists("src/com//opcoach/xtend/project/impl/TaskFolderImpl.xtend");
-		assertFileNotExists("src/com//opcoach/xtend/project/impl/TaskFolderImpl.java");
+		assertFileExists("src/com/opcoach/xtend/project/impl/TaskFolderImpl.xtend");
+		assertFileNotExists("src/com/opcoach/xtend/project/impl/TaskFolderImpl.java");
 
-		assertFileExists("src/com//opcoach/xtend/project/impl/TaskImpl.xtend");
-		assertFileNotExists("src/com//opcoach/xtend/project/impl/TaskImpl.java");
+		assertFileExists("src/com/opcoach/xtend/project/impl/TaskImpl.xtend");
+		assertFileNotExists("src/com/opcoach/xtend/project/impl/TaskImpl.java");
 
-		assertFileExists("src/com//opcoach/xtend/project/impl/TaskStoreImpl.xtend");
-		assertFileNotExists("src/com//opcoach/xtend/project/impl/TaskStoreImpl.java");
+		assertFileExists("src/com/opcoach/xtend/project/impl/TaskStoreImpl.xtend");
+		assertFileNotExists("src/com/opcoach/xtend/project/impl/TaskStoreImpl.java");
 	}
 
 }
