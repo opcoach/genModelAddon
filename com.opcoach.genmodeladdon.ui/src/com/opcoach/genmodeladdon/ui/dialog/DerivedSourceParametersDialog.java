@@ -56,8 +56,8 @@ public class DerivedSourceParametersDialog extends Dialog implements GMAConstant
 	// Should generated EMF code after
 	private boolean generateEMFCode = true;
 
-	// Should generate Xtend classes instead of Java classes
-	private boolean generateXtendCode = false;
+	// Should generate Overriden impl classes as Xtend code instead of Java code
+	private boolean generateOverridenImplAsXtend = false;
 
 	/**
 	 * Create the dialog.
@@ -198,7 +198,7 @@ public class DerivedSourceParametersDialog extends Dialog implements GMAConstant
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				generateXtendCode = genClassXtend.getSelection();
+				generateOverridenImplAsXtend = genClassXtend.getSelection();
 			}
 		});
 
@@ -315,7 +315,7 @@ public class DerivedSourceParametersDialog extends Dialog implements GMAConstant
 		String ipProp = genModel.getDevInterfacePattern();
 		String srcProp = genModel.getSrcDir();
 		boolean genEmf = genModel.mustGenerateEMF();
-		boolean genXtend = genModel.mustGenerateXtendCode();
+		boolean genXtend = genModel.mustGenerateOverridenImplAsXtendCode();
 
 		devClassPattern.setText(cpProp);
 		previousDevClassPattern = cpProp;
@@ -363,9 +363,9 @@ public class DerivedSourceParametersDialog extends Dialog implements GMAConstant
 		return generateEMFCode;
 	}
 
-	public boolean getGenerateXtendCode()
+	public boolean isOverridenImplAsXtend()
 	{
-		return generateXtendCode;
+		return generateOverridenImplAsXtend;
 	}
 
 	@Override

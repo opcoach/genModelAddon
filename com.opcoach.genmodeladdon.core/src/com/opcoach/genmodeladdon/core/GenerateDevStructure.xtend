@@ -342,7 +342,7 @@ class GenerateDevStructure implements IResourceChangeListener {
 
 	def generateOverriddenClass(GenClass gc, String path) {
 
-		if( gmaGenModel.mustGenerateXtendCode) {
+		if( gmaGenModel.mustGenerateOverridenImplAsXtendCode) {
 			generateFile(path + gc.computeClassFilename + ".xtend", gc.generateXtendClassContent)
 		} else {
 			generateFile(path + gc.computeClassFilename + ".java", gc.generateClassContent)

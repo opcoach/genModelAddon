@@ -18,12 +18,10 @@ import com.opcoach.genmodeladdon.core.GenerateDevStructure;
  * @author olivier
  *
  */
-public class TestClassNames extends GenModelAddonTestCase
-{
+public class TestClassNames extends GenModelAddonTestCase {
 
 	@Test
-	public void test_GenPackageClassName_WithPrefix()
-	{
+	public void test_GenPackageClassName_WithPrefix() {
 		GenModel gm = getGenModel(FANNOISE_GENMODEL);
 		GenerateDevStructure gen = getGenDevStructure(FANNOISE_GENMODEL);
 
@@ -39,8 +37,7 @@ public class TestClassNames extends GenModelAddonTestCase
 	}
 
 	@Test
-	public void testClassNames()
-	{
+	public void testClassNames() {
 		GenModel gm = getGenModel(PROJECT_GENMODEL);
 		GenerateDevStructure gen = getGenDevStructure(PROJECT_GENMODEL);
 
@@ -64,8 +61,7 @@ public class TestClassNames extends GenModelAddonTestCase
 	}
 
 	@Test
-	public void testUsedGenericInterfaces()
-	{
+	public void testUsedGenericInterfaces() {
 		GenerateDevStructure gen = getGenDevStructure(PROJECT_GENMODEL);
 
 		// Test that for a class name interfaces used in the generic part are
@@ -102,8 +98,7 @@ public class TestClassNames extends GenModelAddonTestCase
 
 	/** A test for bug #74 */
 	@Test
-	public void testGenerateFactoryInterfaceNameWithOtherPrefix()
-	{
+	public void testGenerateFactoryInterfaceNameWithOtherPrefix() {
 		GenModel gm = getGenModel(PROJECT_GENMODEL);
 		GenerateDevStructure gen = getGenDevStructure(PROJECT_GENMODEL);
 		String oldCp = gen.getClassPattern();
@@ -120,8 +115,39 @@ public class TestClassNames extends GenModelAddonTestCase
 		// Reset previous values
 		gen.setClassPattern(oldCp);
 		gen.setInterfacePattern(oldIp);
-		
+	}
 
+	@Test
+	public void testXtendClassNames() {
+		assertFileExists("src/com//opcoach/xtend/project/impl/CompanyImpl.xtend");
+		assertFileNotExists("src/com//opcoach/xtend/project/impl/CompanyImpl.java");
+
+		assertFileExists("src/com//opcoach/xtend/project/impl/FolderImpl.xtend");
+		assertFileNotExists("src/com//opcoach/xtend/project/impl/FolderImpl.java");
+
+		assertFileExists("src/com//opcoach/xtend/project/impl/PersonImpl.xtend");
+		assertFileNotExists("src/com//opcoach/xtend/project/impl/PersonImpl.java");
+
+		assertFileExists("src/com//opcoach/xtend/project/impl/ProjectFactoryImpl.java");
+		assertFileNotExists("src/com//opcoach/xtend/project/impl/ProjectFactoryImpl.xtend");
+
+		assertFileExists("src/com//opcoach/xtend/project/impl/ProjectFolderImpl.xtend");
+		assertFileNotExists("src/com//opcoach/xtend/project/impl/ProjectFolderImpl.java");
+
+		assertFileExists("src/com//opcoach/xtend/project/impl/ProjectImpl.xtend");
+		assertFileNotExists("src/com//opcoach/xtend/project/impl/ProjectImpl.java");
+
+		assertFileExists("src/com//opcoach/xtend/project/impl/StoreImpl.xtend");
+		assertFileNotExists("src/com//opcoach/xtend/project/impl/StoreImpl.java");
+
+		assertFileExists("src/com//opcoach/xtend/project/impl/TaskFolderImpl.xtend");
+		assertFileNotExists("src/com//opcoach/xtend/project/impl/TaskFolderImpl.java");
+
+		assertFileExists("src/com//opcoach/xtend/project/impl/TaskImpl.xtend");
+		assertFileNotExists("src/com//opcoach/xtend/project/impl/TaskImpl.java");
+
+		assertFileExists("src/com//opcoach/xtend/project/impl/TaskStoreImpl.xtend");
+		assertFileNotExists("src/com//opcoach/xtend/project/impl/TaskStoreImpl.java");
 	}
 
 }

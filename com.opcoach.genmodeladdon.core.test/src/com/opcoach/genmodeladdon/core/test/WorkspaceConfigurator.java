@@ -38,8 +38,7 @@ import com.opcoach.genmodeladdon.nature.GMANature;
  * @author olivier
  *
  */
-public class WorkspaceConfigurator implements ProjectConstants, GMAConstants
-{
+public class WorkspaceConfigurator implements ProjectConstants, GMAConstants {
 
 	private Map<String, GMAGenModel> gmMap = new HashMap<>();
 	private Map<String, GenerateDevStructure> genMap = new HashMap<>();
@@ -48,30 +47,25 @@ public class WorkspaceConfigurator implements ProjectConstants, GMAConstants
 	private static WorkspaceConfigurator instance = null;
 
 	private IWorkspaceRoot root;
-	
+
 	private IProject sampleProject;
 
 	/** Hidden constructor for singleton */
-	private WorkspaceConfigurator()
-	{
+	private WorkspaceConfigurator() {
 		// Start manually the jdt.ui and catch the bad exception..
 		// Actually we don't need this plugin (or may ben ant.launching needs it
 		// ?) but it appears with dependencies
 		Bundle jdtUI = Platform.getBundle("org.eclipse.jdt.ui");
-		try
-		{
+		try {
 			if (jdtUI != null)
 				jdtUI.start();
-		} catch (BundleException e)
-		{
+		} catch (BundleException e) {
 		}
-		
 
 	}
 
 	/** Accessor for external use */
-	public static WorkspaceConfigurator getDefault()
-	{
+	public static WorkspaceConfigurator getDefault() {
 		if (instance == null)
 			instance = new WorkspaceConfigurator();
 
@@ -79,53 +73,60 @@ public class WorkspaceConfigurator implements ProjectConstants, GMAConstants
 
 	}
 
-	public IWorkspaceRoot getWorkspaceRoot()
-	{
+	public IWorkspaceRoot getWorkspaceRoot() {
 		return root;
 	}
-	
-	public  boolean isInitDone() { return initDone; }
+
+	public boolean isInitDone() {
+		return initDone;
+	}
 
 	/** initialize the sample project only once */
-	public IProject getSampleProject()
-	{
-		if (!initDone)
-		{
-			// System.out.println("******  Creating the project in test workspace ");
-			try
-			{
+	public IProject getSampleProject() {
+		if (!initDone) {
+			// System.out.println("****** Creating the project in test workspace ");
+			try {
 				// Copy the sample project in the runtime workspace
 				root = initWorkspace();
 				initGenModel(PROJECT_GENMODEL, PROJECT_ANT_FILE);
 				initGenModel(PROJECT2_GENMODEL, PROJECT_ANT2_FILE, "{0}Impl", "G{0}", "src");
 				initGenModel(FANNOISE_GENMODEL, FANOISE_ANT_FILE);
 				initGenModel(RAILTOPO_GENMODEL, RAILTOPO_ANT_FILE);
+				initGenModel(XTEND_GENMODEL, XTEND_ANT_FILE, "{0}Impl", "{0}", "src", true);
 				// System.out.println("Init finished");
-			} catch (Exception ex)
-			{
+			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
 			initDone = true;
 		}
-		
+
 		return sampleProject;
 	}
 
-	
-	public void initGenModel(String genModelName, String antFilename) throws IOException, InterruptedException
-	{
-		initGenModel(genModelName, antFilename, ADVISED_DEV_CLASS_IMPL_PATTERN, ADVISED_DEV_INTERFACE_PATTERN, DEFAULT_SRC_DEV);
+	public void initGenModel(String genModelName, String antFilename) throws IOException, InterruptedException {
+		initGenModel(genModelName, antFilename, false);
 	}
-	
 
-	public void initGenModel(String genModelName, String antFilename, String cPattern, String iPattern, String srcDir) throws IOException, InterruptedException
-	{
+	public void initGenModel(String genModelName, String antFilename, boolean xtendGeneration)
+			throws IOException, InterruptedException {
+		initGenModel(genModelName, antFilename, ADVISED_DEV_CLASS_IMPL_PATTERN, ADVISED_DEV_INTERFACE_PATTERN,
+				DEFAULT_SRC_DEV, xtendGeneration);
+	}
+
+	public void initGenModel(String genModelName, String antFilename, String cPattern, String iPattern, String srcDir)
+			throws IOException, InterruptedException {
+		initGenModel(genModelName, antFilename, cPattern, iPattern, srcDir, false);
+	}
+
+	public void initGenModel(String genModelName, String antFilename, String cPattern, String iPattern, String srcDir,
+			boolean xtendGeneration) throws IOException, InterruptedException {
 		// Read the genModel
 		GMAGenModel gm = readSampleGenModel(root, genModelName);
 		gm.setDevClassPattern(cPattern);
 		gm.setDevInterfacePattern(iPattern);
-		gm.setSrcDir( srcDir);
+		gm.setSrcDir(srcDir);
 		gm.setGenerateEMFCode(true);
+		gm.setGenerateOverridenImplAsXtend(xtendGeneration);
 
 		gmMap.put(genModelName, gm);
 
@@ -135,45 +136,40 @@ public class WorkspaceConfigurator implements ProjectConstants, GMAConstants
 
 		// Remember of sample project
 		sampleProject = root.getProject(DEST_SAMPLE_PROJECT);
-		
+
 		// Assign it the GMA nature is not set aleady
 		try {
-			if( !sampleProject.hasNature(GMAConstants.NATURE_ID))
+			if (!sampleProject.hasNature(GMAConstants.NATURE_ID))
 				GMANature.toggleNature(sampleProject);
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		NullProgressMonitor npm = new NullProgressMonitor();
-		try
-		{
+		try {
 			sampleProject.open(npm);
-		} catch (CoreException e1)
-		{
+		} catch (CoreException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
-		// Do all in the right order ! 
+
+		// Do all in the right order !
 		gen.generateAll(antFilename);
-		
+
 	}
 
-	public GMAGenModel getGenModel(String name)
-	{
+	public GMAGenModel getGenModel(String name) {
 		return gmMap.get(name);
 	}
 
-	public GenerateDevStructure getGenDevStructure(String name)
-	{
+	public GenerateDevStructure getGenDevStructure(String name) {
 		return genMap.get(name);
 	}
 
 	/**
 	 * Read the sample gen model located in sample project
 	 */
-	private static GMAGenModel readSampleGenModel(IWorkspaceRoot root, String pathToGenModel)
-	{
+	private static GMAGenModel readSampleGenModel(IWorkspaceRoot root, String pathToGenModel) {
 		// Read the sample gen model in temporary workspace
 		String path = root.getLocation().toString() + pathToGenModel;
 
@@ -186,14 +182,14 @@ public class WorkspaceConfigurator implements ProjectConstants, GMAConstants
 
 	}
 
-	/** This method initializes the test workspace with a sample project 
-	 * It calls the prepareTestWorkspace ant file that will unzip the sample project
-	 * */
-	private IWorkspaceRoot initWorkspace() throws IOException
-	{
+	/**
+	 * This method initializes the test workspace with a sample project It calls the
+	 * prepareTestWorkspace ant file that will unzip the sample project
+	 */
+	private IWorkspaceRoot initWorkspace() throws IOException {
 		// Get the zipped file to extract
 		Bundle b = Platform.getBundle(SRC_SAMPLE_PROJECT);
-		
+
 		URL url = b.getEntry("sampleProject.zip");
 		String fileURL = FileLocator.toFileURL(url).toString();
 
@@ -202,10 +198,8 @@ public class WorkspaceConfigurator implements ProjectConstants, GMAConstants
 		IProject proj = root.getProject(DEST_SAMPLE_PROJECT);
 
 		NullProgressMonitor npm = new NullProgressMonitor();
-		try
-		{
-			if (proj.exists())
-			{
+		try {
+			if (proj.exists()) {
 				// remove previous project version.
 				System.out.println("Deleting existing project : " + DEST_SAMPLE_PROJECT);
 				proj.delete(true, npm);
@@ -213,8 +207,7 @@ public class WorkspaceConfigurator implements ProjectConstants, GMAConstants
 
 			proj.create(npm);
 
-		} catch (CoreException e1)
-		{
+		} catch (CoreException e1) {
 			e1.printStackTrace();
 		}
 
@@ -228,8 +221,7 @@ public class WorkspaceConfigurator implements ProjectConstants, GMAConstants
 		runner.addUserProperties(properties);
 		runner.setBuildFileLocation("prepareTestWorkspace.xml");
 		runner.addBuildLogger("org.apache.tools.ant.DefaultLogger");
-		try
-		{
+		try {
 			runner.run();
 			root.refreshLocal(IResource.DEPTH_INFINITE, null);
 
@@ -238,8 +230,7 @@ public class WorkspaceConfigurator implements ProjectConstants, GMAConstants
 			proj = root.getProject(DEST_SAMPLE_PROJECT);
 			proj.open(npm);
 
-		} catch (CoreException e)
-		{
+		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

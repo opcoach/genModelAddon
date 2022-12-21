@@ -227,9 +227,9 @@ class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMAConstants 
 		setProperty(PROP_GENEMFCODE, gen.toString)
 	}
 
-	override setGenerateXtendCode(boolean gen) {
+	override setGenerateOverridenImplAsXtend(boolean gen) {
 		genXtendCode = gen
-		setProperty(PROP_GENXTENDCODE, gen.toString)
+		setProperty(GMAConstants.PROP_OVERRIDEN_IMPL_AS_XTEND, gen.toString)
 	}
 
 	override getSrcDir() {
@@ -248,9 +248,9 @@ class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMAConstants 
 		return genEMFCode.booleanValue
 	}
 
-	override mustGenerateXtendCode() {
+	override mustGenerateOverridenImplAsXtendCode() {
 		if (genXtendCode === null) {
-			genXtendCode = Boolean.valueOf(getProperty(PROP_GENXTENDCODE))
+			genXtendCode = Boolean.valueOf(getProperty(GMAConstants.PROP_OVERRIDEN_IMPL_AS_XTEND))
 		}
 		return genXtendCode.booleanValue
 	}

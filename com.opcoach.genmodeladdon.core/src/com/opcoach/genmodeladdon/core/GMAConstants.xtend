@@ -16,7 +16,7 @@ interface GMAConstants {
 	public static val PROP_GENEMFCODE = "generateEMFCodeAfter"
 		
 	// Store the Xtend code generate property
-	public static val PROP_GENXTENDCODE = "generateXtendCode"
+	public static val PROP_OVERRIDEN_IMPL_AS_XTEND = "generateOverrideImplAsXtend"
 
 	// Extension for the property file to store the data... 
 	public static val GMA_EXT = ".gma"

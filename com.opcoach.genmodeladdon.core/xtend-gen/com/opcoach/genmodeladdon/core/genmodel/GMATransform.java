@@ -24,24 +24,24 @@ import org.eclipse.xtext.xbase.lib.InputOutput;
 @SuppressWarnings("all")
 public class GMATransform implements GMAConstants {
   protected Map<String, String> devNames = new TreeMap<String, String>();
-  
+
   private String devInterfaceNamePattern = GMAConstants.DEFAULT_SRC_INTERFACE_PATTERN;
-  
+
   private String genInterfaceNamePattern = GMAConstants.DEFAULT_GEN_INTERFACE_PATTERN;
-  
+
   private String devClassNamePattern = GMAConstants.DEFAULT_SRC_CLASS_IMPL_PATTERN;
-  
+
   private String genClassNamePattern = GMAConstants.DEFAULT_GEN_CLASS_IMPL_PATTERN;
-  
+
   private GMAGenModel gm;
-  
+
   private boolean isInit = false;
-  
+
   public GMATransform(final GMAGenModel gm) {
     this.gm = gm;
     this.initPatterns();
   }
-  
+
   private GMATransform initPatterns() {
     GMATransform _xblockexpression = null;
     {
@@ -69,7 +69,7 @@ public class GMATransform implements GMAConstants {
     }
     return _xblockexpression;
   }
-  
+
   @Override
   public synchronized String toString() {
     String _xblockexpression = null;
@@ -91,7 +91,7 @@ public class GMATransform implements GMAConstants {
     }
     return _xblockexpression;
   }
-  
+
   public boolean init() {
     boolean _xifexpression = false;
     if ((!this.isInit)) {
@@ -111,7 +111,7 @@ public class GMATransform implements GMAConstants {
     }
     return _xifexpression;
   }
-  
+
   public boolean clear() {
     boolean _xblockexpression = false;
     {
@@ -120,7 +120,7 @@ public class GMATransform implements GMAConstants {
     }
     return _xblockexpression;
   }
-  
+
   public void computeNames(final EPackage p) {
     boolean _equals = EcorePackage.eNS_URI.equals(p.getNsURI());
     boolean _not = (!_equals);
@@ -142,7 +142,7 @@ public class GMATransform implements GMAConstants {
       }
     }
   }
-  
+
   /**
    * Replace the development name (a key in the map) as many times as necessary.
    * But it must be replaced only if the key is found with not a letter before or after.
@@ -176,7 +176,7 @@ public class GMATransform implements GMAConstants {
     }
     return res.toString();
   }
-  
+
   /**
    * Transform a String with default computed names with the new names
    */

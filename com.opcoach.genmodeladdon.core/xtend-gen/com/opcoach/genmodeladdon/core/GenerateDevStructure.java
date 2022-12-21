@@ -56,33 +56,33 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
 @SuppressWarnings("all")
 public class GenerateDevStructure implements IResourceChangeListener {
   private String classPattern;
-  
+
   private String interfacePattern;
-  
+
   private String srcDevDirectory;
-  
+
   private boolean generateFiles = false;
-  
+
   private IProject project;
-  
+
   private String projectName;
-  
+
   private GMAGenModel gmaGenModel;
-  
+
   private String copyright = "";
-  
+
   private boolean debug = false;
-  
+
   public Map<String, Object> filesNotGenerated = new HashMap<String, Object>();
-  
+
   private String modelName;
-  
+
   private String modelDir;
-  
+
   private Map<String, String> factories = new HashMap<String, String>();
-  
+
   private Map<String, String> packages = new HashMap<String, String>();
-  
+
   /**
    * Build the generator with 4 parameters
    * gm : the GMAGenModelImpl correctly initialized with cPattern, iPattern and srcDir
@@ -118,7 +118,7 @@ public class GenerateDevStructure implements IResourceChangeListener {
       throw Exceptions.sneakyThrow(_e);
     }
   }
-  
+
   /**
    * Generate the file structure. If genFiles is false just compute the files to be generated
    */
@@ -134,7 +134,7 @@ public class GenerateDevStructure implements IResourceChangeListener {
       throw Exceptions.sneakyThrow(_e);
     }
   }
-  
+
   public void generateDevStructure(final GenPackage gp) {
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     this.project = root.getProject(this.projectName);
@@ -198,7 +198,7 @@ public class GenerateDevStructure implements IResourceChangeListener {
       this.generateDevStructure(sp);
     }
   }
-  
+
   /**
    * add the srcDir as a source directory in the java project, if it is not yet added
    */
@@ -234,21 +234,21 @@ public class GenerateDevStructure implements IResourceChangeListener {
       throw Exceptions.sneakyThrow(_e);
     }
   }
-  
+
   /**
    * This method initializes the genModel with convenient values
    */
   public void initializeGenModelConvenientProperties() {
     this.gmaGenModel.setImportOrganizing(true);
   }
-  
+
   /**
    * Generate the ant file and return it (or null.
    */
   public File generateAntFile() {
     return this.generateAntFile(GenerateAntFileForCodeGeneration.ANT_FILENAME);
   }
-  
+
   /**
    * Generate the ant file and return it (or null.
    */
@@ -272,7 +272,7 @@ public class GenerateDevStructure implements IResourceChangeListener {
     }
     return null;
   }
-  
+
   /**
    * generate the source code using the ant generated task
    * @param f : the ant file to be called
@@ -301,12 +301,12 @@ public class GenerateDevStructure implements IResourceChangeListener {
       }
     }
   }
-  
+
   public void generateExtensions() {
     final GenerateExtensions gfoe = new GenerateExtensions(this.project);
     gfoe.generateOrUpdateExtensions(this.factories, this.packages);
   }
-  
+
   public void generateAll(final String antFilename) {
     this.initializeGenModelConvenientProperties();
     this.generateDevStructure(true);
@@ -316,25 +316,25 @@ public class GenerateDevStructure implements IResourceChangeListener {
     this.generateExtensions();
     this.refreshWorkspace();
   }
-  
+
   public String setClassPattern(final String cp) {
     return this.classPattern = cp;
   }
-  
+
   public String getClassPattern() {
     return this.classPattern;
   }
-  
+
   public String setInterfacePattern(final String ip) {
     return this.interfacePattern = ip;
   }
-  
+
   public String getInterfacePattern() {
     return this.interfacePattern;
   }
-  
+
   private boolean waitingForRefresh = false;
-  
+
   public void refreshWorkspace() {
     try {
       try {
@@ -363,12 +363,12 @@ public class GenerateDevStructure implements IResourceChangeListener {
       throw Exceptions.sneakyThrow(_e);
     }
   }
-  
+
   @Override
   public void resourceChanged(final IResourceChangeEvent event) {
     this.waitingForRefresh = false;
   }
-  
+
   public Object generateOverriddenFactoryInterface(final GenPackage gp, final String path) {
     Object _xblockexpression = null;
     {
@@ -379,7 +379,7 @@ public class GenerateDevStructure implements IResourceChangeListener {
     }
     return _xblockexpression;
   }
-  
+
   public Object generateOverriddenFactoryClass(final GenPackage gp, final String path) {
     Object _xblockexpression = null;
     {
@@ -390,7 +390,7 @@ public class GenerateDevStructure implements IResourceChangeListener {
     }
     return _xblockexpression;
   }
-  
+
   public Object generateOverriddenPackageInterface(final GenPackage gp, final String path) {
     Object _xblockexpression = null;
     {
@@ -401,11 +401,11 @@ public class GenerateDevStructure implements IResourceChangeListener {
     }
     return _xblockexpression;
   }
-  
+
   public Object generateOverriddenClass(final GenClass gc, final String path) {
     Object _xifexpression = null;
-    boolean _mustGenerateXtendCode = this.gmaGenModel.mustGenerateXtendCode();
-    if (_mustGenerateXtendCode) {
+    boolean _mustGenerateOverridenImplAsXtendCode = this.gmaGenModel.mustGenerateOverridenImplAsXtendCode();
+    if (_mustGenerateOverridenImplAsXtendCode) {
       String _computeClassFilename = this.computeClassFilename(gc);
       String _plus = (path + _computeClassFilename);
       String _plus_1 = (_plus + ".xtend");
@@ -418,14 +418,14 @@ public class GenerateDevStructure implements IResourceChangeListener {
     }
     return _xifexpression;
   }
-  
+
   public Object generateOverriddenInterface(final GenClass gc, final String path) {
     String _computeInterfaceFilename = this.computeInterfaceFilename(gc);
     String _plus = (path + _computeInterfaceFilename);
     String _plus_1 = (_plus + ".java");
     return this.generateFile(_plus_1, this.generateInterfaceContent(gc));
   }
-  
+
   public Object generateFile(final String filename, final Object contents) {
     try {
       Object _xblockexpression = null;
@@ -450,7 +450,7 @@ public class GenerateDevStructure implements IResourceChangeListener {
       throw Exceptions.sneakyThrow(_e);
     }
   }
-  
+
   public String getSrcAbsolutePath() {
     String _xblockexpression = null;
     {
@@ -462,7 +462,7 @@ public class GenerateDevStructure implements IResourceChangeListener {
     }
     return _xblockexpression;
   }
-  
+
   public CharSequence generateClassContent(final GenClass gc) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append(this.copyright);
@@ -513,7 +513,7 @@ public class GenerateDevStructure implements IResourceChangeListener {
     _builder.newLine();
     return _builder;
   }
-  
+
   public CharSequence generateXtendClassContent(final GenClass gc) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append(this.copyright);
@@ -561,7 +561,7 @@ public class GenerateDevStructure implements IResourceChangeListener {
     _builder.newLine();
     return _builder;
   }
-  
+
   /**
    * return the list of interface names found in a generic class name
    * for 'Project' -> returns empty array.
@@ -586,7 +586,7 @@ public class GenerateDevStructure implements IResourceChangeListener {
     }
     return ((String[])Conversions.unwrapArray(_xblockexpression, String.class));
   }
-  
+
   public CharSequence generateInterfaceContent(final GenClass gc) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append(this.copyright);
@@ -628,7 +628,7 @@ public class GenerateDevStructure implements IResourceChangeListener {
     _builder.newLine();
     return _builder;
   }
-  
+
   public CharSequence generateInterfaceFactoryContent(final GenPackage gp) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append(this.copyright);
@@ -685,7 +685,7 @@ public class GenerateDevStructure implements IResourceChangeListener {
     _builder.newLine();
     return _builder;
   }
-  
+
   public CharSequence generateInterfacePackageContent(final GenPackage gp) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append(this.copyright);
@@ -720,7 +720,7 @@ public class GenerateDevStructure implements IResourceChangeListener {
     _builder.newLine();
     return _builder;
   }
-  
+
   public CharSequence generateFactoryDef(final GenClass gc) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("public ");
@@ -735,7 +735,7 @@ public class GenerateDevStructure implements IResourceChangeListener {
     _builder.newLineIfNotEmpty();
     return _builder;
   }
-  
+
   /**
    * This method extracts the generic types found at the end of a class name, like Folder<T> or Folder<T,U>
    * it returns <T> or <T,U> if the interfaceName is Folder<T> or Folder<T,U>
@@ -756,7 +756,7 @@ public class GenerateDevStructure implements IResourceChangeListener {
     }
     return _xblockexpression;
   }
-  
+
   public CharSequence generateClassFactoryContent(final GenPackage gp) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append(this.copyright);
@@ -853,7 +853,7 @@ public class GenerateDevStructure implements IResourceChangeListener {
     _builder.newLine();
     return _builder;
   }
-  
+
   public CharSequence computeCopyrightComment() {
     StringConcatenation _builder = new StringConcatenation();
     {
@@ -872,21 +872,21 @@ public class GenerateDevStructure implements IResourceChangeListener {
     }
     return _builder;
   }
-  
+
   /**
    * Compute the class name to be generated
    */
   public String computeClassFilename(final GenClass gc) {
     return MessageFormat.format(this.classPattern, gc.getEcoreClass().getName());
   }
-  
+
   /**
    * Compute the interface name to be generated
    */
   public String computeInterfaceFilename(final GenClass gc) {
     return MessageFormat.format(this.interfacePattern, gc.getEcoreClass().getName());
   }
-  
+
   /**
    * Compute the class name to be generated
    */
@@ -895,11 +895,11 @@ public class GenerateDevStructure implements IResourceChangeListener {
     Object _computeGenericTypes = this.computeGenericTypes(gc.getEcoreClass());
     return (_computeClassFilename + _computeGenericTypes);
   }
-  
+
   public String computeInterfaceName(final GenClass gc) {
     return this.computeInterfaceName(gc, true);
   }
-  
+
   /**
    * Compute the interface name to be generated
    */
@@ -908,11 +908,11 @@ public class GenerateDevStructure implements IResourceChangeListener {
     Object _computeGenericTypes = this.computeGenericTypes(gc.getEcoreClass(), addExtend);
     return (_computeInterfaceFilename + _computeGenericTypes);
   }
-  
+
   public Object computeGenericTypes(final EClass c) {
     return this.computeGenericTypes(c, true);
   }
-  
+
   public Object computeGenericTypes(final EClass c, final boolean addExtends) {
     boolean _isEmpty = c.getETypeParameters().isEmpty();
     if (_isEmpty) {
@@ -940,28 +940,28 @@ public class GenerateDevStructure implements IResourceChangeListener {
     sb.append(">");
     return sb;
   }
-  
+
   /**
    * Compute the factory interface name to be generated
    */
   public String computeFactoryInterfaceName(final GenPackage gp) {
     return MessageFormat.format(this.interfacePattern, gp.getFactoryName());
   }
-  
+
   /**
    * Compute the factory interface name to be generated
    */
   public String computePackageInterfaceName(final GenPackage gp) {
     return MessageFormat.format(this.interfacePattern, gp.getBasicPackageName());
   }
-  
+
   /**
    * Compute the factory class name to be generated
    */
   public String computeFactoryClassName(final GenPackage gp) {
     return MessageFormat.format(this.classPattern, gp.getFactoryName());
   }
-  
+
   /**
    * Compute the package name for class
    */
@@ -994,7 +994,7 @@ public class GenerateDevStructure implements IResourceChangeListener {
     }
     return _xblockexpression;
   }
-  
+
   /**
    * Compute the package name for interfaces
    */
@@ -1025,7 +1025,7 @@ public class GenerateDevStructure implements IResourceChangeListener {
     }
     return _xblockexpression;
   }
-  
+
   /**
    * Compute the generated class name depending on classpattern.
    */
@@ -1034,11 +1034,11 @@ public class GenerateDevStructure implements IResourceChangeListener {
     Object _computeGenericTypes = this.computeGenericTypes(gc.getEcoreClass(), addExtend);
     return (_className + _computeGenericTypes);
   }
-  
+
   public String computeGeneratedClassName(final GenClass gc) {
     return this.computeGeneratedClassName(gc, true);
   }
-  
+
   /**
    * Compute the generated interface name depending on interfacePattern.
    */

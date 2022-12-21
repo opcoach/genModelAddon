@@ -13,7 +13,7 @@ interface GMAGenModel extends GenModel {
 	
 	def void setGenerateEMFCode(boolean gen)
 
-	def void setGenerateXtendCode(boolean gen)
+	def void setGenerateOverridenImplAsXtend(boolean gen)
 
 	def String getDevClassPattern()
 
@@ -23,7 +23,7 @@ interface GMAGenModel extends GenModel {
 	
 	def boolean mustGenerateEMF()
 
-	def boolean mustGenerateXtendCode()
+	def boolean mustGenerateOverridenImplAsXtendCode()
 
 	def GMATransform getGMATransform()
 
