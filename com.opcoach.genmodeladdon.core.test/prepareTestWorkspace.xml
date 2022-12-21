@@ -33,6 +33,7 @@
 		<replace file="${destDir}/model_fannoise/ananax.genmodel" token="${srcProjectName}" value="${destProjectName}"/>
 		<replace file="${destDir}/model_fannoise/fannoise.genmodel" token="${srcProjectName}" value="${destProjectName}"/>
 		<replace file="${destDir}/model_railtopo/railtopomodel.genmodel" token="${srcProjectName}" value="${destProjectName}"/>
+		<replace file="${destDir}/model_xtend/xtendmodel.genmodel" token="${srcProjectName}" value="${destProjectName}"/>
 	</target>
 
 

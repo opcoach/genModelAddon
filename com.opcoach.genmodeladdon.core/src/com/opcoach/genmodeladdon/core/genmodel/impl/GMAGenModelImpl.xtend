@@ -27,6 +27,7 @@ class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMAConstants 
 	String iPattern
 	String srcDir
 	Boolean genEMFCode
+	Boolean genXtendCode
 
 	override GMATransform getGMATransform() {
 
@@ -164,8 +165,11 @@ class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMAConstants 
 
 			properties = new Properties
 			try {
-				val fr = new FileReader(propertyFilename)
-				properties.load(fr)
+				val fileName = propertyFilename
+				if( fileName !== null ) {
+				val fr = new FileReader(fileName)
+					properties.load(fr)
+				}
 			} catch (Exception e) {
 				// If no properties, return empty properties...
 			}
@@ -223,6 +227,11 @@ class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMAConstants 
 		setProperty(PROP_GENEMFCODE, gen.toString)
 	}
 
+	override setGenerateOverridenImplAsXtend(boolean gen) {
+		genXtendCode = gen
+		setProperty(GMAConstants.PROP_OVERRIDEN_IMPL_AS_XTEND, gen.toString)
+	}
+
 	override getSrcDir() {
 		if (srcDir === null) {
 			srcDir = getProperty(PROP_SRCDIR)
@@ -234,9 +243,15 @@ class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMAConstants 
 
 	override mustGenerateEMF() {
 		if (genEMFCode === null) {
-			genEMFCode = new Boolean(getProperty(PROP_GENEMFCODE))
+			genEMFCode = Boolean.valueOf(getProperty(PROP_GENEMFCODE))
 		}
 		return genEMFCode.booleanValue
 	}
 
+	override mustGenerateOverridenImplAsXtendCode() {
+		if (genXtendCode === null) {
+			genXtendCode = Boolean.valueOf(getProperty(GMAConstants.PROP_OVERRIDEN_IMPL_AS_XTEND))
+		}
+		return genXtendCode.booleanValue
+	}
 }

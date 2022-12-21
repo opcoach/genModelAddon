@@ -8,11 +8,15 @@ class GMAHelper {
 	static def boolean GMACompliant(GenBase context) {
 		val genModel = context.getGenModel()
 		val path = genModel.getModelProjectDirectory()
+		if( path === null ) {
+			return false
+		}
 		val workspace = ResourcesPlugin.getWorkspace()
 		val modelProject = workspace.getRoot().getProject(path)
 		try {
 			return modelProject.hasNature(GMAConstants.NATURE_ID)
 		} catch (CoreException e) {
+			//System.err.println(e.message)
 			return false
 		}
 	}

@@ -32,21 +32,21 @@ import org.eclipse.xtext.xbase.lib.InputOutput;
 @SuppressWarnings("all")
 class GenerateExtensions {
   private static final String EMF_GENERATED_PACKAGE = "org.eclipse.emf.ecore.generated_package";
-
+  
   private static final String FACTORY_OVERRIDE = "org.eclipse.emf.ecore.factory_override";
-
+  
   private static final String PACKAGE_ELT = "package";
-
+  
   private static final String FACTORY_ELT = "factory";
-
+  
   private static final String URI_ATTR = "uri";
-
+  
   private static final String CLASS_ATTR = "class";
-
+  
   private WorkspaceBundlePluginModel fModel;
-
+  
   private IProject project;
-
+  
   public GenerateExtensions(final IProject p) {
     try {
       this.project = p;
@@ -81,7 +81,7 @@ class GenerateExtensions {
       throw Exceptions.sneakyThrow(_e);
     }
   }
-
+  
   public String printExtension(final IPluginExtension ext) {
     String _xblockexpression = null;
     {
@@ -113,7 +113,7 @@ class GenerateExtensions {
     }
     return _xblockexpression;
   }
-
+  
   private IPluginExtension copyExtension(final IPluginExtension ext) {
     try {
       final IPluginExtension clonedExt = this.fModel.getFactory().createExtension();
@@ -137,7 +137,7 @@ class GenerateExtensions {
       throw Exceptions.sneakyThrow(_e);
     }
   }
-
+  
   private IPluginExtensionPoint copyExtensionPoint(final IPluginExtensionPoint extPt) {
     try {
       final IPluginExtensionPoint clonedExtPt = this.fModel.getFactory().createExtensionPoint();
@@ -149,7 +149,7 @@ class GenerateExtensions {
       throw Exceptions.sneakyThrow(_e);
     }
   }
-
+  
   private IPluginElement copyExtensionElement(final IPluginElement elt, final IPluginObject parent) {
     try {
       final IPluginElement clonedElt = this.fModel.getFactory().createElement(parent);
@@ -170,7 +170,7 @@ class GenerateExtensions {
       throw Exceptions.sneakyThrow(_e);
     }
   }
-
+  
   /**
    * Check if factory_override or generated_package are correct in the plugin.xml
    *  Must be checked in case the class names have changed between 2 generations
@@ -192,7 +192,7 @@ class GenerateExtensions {
     NullProgressMonitor _nullProgressMonitor = new NullProgressMonitor();
     _instance.targetReloaded(_nullProgressMonitor);
   }
-
+  
   private void generateOrUpdateExtension(final String extName, final String modelURI, final String nodeName, final String classname) {
     try {
       IPluginExtension factoryExt = null;
@@ -216,7 +216,7 @@ class GenerateExtensions {
       throw Exceptions.sneakyThrow(_e);
     }
   }
-
+  
   /**
    * Search for a plugin element 'factory' for factoryoverride extension
    * or 'package' for the emf_generatedPackage extension

@@ -89,6 +89,14 @@ public class TestExtensionGeneration extends GenModelAddonTestCase
 	}
 
 	@Test
+	public void checkOnlyOneEmfGeneratedPackageForXtendProject()
+	{
+		String uriToCheck = "http://com.xtend.xtendproject/1.0";
+		int nbExt = countEltWithUriAttribute(EMF_GENERATED_PACKAGE, PACKAGE_ELT, uriToCheck);
+		assertEquals("There must be only one genPackage extension for " + uriToCheck, 1, nbExt);
+	}
+
+	@Test
 	public void checkOnlyOneFactoryOverrideForProject()
 	{
 		String uriToCheck = "http://com.opcoach.project/1.0";

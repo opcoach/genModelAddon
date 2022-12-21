@@ -38,6 +38,8 @@ public class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMACon
 
   private Boolean genEMFCode;
 
+  private Boolean genXtendCode;
+
   @Override
   public GMATransform getGMATransform() {
     if ((this.gmaTransform == null)) {
@@ -207,9 +209,11 @@ public class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMACon
         this.properties = _properties;
         Object _xtrycatchfinallyexpression = null;
         try {
-          String _propertyFilename = this.getPropertyFilename();
-          final FileReader fr = new FileReader(_propertyFilename);
-          this.properties.load(fr);
+          final String fileName = this.getPropertyFilename();
+          if ((fileName != null)) {
+            final FileReader fr = new FileReader(fileName);
+            this.properties.load(fr);
+          }
         } catch (final Throwable _t) {
           if (_t instanceof Exception) {
             _xtrycatchfinallyexpression = null;
@@ -306,6 +310,12 @@ public class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMACon
   }
 
   @Override
+  public void setGenerateOverridenImplAsXtend(final boolean gen) {
+    this.genXtendCode = Boolean.valueOf(gen);
+    this.setProperty(GMAConstants.PROP_OVERRIDEN_IMPL_AS_XTEND, Boolean.valueOf(gen).toString());
+  }
+
+  @Override
   public String getSrcDir() {
     if ((this.srcDir == null)) {
       this.srcDir = this.getProperty(GMAConstants.PROP_SRCDIR);
@@ -319,10 +329,16 @@ public class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMACon
   @Override
   public boolean mustGenerateEMF() {
     if ((this.genEMFCode == null)) {
-      String _property = this.getProperty(GMAConstants.PROP_GENEMFCODE);
-      Boolean _boolean = new Boolean(_property);
-      this.genEMFCode = _boolean;
+      this.genEMFCode = Boolean.valueOf(this.getProperty(GMAConstants.PROP_GENEMFCODE));
     }
     return this.genEMFCode.booleanValue();
+  }
+
+  @Override
+  public boolean mustGenerateOverridenImplAsXtendCode() {
+    if ((this.genXtendCode == null)) {
+      this.genXtendCode = Boolean.valueOf(this.getProperty(GMAConstants.PROP_OVERRIDEN_IMPL_AS_XTEND));
+    }
+    return this.genXtendCode.booleanValue();
   }
 }

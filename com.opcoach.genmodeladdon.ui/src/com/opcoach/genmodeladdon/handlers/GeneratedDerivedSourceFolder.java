@@ -53,6 +53,9 @@ public class GeneratedDerivedSourceFolder extends GenerateParentHandler
 			boolean generateEMFModelCode = dial.getGenerateEMFModelCode();
 			gm.setGenerateEMFCode(generateEMFModelCode);
 
+			boolean generateXtendCode = dial.isOverridenImplAsXtend();
+			gm.setGenerateOverridenImplAsXtend(generateXtendCode);
+
 			final GenerateDevStructure gds = new GenerateDevStructure(gm);
 
 			// set some genModel convenient properties.

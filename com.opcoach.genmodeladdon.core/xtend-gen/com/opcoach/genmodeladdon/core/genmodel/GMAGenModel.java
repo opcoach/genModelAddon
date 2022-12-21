@@ -15,6 +15,8 @@ public interface GMAGenModel extends GenModel {
 
   void setGenerateEMFCode(final boolean gen);
 
+  void setGenerateOverridenImplAsXtend(final boolean gen);
+
   String getDevClassPattern();
 
   String getDevInterfacePattern();
@@ -22,6 +24,8 @@ public interface GMAGenModel extends GenModel {
   String getSrcDir();
 
   boolean mustGenerateEMF();
+
+  boolean mustGenerateOverridenImplAsXtendCode();
 
   GMATransform getGMATransform();
 }

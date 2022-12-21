@@ -123,7 +123,7 @@ class GenerateDevStructure implements IResourceChangeListener {
 			srcDevDirectory + "/" + gp.computePackageNameForInterfaces.replace(".", "/"))
 		val interfaceAbsolutePath = interfaceFolder.location.toOSString + "/"
 		val f2 = new File(interfaceAbsolutePath)
-		if(!f2.exists) f.mkdirs
+		if(!f2.exists) f2.mkdirs
 
 		// println("Generate classes in    : " + srcAbsolutePath)
 		// println("Generate interfaces in : " + interfaceAbsolutePath)
@@ -342,7 +342,11 @@ class GenerateDevStructure implements IResourceChangeListener {
 
 	def generateOverriddenClass(GenClass gc, String path) {
 
-		generateFile(path + gc.computeClassFilename + ".java", gc.generateClassContent)
+		if( gmaGenModel.mustGenerateOverridenImplAsXtendCode) {
+			generateFile(path + gc.computeClassFilename + ".xtend", gc.generateXtendClassContent)
+		} else {
+			generateFile(path + gc.computeClassFilename + ".java", gc.generateClassContent)
+		}
 	}
 
 	def generateOverriddenInterface(GenClass gc, String path) {
@@ -387,6 +391,22 @@ class GenerateDevStructure implements IResourceChangeListener {
 		
 		// This class overrides the generated class and will be instantiated by factory
 		public class «gc.computeClassname» extends «gc.computeGeneratedClassName(false)» implements «gc.computeInterfaceName(false)»
+		{
+		
+		}
+	'''
+
+	def generateXtendClassContent(GenClass gc) '''
+		«copyright»
+		package «gc.genPackage.computePackageNameForClasses»
+		
+		import «gc.genPackage.computePackageNameForInterfaces».«gc.computeInterfaceFilename»
+		«FOR name : gc.computeClassname.usedGenericInterfaceNames»
+			import «gc.genPackage.computePackageNameForInterfaces».«name»
+		«ENDFOR»
+		
+		// This class overrides the generated class and will be instantiated by factory
+		class «gc.computeClassname» extends «gc.computeGeneratedClassName(false)» implements «gc.computeInterfaceName(false)»
 		{
 		
 		}

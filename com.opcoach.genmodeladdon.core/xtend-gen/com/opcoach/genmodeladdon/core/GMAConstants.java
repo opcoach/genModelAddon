@@ -14,6 +14,8 @@ public interface GMAConstants {
 
   static final String PROP_GENEMFCODE = "generateEMFCodeAfter";
 
+  static final String PROP_OVERRIDEN_IMPL_AS_XTEND = "generateOverrideImplAsXtend";
+
   static final String GMA_EXT = ".gma";
 
   static final String ADVISED_GEN_INTERFACE_PATTERN = "M{0}";

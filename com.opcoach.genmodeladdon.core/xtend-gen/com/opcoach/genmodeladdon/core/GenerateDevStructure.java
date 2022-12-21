@@ -159,7 +159,7 @@ public class GenerateDevStructure implements IResourceChangeListener {
     boolean _exists_1 = f2.exists();
     boolean _not_1 = (!_exists_1);
     if (_not_1) {
-      f.mkdirs();
+      f2.mkdirs();
     }
     final Function1<GenClass, Boolean> _function = (GenClass it) -> {
       boolean _isDynamic = it.isDynamic();
@@ -403,10 +403,20 @@ public class GenerateDevStructure implements IResourceChangeListener {
   }
 
   public Object generateOverriddenClass(final GenClass gc, final String path) {
-    String _computeClassFilename = this.computeClassFilename(gc);
-    String _plus = (path + _computeClassFilename);
-    String _plus_1 = (_plus + ".java");
-    return this.generateFile(_plus_1, this.generateClassContent(gc));
+    Object _xifexpression = null;
+    boolean _mustGenerateOverridenImplAsXtendCode = this.gmaGenModel.mustGenerateOverridenImplAsXtendCode();
+    if (_mustGenerateOverridenImplAsXtendCode) {
+      String _computeClassFilename = this.computeClassFilename(gc);
+      String _plus = (path + _computeClassFilename);
+      String _plus_1 = (_plus + ".xtend");
+      _xifexpression = this.generateFile(_plus_1, this.generateXtendClassContent(gc));
+    } else {
+      String _computeClassFilename_1 = this.computeClassFilename(gc);
+      String _plus_2 = (path + _computeClassFilename_1);
+      String _plus_3 = (_plus_2 + ".java");
+      _xifexpression = this.generateFile(_plus_3, this.generateClassContent(gc));
+    }
+    return _xifexpression;
   }
 
   public Object generateOverriddenInterface(final GenClass gc, final String path) {
@@ -487,6 +497,54 @@ public class GenerateDevStructure implements IResourceChangeListener {
     _builder.append("// This class overrides the generated class and will be instantiated by factory");
     _builder.newLine();
     _builder.append("public class ");
+    String _computeClassname = this.computeClassname(gc);
+    _builder.append(_computeClassname);
+    _builder.append(" extends ");
+    String _computeGeneratedClassName = this.computeGeneratedClassName(gc, false);
+    _builder.append(_computeGeneratedClassName);
+    _builder.append(" implements ");
+    String _computeInterfaceName = this.computeInterfaceName(gc, false);
+    _builder.append(_computeInterfaceName);
+    _builder.newLineIfNotEmpty();
+    _builder.append("{");
+    _builder.newLine();
+    _builder.newLine();
+    _builder.append("}");
+    _builder.newLine();
+    return _builder;
+  }
+
+  public CharSequence generateXtendClassContent(final GenClass gc) {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append(this.copyright);
+    _builder.newLineIfNotEmpty();
+    _builder.append("package ");
+    String _computePackageNameForClasses = this.computePackageNameForClasses(gc.getGenPackage());
+    _builder.append(_computePackageNameForClasses);
+    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    _builder.append("import ");
+    String _computePackageNameForInterfaces = this.computePackageNameForInterfaces(gc.getGenPackage());
+    _builder.append(_computePackageNameForInterfaces);
+    _builder.append(".");
+    String _computeInterfaceFilename = this.computeInterfaceFilename(gc);
+    _builder.append(_computeInterfaceFilename);
+    _builder.newLineIfNotEmpty();
+    {
+      String[] _usedGenericInterfaceNames = this.getUsedGenericInterfaceNames(this.computeClassname(gc));
+      for(final String name : _usedGenericInterfaceNames) {
+        _builder.append("import ");
+        String _computePackageNameForInterfaces_1 = this.computePackageNameForInterfaces(gc.getGenPackage());
+        _builder.append(_computePackageNameForInterfaces_1);
+        _builder.append(".");
+        _builder.append(name);
+        _builder.newLineIfNotEmpty();
+      }
+    }
+    _builder.newLine();
+    _builder.append("// This class overrides the generated class and will be instantiated by factory");
+    _builder.newLine();
+    _builder.append("class ");
     String _computeClassname = this.computeClassname(gc);
     _builder.append(_computeClassname);
     _builder.append(" extends ");
