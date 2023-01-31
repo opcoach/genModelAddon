@@ -191,7 +191,6 @@ public class DerivedSourceParametersDialog extends Dialog implements GMAConstant
 		genClassJava = new Button(genClassComposite, SWT.RADIO);
 		genClassJava.setText("Java");
 		genClassJava.setSelection(true);
-
 		genClassXtend = new Button(genClassComposite, SWT.RADIO);
 		genClassXtend.setText("Xtend");
 		genClassXtend.addSelectionListener(new SelectionAdapter() {
@@ -278,6 +277,7 @@ public class DerivedSourceParametersDialog extends Dialog implements GMAConstant
 	public void setGenModel(GMAGenModel gm)
 	{
 		genModel = gm;
+		generateOverridenImplAsXtend = genModel.mustGenerateOverridenImplAsXtendCode();
 	}
 
 	/**
