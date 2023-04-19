@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/opcoach/genModelAddon.svg?branch=master)](https://travis-ci.org/opcoach/genModelAddon)
+![Build Status](https://github.com/opcoach/genModelAddon/actions/workflows/maven.yml/badge.svg)
 
 genModelAddon
 =============
