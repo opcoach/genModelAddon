@@ -21,7 +21,6 @@ jobs:
       with:
         java-version: '17'
         distribution: 'adopt'
-	maven-version: 3.9.3
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
