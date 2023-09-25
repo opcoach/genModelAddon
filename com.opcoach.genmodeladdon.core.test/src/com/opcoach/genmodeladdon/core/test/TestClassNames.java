@@ -128,8 +128,8 @@ public class TestClassNames extends GenModelAddonTestCase {
 		assertFileExists("src/com/opcoach/xtend/project/impl/PersonImpl.xtend");
 		assertFileNotExists("src/com/opcoach/xtend/project/impl/PersonImpl.java");
 
-		assertFileExists("src/com/opcoach/xtend/project/impl/ProjectFactoryImpl.java");
-		assertFileNotExists("src/com/opcoach/xtend/project/impl/ProjectFactoryImpl.xtend");
+		assertFileExists("src/com/opcoach/xtend/project/impl/ProjectFactoryImpl.xtend");
+		assertFileNotExists("src/com/opcoach/xtend/project/impl/ProjectFactoryImpl.java");
 
 		assertFileExists("src/com/opcoach/xtend/project/impl/ProjectFolderImpl.xtend");
 		assertFileNotExists("src/com/opcoach/xtend/project/impl/ProjectFolderImpl.java");

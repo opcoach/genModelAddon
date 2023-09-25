@@ -381,14 +381,28 @@ public class GenerateDevStructure implements IResourceChangeListener {
   }
 
   public Object generateOverriddenFactoryClass(final GenPackage gp, final String path) {
-    Object _xblockexpression = null;
-    {
-      String _computeFactoryClassName = this.computeFactoryClassName(gp);
-      String _plus = (path + _computeFactoryClassName);
-      final String filename = (_plus + ".java");
-      _xblockexpression = this.generateFile(filename, this.generateClassFactoryContent(gp));
+    Object _xifexpression = null;
+    boolean _mustGenerateOverridenImplAsXtendCode = this.gmaGenModel.mustGenerateOverridenImplAsXtendCode();
+    if (_mustGenerateOverridenImplAsXtendCode) {
+      Object _xblockexpression = null;
+      {
+        String _computeFactoryClassName = this.computeFactoryClassName(gp);
+        String _plus = (path + _computeFactoryClassName);
+        final String filename = (_plus + ".xtend");
+        _xblockexpression = this.generateFile(filename, this.generateXtendClassFactoryContent(gp));
+      }
+      _xifexpression = _xblockexpression;
+    } else {
+      Object _xblockexpression_1 = null;
+      {
+        String _computeFactoryClassName = this.computeFactoryClassName(gp);
+        String _plus = (path + _computeFactoryClassName);
+        final String filename = (_plus + ".java");
+        _xblockexpression_1 = this.generateFile(filename, this.generateClassFactoryContent(gp));
+      }
+      _xifexpression = _xblockexpression_1;
     }
-    return _xblockexpression;
+    return _xifexpression;
   }
 
   public Object generateOverriddenPackageInterface(final GenPackage gp, final String path) {
@@ -842,6 +856,101 @@ public class GenerateDevStructure implements IResourceChangeListener {
     String _computeFactoryClassName_1 = this.computeFactoryClassName(gp);
     _builder.append(_computeFactoryClassName_1, "\t\t");
     _builder.append("(); ");
+    _builder.newLineIfNotEmpty();
+    _builder.append("\t\t ");
+    _builder.append("}");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.newLine();
+    _builder.newLine();
+    _builder.append("}");
+    _builder.newLine();
+    return _builder;
+  }
+
+  public CharSequence generateXtendClassFactoryContent(final GenPackage gp) {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append(this.copyright);
+    _builder.newLineIfNotEmpty();
+    _builder.append("package ");
+    String _computePackageNameForClasses = this.computePackageNameForClasses(gp);
+    _builder.append(_computePackageNameForClasses);
+    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    _builder.append("import org.eclipse.emf.ecore.plugin.EcorePlugin");
+    _builder.newLine();
+    _builder.newLine();
+    _builder.append("import ");
+    String _computePackageNameForInterfaces = this.computePackageNameForInterfaces(gp);
+    _builder.append(_computePackageNameForInterfaces);
+    _builder.append(".");
+    String _computeFactoryInterfaceName = this.computeFactoryInterfaceName(gp);
+    _builder.append(_computeFactoryInterfaceName);
+    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    _builder.newLine();
+    _builder.append("// This factory  renames the generated factory interface to use it as an overriden factory");
+    _builder.newLine();
+    _builder.append("class ");
+    String _computeFactoryClassName = this.computeFactoryClassName(gp);
+    _builder.append(_computeFactoryClassName);
+    _builder.append(" extends ");
+    String _factoryClassName = gp.getFactoryClassName();
+    _builder.append(_factoryClassName);
+    _builder.append(" implements ");
+    String _computeFactoryInterfaceName_1 = this.computeFactoryInterfaceName(gp);
+    _builder.append(_computeFactoryInterfaceName_1);
+    _builder.newLineIfNotEmpty();
+    _builder.append("{");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.append("def static ");
+    String _computeFactoryInterfaceName_2 = this.computeFactoryInterfaceName(gp);
+    _builder.append(_computeFactoryInterfaceName_2, "\t");
+    _builder.append(" init() {");
+    _builder.newLineIfNotEmpty();
+    _builder.append("\t\t");
+    _builder.newLine();
+    _builder.append("\t\t");
+    _builder.append("try {");
+    _builder.newLine();
+    _builder.append("\t\t\t");
+    _builder.append("var Object fact = ");
+    String _factoryClassName_1 = gp.getFactoryClassName();
+    _builder.append(_factoryClassName_1, "\t\t\t");
+    _builder.append(".init()");
+    _builder.newLineIfNotEmpty();
+    _builder.append("\t\t\t");
+    _builder.append("if ((fact !== null) && (fact instanceof ");
+    String _computeFactoryInterfaceName_3 = this.computeFactoryInterfaceName(gp);
+    _builder.append(_computeFactoryInterfaceName_3, "\t\t\t");
+    _builder.append("))");
+    _builder.newLineIfNotEmpty();
+    _builder.append("\t\t\t\t\t");
+    _builder.append("return (fact as ");
+    String _computeFactoryInterfaceName_4 = this.computeFactoryInterfaceName(gp);
+    _builder.append(_computeFactoryInterfaceName_4, "\t\t\t\t\t");
+    _builder.append(")");
+    _builder.newLineIfNotEmpty();
+    _builder.append("\t\t\t");
+    _builder.append("}");
+    _builder.newLine();
+    _builder.append("\t\t");
+    _builder.append("catch (Exception exception) {");
+    _builder.newLine();
+    _builder.append("\t\t\t");
+    _builder.append("EcorePlugin.INSTANCE.log(exception)");
+    _builder.newLine();
+    _builder.append("\t\t");
+    _builder.append("}");
+    _builder.newLine();
+    _builder.append("\t\t");
+    _builder.append("return new ");
+    String _computeFactoryClassName_1 = this.computeFactoryClassName(gp);
+    _builder.append(_computeFactoryClassName_1, "\t\t");
+    _builder.append("() ");
     _builder.newLineIfNotEmpty();
     _builder.append("\t\t ");
     _builder.append("}");

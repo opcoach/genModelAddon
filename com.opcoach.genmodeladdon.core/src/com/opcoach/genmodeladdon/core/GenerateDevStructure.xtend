@@ -92,7 +92,6 @@ class GenerateDevStructure implements IResourceChangeListener {
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(this, IResourceChangeEvent.POST_BUILD)
 	}
 
-
 	/** Generate the file structure. If genFiles is false just compute the files to be generated */
 	def generateDevStructure(boolean genFiles) {
 		generateFiles = genFiles
@@ -136,8 +135,7 @@ class GenerateDevStructure implements IResourceChangeListener {
 		// Count nb of EClasses in the Package
 		val nbClasses = gp.getEcorePackage.EClassifiers.filter(EClass).size
 
-       // println("There are " + nbClasses + " classes in package " + gp.getEcorePackage.name + " with URI " + gp.getEcorePackage.nsURI)
-	
+		// println("There are " + nbClasses + " classes in package " + gp.getEcorePackage.name + " with URI " + gp.getEcorePackage.nsURI)
 		// Generate factory interface and implementation only if they are classes
 		if (nbClasses > 0) {
 			gp.generateOverriddenFactoryInterface(interfaceAbsolutePath)
@@ -315,7 +313,7 @@ class GenerateDevStructure implements IResourceChangeListener {
 			e.printStackTrace
 		} finally {
 			PluginModelManager.instance.targetReloaded(new NullProgressMonitor())
-			// PDECore.^default.modelManager.bundleRootChanged(project)
+		// PDECore.^default.modelManager.bundleRootChanged(project)
 		}
 
 	}
@@ -331,8 +329,15 @@ class GenerateDevStructure implements IResourceChangeListener {
 	}
 
 	def generateOverriddenFactoryClass(GenPackage gp, String path) {
-		val filename = path + gp.computeFactoryClassName + ".java"
-		generateFile(filename, gp.generateClassFactoryContent)
+		// Generates either xtend or java code
+		if (gmaGenModel.mustGenerateOverridenImplAsXtendCode) {
+			val filename = path + gp.computeFactoryClassName + ".xtend"
+			generateFile(filename, gp.generateXtendClassFactoryContent)
+		} else {
+			val filename = path + gp.computeFactoryClassName + ".java"
+			generateFile(filename, gp.generateClassFactoryContent)
+
+		}
 	}
 
 	def generateOverriddenPackageInterface(GenPackage gp, String path) {
@@ -341,8 +346,8 @@ class GenerateDevStructure implements IResourceChangeListener {
 	}
 
 	def generateOverriddenClass(GenClass gc, String path) {
-
-		if( gmaGenModel.mustGenerateOverridenImplAsXtendCode) {
+		// Generates either xtend or java code
+		if (gmaGenModel.mustGenerateOverridenImplAsXtendCode) {
 			generateFile(path + gc.computeClassFilename + ".xtend", gc.generateXtendClassContent)
 		} else {
 			generateFile(path + gc.computeClassFilename + ".java", gc.generateClassContent)
@@ -491,6 +496,7 @@ class GenerateDevStructure implements IResourceChangeListener {
 			""
 	}
 
+	// Generates java code for class factory
 	def generateClassFactoryContent(GenPackage gp) '''
 		«copyright»
 		package «gp.computePackageNameForClasses»;
@@ -516,6 +522,38 @@ class GenerateDevStructure implements IResourceChangeListener {
 					EcorePlugin.INSTANCE.log(exception);
 				}
 				return new «gp.computeFactoryClassName»(); 
+				 }
+			
+		
+		}
+	'''
+
+	// Generates xtend code for class factory
+	def generateXtendClassFactoryContent(GenPackage gp) '''
+		«copyright»
+		package «gp.computePackageNameForClasses»
+		
+		import org.eclipse.emf.ecore.plugin.EcorePlugin
+		
+		import «gp.computePackageNameForInterfaces».«gp.computeFactoryInterfaceName»
+		
+		
+		// This factory  renames the generated factory interface to use it as an overriden factory
+		class «gp.computeFactoryClassName» extends «gp.factoryClassName» implements «gp.
+			computeFactoryInterfaceName»
+		{
+			
+			def static «gp.computeFactoryInterfaceName» init() {
+				
+				try {
+					var Object fact = «gp.factoryClassName».init()
+					if ((fact !== null) && (fact instanceof «gp.computeFactoryInterfaceName»))
+							return (fact as «gp.computeFactoryInterfaceName»)
+					}
+				catch (Exception exception) {
+					EcorePlugin.INSTANCE.log(exception)
+				}
+				return new «gp.computeFactoryClassName»() 
 				 }
 			
 		
