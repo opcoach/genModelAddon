@@ -8,7 +8,7 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<tycho-version>4.0.1</tycho-version>
+		<tycho-version>4.0.5</tycho-version>
 	</properties>
 
 
@@ -39,7 +39,7 @@
 						<artifact>
 							<groupId>com.opcoach.genmodeladdon</groupId>
 							<artifactId>com.opcoach.genmodeladdon.tp</artifactId>
-							<version>4.28.0</version>
+							<version>4.30.0</version>
 						</artifact>
 					</target>
 					<environments>
