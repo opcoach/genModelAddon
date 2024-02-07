@@ -1,8 +1,6 @@
  
 package com.opcoach.genmodeladdon.handlers;
 
-import javax.inject.Named;
-
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
@@ -11,6 +9,8 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.opcoach.genmodeladdon.core.GenerateCommon;
 import com.opcoach.genmodeladdon.core.genmodel.GMAGenModel;
+
+import jakarta.inject.Named;
 
 public abstract class GenerateParentHandler {
 	

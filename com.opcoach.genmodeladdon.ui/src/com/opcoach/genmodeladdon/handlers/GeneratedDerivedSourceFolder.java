@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
-import javax.inject.Named;
-
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
@@ -26,6 +24,8 @@ import com.opcoach.genmodeladdon.core.GenerateDevStructure;
 import com.opcoach.genmodeladdon.core.genmodel.GMAGenModel;
 import com.opcoach.genmodeladdon.ui.dialog.ConfirmFileSelectionDialog;
 import com.opcoach.genmodeladdon.ui.dialog.DerivedSourceParametersDialog;
+
+import jakarta.inject.Named;
 
 public class GeneratedDerivedSourceFolder extends GenerateParentHandler
 {

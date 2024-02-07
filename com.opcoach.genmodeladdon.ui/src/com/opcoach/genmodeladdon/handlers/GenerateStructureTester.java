@@ -1,14 +1,14 @@
 
 package com.opcoach.genmodeladdon.handlers;
 
-import javax.inject.Named;
-
 import org.eclipse.e4.core.di.annotations.Evaluate;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.jface.viewers.IStructuredSelection;
 
 import com.opcoach.genmodeladdon.core.GMAHelper;
+
+import jakarta.inject.Named;
 
 public class GenerateStructureTester
 {

@@ -31,7 +31,10 @@ location "https://download.eclipse.org/releases/2023-12" {
 	org.eclipse.sdk.feature.group
 	
 	com.google.guava
-	javax.annotation
+	jakarta.annotation-api
+	jakarta.inject.jakarta.inject-api
+	org.apache.log4j
+	org.apache.commons.commons-io
 	
 }
 

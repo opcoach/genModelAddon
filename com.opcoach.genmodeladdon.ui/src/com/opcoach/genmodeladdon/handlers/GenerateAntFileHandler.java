@@ -3,8 +3,6 @@ package com.opcoach.genmodeladdon.handlers;
 import java.io.File;
 import java.io.IOException;
 
-import javax.inject.Named;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.e4.core.di.annotations.Execute;
@@ -15,6 +13,8 @@ import org.eclipse.swt.widgets.Shell;
 import com.opcoach.genmodeladdon.core.GenerateAntFileForCodeGeneration;
 import com.opcoach.genmodeladdon.core.GenerateCommon;
 import com.opcoach.genmodeladdon.core.genmodel.GMAGenModel;
+
+import jakarta.inject.Named;
 
 public class GenerateAntFileHandler extends GenerateParentHandler
 {
