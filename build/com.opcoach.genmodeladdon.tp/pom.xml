@@ -12,6 +12,6 @@
 
 	<artifactId>com.opcoach.genmodeladdon.tp</artifactId>
 	<packaging>eclipse-target-definition</packaging>
-	<version>4.31.0</version>
+	<version>4.34.0</version>
 	
 </project>
