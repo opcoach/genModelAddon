@@ -1,6 +1,5 @@
 package com.opcoach.genmodeladdon.core.genmodel.impl;
 
-import com.google.common.base.Objects;
 import com.opcoach.genmodeladdon.core.GMAConstants;
 import com.opcoach.genmodeladdon.core.GMAHelper;
 import com.opcoach.genmodeladdon.core.genmodel.GMAGenModel;
@@ -9,6 +8,7 @@ import com.opcoach.genmodeladdon.core.genmodel.GMATransform;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.net.URL;
+import java.util.Objects;
 import java.util.Properties;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
@@ -135,7 +135,7 @@ public class GMAGenModelImpl extends GenModelImpl implements GMAGenModel, GMACon
         return pname;
       }
       final String result = this.getGMATransform().replaceDevName(pname);
-      boolean _notEquals = (!Objects.equal(result, pname));
+      boolean _notEquals = (!Objects.equals(result, pname));
       if (_notEquals) {
         InputOutput.<String>println(((("--->> genModelImportedName convert " + pname) + " into ") + result));
       }

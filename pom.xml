@@ -39,7 +39,7 @@
 						<artifact>
 							<groupId>com.opcoach.genmodeladdon</groupId>
 							<artifactId>com.opcoach.genmodeladdon.tp</artifactId>
-							<version>4.34.0</version>
+							<version>4.35.0</version>
 						</artifact>
 					</target>
 					<environments>
