@@ -8,6 +8,6 @@ Bundle-ClassPath: ant_tasks/importer.ecore.tasks.jar,
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.xmi
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Eclipse-BundleShape: dir
 Automatic-Module-Name: com.opcoach.genmodeladdon.sample

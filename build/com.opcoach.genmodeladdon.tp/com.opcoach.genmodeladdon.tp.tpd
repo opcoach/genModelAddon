@@ -1,16 +1,16 @@
-target "GMA SimRel0325"
+target "GMA SimRel0625"
 
 with source requirements 
 
 
-location "https://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.38.0/" {
+location "https://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.39.0/" {
   org.eclipse.xtext.sdk.feature.group
   org.eclipse.xtend.sdk.feature.group 
   org.eclipse.xtext.xbase.feature.group
 }
 
 
-location "https://download.eclipse.org/releases/2025-03" {
+location "https://download.eclipse.org/releases/2025-06" {
 	
 	org.eclipse.rcp.feature.group
 	org.eclipse.ant.core
